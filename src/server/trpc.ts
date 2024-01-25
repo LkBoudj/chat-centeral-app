@@ -4,9 +4,9 @@ export const t = initTRPC.create();
 
 export const router = t.router;
 
-export const publicProducder = t.procedure;
+export const publicProducer = t.procedure;
 
-export const privateProcuder = publicProducder.use((opts) => {
+export const privateProcuder = publicProducer.use((opts) => {
   const { ctx } = opts;
   console.log(opts);
 

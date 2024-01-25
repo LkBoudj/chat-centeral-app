@@ -5,8 +5,9 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { Adapter } from "next-auth/adapters";
 import prismaConfig from "./prismaConfig";
-import { comparePassword } from "../utlis";
+
 import { User } from "@prisma/client";
+import { comparePassword } from "../helper";
 
 export const nextOption: NextAuthOptions = {
   adapter: PrismaAdapter(prismaConfig) as Adapter,
@@ -33,13 +34,12 @@ export const nextOption: NextAuthOptions = {
           },
         });
 
-        if (user) {
-          const isValid = await comparePassword(
-            credentials?.password as string,
-            user.password
-          );
-          if (isValid) return user;
-        }
+        if (!user) return null;
+        const isValid = await comparePassword(
+          credentials?.password as string,
+          user.password
+        );
+        if (isValid) return user;
 
         return null;
       },

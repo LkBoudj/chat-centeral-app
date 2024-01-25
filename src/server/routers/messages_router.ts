@@ -1,7 +1,5 @@
-import { publicProducder, router } from "../trpc";
+import { router } from "../trpc";
 
-const appMessagesRouter = router({
-  hello: publicProducder.query(() => "hello"),
-});
+const appMessagesRouter = router({});
 
 export default appMessagesRouter;
