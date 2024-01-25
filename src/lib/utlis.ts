@@ -17,3 +17,7 @@ export const hashPassword = async (pass: string) => {
 export const comparePassword = async (pass: string, hash: string) => {
   return await bcrypt.compare(pass, hash);
 };
+
+export const isCanSubmit = (shema: any, data: any) => {
+  return shema.safeParse({ ...data }).success;
+};
