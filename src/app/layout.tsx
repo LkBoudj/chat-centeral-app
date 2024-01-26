@@ -1,11 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Open_Sans, Cairo } from "next/font/google";
 import Provider from "@/components/providers";
 import { cn } from "@/lib/utlis";
 
 const inter = Inter({ subsets: ["latin"] });
-
+const OpenSans = Open_Sans({ subsets: ["latin"] });
+const cairo = Cairo({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Chat Central",
   description: "Chat Central",
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className)}>
+      <body className={cn(cairo.className)}>
         <Provider>{children}</Provider>
       </body>
     </html>

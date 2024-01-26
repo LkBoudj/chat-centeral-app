@@ -6,7 +6,7 @@ import ListOfMessages from "@/components/chat/ListOfMessages";
 
 type Props = {};
 
-const ChatPage = (props: Props) => {
+const ConversationPage = (props: Props) => {
   return (
     <div className=" w-full h-screen  bg-[#EEEEEE]">
       <ChatAside />
@@ -22,4 +22,4 @@ const ChatPage = (props: Props) => {
   );
 };
 
-export default ChatPage;
+export default ConversationPage;

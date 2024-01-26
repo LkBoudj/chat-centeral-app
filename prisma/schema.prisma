@@ -84,6 +84,7 @@ model VerificationToken {
 model Conversation {
   id          Int       @id @default(autoincrement()) @db.UnsignedInt
   title       String
+  slug        String
   description String?
   user        User      @relation("conversaton_creator", fields: [userId], references: [id], onDelete: Cascade)
   userId      Int       @db.UnsignedInt
