@@ -11,6 +11,7 @@ import {
 
 import { Bot } from "lucide-react";
 import { usePathname } from "next/navigation";
+import AuthanticationButton from "./AuthanticationButton";
 
 type Props = {
   navsData: NavItem[];
@@ -62,24 +63,7 @@ const LkNavbar = ({ navsData }: Props) => {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Button
-            as={Link}
-            className="border-r rounded-none text-slate-700"
-            color="primary"
-            href="#"
-            variant="light"
-          >
-            Sign In
-          </Button>
-          <Button
-            className="text-slate-700"
-            as={Link}
-            color="primary"
-            href="#"
-            variant="light"
-          >
-            Sign Up
-          </Button>
+          <AuthanticationButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

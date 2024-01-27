@@ -15,7 +15,7 @@ const ChatPage = (props: Props) => {
         isEnabled={false}
         className="w-full  pr-[370px] h-screen chat-area "
       >
-        <ListOfMessages />
+        <ListOfMessages messages={[]} />
       </ScrollShadow>
       <CreateMessage />
     </div>

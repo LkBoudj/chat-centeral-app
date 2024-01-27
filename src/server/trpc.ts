@@ -1,6 +1,7 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
+import { createContext } from "./context";
 
-export const t = initTRPC.create();
+export const t = initTRPC.context<typeof createContext>().create();
 
 export const router = t.router;
 
@@ -8,9 +9,11 @@ export const publicProducer = t.procedure;
 
 export const privateProcuder = publicProducer.use((opts) => {
   const { ctx } = opts;
-  console.log(opts);
-
-  return opts.next({
-    ctx: {},
-  });
+  if (!ctx?.auth) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "We don't take kindly to out-of-town folk",
+    });
+  }
+  return opts.next();
 });

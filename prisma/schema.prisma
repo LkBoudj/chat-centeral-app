@@ -82,9 +82,9 @@ model VerificationToken {
 }
 
 model Conversation {
-  id          Int       @id @default(autoincrement()) @db.UnsignedInt
-  title       String
-  slug        String
+  id    String @id @unique @default(uuid())
+  title String
+
   description String?
   user        User      @relation("conversaton_creator", fields: [userId], references: [id], onDelete: Cascade)
   userId      Int       @db.UnsignedInt
@@ -97,7 +97,7 @@ model Conversation {
 
 model Technology {
   id          Int       @id @default(autoincrement()) @db.UnsignedInt
-  refTech     Int       @db.UnsignedInt
+  refTech     String
   name        String    @unique
   description Json?
   logo        String?
@@ -114,7 +114,7 @@ model Message {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int          @db.UnsignedInt
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  conversationId Int          @db.UnsignedInt
+  conversationId String
   fromMachin     Boolean?     @default(false)
   technology     Technology   @relation(fields: [technologyId], references: [id], onDelete: Cascade)
   technologyId   Int          @db.UnsignedInt

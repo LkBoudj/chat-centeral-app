@@ -1,7 +1,7 @@
 "use client";
 import moment from "moment";
 import ChatItemAction from "./ChatItemAction ";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import {
   Button,
   Card,
@@ -12,12 +12,12 @@ import {
   ListboxItem,
   ScrollShadow,
 } from "@nextui-org/react";
-
 import { MessageCirclePlus, ChevronRight, ChevronLeft } from "lucide-react";
-
 import { IconButton } from "..";
 import { cn } from "@/lib/utlis";
 import { Conversation } from "@prisma/client";
+import { chatContext } from "../context/ChatContextProvider";
+import { useParams } from "next/navigation";
 
 type Props = {
   items: Conversation[];
@@ -27,6 +27,29 @@ type Props = {
   page: number;
 };
 
+const ConversationItemOption = ({
+  item,
+  id,
+}: {
+  item: Conversation;
+  id?: string;
+}) => {
+  const isActive: boolean = item.id == id;
+  return (
+    <div className="flex items-center justify-between pr-14">
+      <p className="text-sm font-semibold truncate   ">{item.title}</p>
+      <div className="absolute   w-24 justify-end h-full flex items-center right-0">
+        {isActive ? (
+          <ChatItemAction />
+        ) : (
+          <span className="text-[11px] py-3 px-2">
+            {moment(item.updatedAt).startOf("hour").fromNow()}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
 const ListOfChats = ({
   items,
   isHaveNext,
@@ -34,12 +57,13 @@ const ListOfChats = ({
   handelNextPage,
   page,
 }: Props) => {
-  const [selected, setSelectedChat] = useState<any>(0);
-
-  const handelSelection = (key: any) => setSelectedChat(key);
+  const { id } = useParams();
 
   return (
-    <Card shadow="none" className=" ring-1 ring-gray-100 shadow-md w-full ">
+    <Card
+      shadow="none"
+      className="bg-[#f7f7f7] ring-1 ring-gray-100 shadow-md w-full "
+    >
       <CardHeader>
         <Button
           color="primary"
@@ -56,34 +80,20 @@ const ListOfChats = ({
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
-            className="space-y-8"
-            //selectedKeys={selected}
-            onSelectionChange={handelSelection}
-            onAction={(key) => setSelectedChat(key)}
+            className=""
+            selectedKeys={id}
           >
             {items?.map((item, i) => {
               return (
                 <ListboxItem
-                  href={`/chat/${item.slug}`}
+                  href={`/chat/${item.id}`}
                   className={cn(
-                    "border-b hover:border-b-0 border-gray-100 hover:border-l-3 hover:border-blue-600",
-                    item.id == Number(selected) &&
-                      "border-l-3 border-blue-600 border-b-0"
+                    "aside-item-chat rounded-none py-4",
+                    item.id == id && "border-l-3 border-blue-600 border-b-0"
                   )}
                   key={item.id.toString()}
                 >
-                  <div className="flex items-center justify-between">
-                    <p className="text-[13px]">
-                      {item.id} {item.title.substring(0, 15)}
-                    </p>
-                    {item.id == Number(selected) ? (
-                      <ChatItemAction />
-                    ) : (
-                      <span className="text-[11px] py-3">
-                        {moment().startOf("hour").fromNow()}
-                      </span>
-                    )}
-                  </div>
+                  <ConversationItemOption item={item} id={id as string} />
                 </ListboxItem>
               );
             })}

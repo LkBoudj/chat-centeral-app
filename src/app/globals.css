@@ -5,3 +5,9 @@
 .chat-area {
   max-height: calc(100% - 260px);
 }
+
+@layer base {
+  .aside-item-chat {
+    @apply bg-gradient-to-r from-transparent to-[#f7f7f7] relative border-b  hover:border-b-0 border-gray-100 hover:border-l-3 hover:border-blue-600;
+  }
+}

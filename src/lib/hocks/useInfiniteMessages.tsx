@@ -1,17 +1,22 @@
-"use client";
 import { trpc } from "@/trpc/client";
-
 import { useEffect } from "react";
 import usePaginationInfinteHock from "./usePaginationInfinteHock";
 
-const useInfiniteConversation = () => {
-  const { data, isLoading, isSuccess, fetchNextPage } =
-    trpc.conversations.infiniteChats.useInfiniteQuery(
+const useInfiniteMessages = ({
+  id,
+  limit = 10,
+}: {
+  id: string;
+  limit?: number;
+}) => {
+  const { data, isLoading, isSuccess, error, isError, fetchNextPage } =
+    trpc.messages.infiniteConversationMessages.useInfiniteQuery(
       {
-        limit: 10,
+        limit,
+        id,
       },
       {
-        getNextPageParam: (next) => next.nextCursor,
+        getNextPageParam: (next) => next?.nextCursor ?? null,
       }
     );
 
@@ -30,22 +35,25 @@ const useInfiniteConversation = () => {
       setItems(data?.pages[preP - 1].ietms);
     }
   };
+  const toShow = data?.pages[page - 1]?.ietms ?? [];
+  // useEffect(() => {
+  //   setItems(data?.pages[page - 1].ietms);
 
-  useEffect(() => {
-    setItems(data?.pages[page - 1].ietms);
-
-    setIsHaveNext(data?.pages[page - 1].nextCursor ? true : false);
-  }, [data]);
+  //   setIsHaveNext(data?.pages[page - 1].nextCursor ? true : false);
+  // }, [data]);
 
   return {
-    items,
+    items: data,
+    toShow,
     handelNextPage,
     handlePreviousPage,
     page,
     isSuccess,
     isHaveNext,
     isLoading,
+    error,
+    isError,
   };
 };
 
-export default useInfiniteConversation;
+export default useInfiniteMessages;

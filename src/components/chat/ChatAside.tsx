@@ -14,7 +14,7 @@ const ChatAside = (props: Props) => {
     items,
   } = useInfiniteConversation();
   return (
-    <aside className="  absolute right-0 top-20  w-full  z-50 max-w-[370px] pr-5">
+    <aside className="  absolute right-0 top-20  w-full hidden lg:block  z-50 max-w-[370px] pr-5">
       <Tabs className="mt-3 font-bold" variant="underlined" color="primary">
         <Tab key="activty" title="Recent activity">
           <ListOfChats

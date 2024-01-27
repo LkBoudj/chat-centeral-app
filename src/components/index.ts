@@ -6,6 +6,7 @@ import Details from "./auth/Details";
 import AuthForm from "./auth/AuthForm";
 //navbar
 import LkNavbar from "./navbar/LkNavbar";
+import AuthanticationButton from "./navbar/AuthanticationButton";
 //chat
 import ChatAside from "./chat/ChatAside";
 import ChatItemAction from "./chat/ChatItemAction ";

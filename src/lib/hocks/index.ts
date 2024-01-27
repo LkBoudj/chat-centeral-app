@@ -1,4 +1,8 @@
 import usePaginationInfinteHock from "./usePaginationInfinteHock";
 import useInfiniteConversation from "./useInfiniteConversation";
-
-export { usePaginationInfinteHock, useInfiniteConversation };
+import useInfiniteMessages from "./useInfiniteMessages";
+export {
+  usePaginationInfinteHock,
+  useInfiniteConversation,
+  useInfiniteMessages,
+};

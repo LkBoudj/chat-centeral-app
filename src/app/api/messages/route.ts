@@ -1,10 +1,10 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
-import prismaConfig from "@/libs/configs/prismaConfig";
+import prismaConfig from "@/lib/configs/prismaConfig";
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "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",
   dangerouslyAllowBrowser: true, // defaults to process.env["OPENAI_API_KEY"]
 });
 
