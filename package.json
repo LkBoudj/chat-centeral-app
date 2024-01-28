@@ -19,6 +19,7 @@
     "@trpc/react-query": "11.0.0-next-beta.228",
     "@trpc/server": "11.0.0-next-beta.228",
     "@types/bcrypt": "^5.0.2",
+    "@types/react-syntax-highlighter": "^15.5.11",
     "ai": "^2.2.31",
     "bcrypt": "^5.1.1",
     "clsx": "^2.1.0",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.0",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

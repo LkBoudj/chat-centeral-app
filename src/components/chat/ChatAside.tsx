@@ -2,6 +2,7 @@
 import { Tab, Tabs } from "@nextui-org/react";
 import ListOfChats from "./ListOfChats";
 import { useInfiniteConversation } from "@/lib/hocks";
+import { ChatOptions } from "..";
 
 type Props = {};
 const ChatAside = (props: Props) => {
@@ -25,7 +26,9 @@ const ChatAside = (props: Props) => {
             page={page}
           />
         </Tab>
-        <Tab key="Options" title="Options Technolgy"></Tab>
+        <Tab key="Options" title="Options Technolgy">
+          <ChatOptions />
+        </Tab>
       </Tabs>
     </aside>
   );

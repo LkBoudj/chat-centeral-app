@@ -35,7 +35,7 @@ const useInfiniteConversation = () => {
     setItems(data?.pages[page - 1].ietms);
 
     setIsHaveNext(data?.pages[page - 1].nextCursor ? true : false);
-  }, [data]);
+  }, [data, page, setIsHaveNext, setItems]);
 
   return {
     items,

@@ -1,13 +1,13 @@
 "use client";
 import moment from "moment";
 import ChatItemAction from "./ChatItemAction ";
-import { useContext } from "react";
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
+  Link,
   Listbox,
   ListboxItem,
   ScrollShadow,
@@ -16,7 +16,6 @@ import { MessageCirclePlus, ChevronRight, ChevronLeft } from "lucide-react";
 import { IconButton } from "..";
 import { cn } from "@/lib/utlis";
 import { Conversation } from "@prisma/client";
-import { chatContext } from "../context/ChatContextProvider";
 import { useParams } from "next/navigation";
 
 type Props = {
@@ -40,7 +39,7 @@ const ConversationItemOption = ({
       <p className="text-sm font-semibold truncate   ">{item.title}</p>
       <div className="absolute   w-24 justify-end h-full flex items-center right-0">
         {isActive ? (
-          <ChatItemAction />
+          <ChatItemAction id={item.id} />
         ) : (
           <span className="text-[11px] py-3 px-2">
             {moment(item.updatedAt).startOf("hour").fromNow()}
@@ -67,6 +66,9 @@ const ListOfChats = ({
       <CardHeader>
         <Button
           color="primary"
+          as={Link}
+          href="/chat"
+          isDisabled={!id}
           className="w-full flex bg-gradient-to-r from-indigo-400 to-blue-600 text-white font-bold"
           startContent={<MessageCirclePlus />}
         >

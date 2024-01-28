@@ -49,6 +49,10 @@ class MessageController {
           id: conversationId,
         },
       },
+      include: {
+        technology: true,
+        user: true,
+      },
       orderBy: {
         id: "desc",
       },
@@ -62,13 +66,7 @@ class MessageController {
     technologyId,
     userId,
     fromMachin,
-  }: {
-    content: string;
-    conversationId: string;
-    technologyId: number;
-    userId: number;
-    fromMachin?: boolean;
-  }) {
+  }: AppMessage) {
     return await prismaConfig.message.create({
       data: {
         content,
@@ -84,4 +82,6 @@ class MessageController {
   }
 }
 
-export default new MessageController();
+const messageController = new MessageController();
+
+export default messageController;

@@ -1,3 +1,4 @@
+"use client";
 import { z } from "zod";
 import Form from "../global/Form";
 import { Textarea } from "@nextui-org/react";
@@ -5,23 +6,29 @@ import { Mic, SendHorizontal, Paperclip } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ContainerMaxWind, IconButton } from "..";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createNewMessageV } from "@/lib/validation";
 import { useContext, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { trpc } from "@/trpc/client";
-import { useParams, useRouter } from "next/navigation";
-import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
-import { conversations_page } from "@/lib/configs/routes_name";
+
+import { useParams } from "next/navigation";
+
 import { chatContext } from "../context/ChatContextProvider";
+import { createNewMessageFrontV } from "@/lib/validation/messages";
 
-type Props = {};
+type Props = {
+  hanldeSendMessage?: (key?: any) => void;
+  isAiThink?: boolean;
+  isAiThinkCompleted?: boolean;
+};
 
-type Inputs = z.infer<typeof createNewMessageV>;
+type Inputs = z.infer<typeof createNewMessageFrontV>;
 
-const CreateMessage = (props: Props) => {
+const CreateMessage = ({
+  hanldeSendMessage,
+  isAiThink,
+  isAiThinkCompleted,
+}: Props) => {
   const params = useParams();
-  const { addNewData, isUpdatedSuccess, isUpdatePending } =
-    useContext(chatContext);
+  const { selectdTechnologyId, selectdModel } = useContext(chatContext);
 
   const {
     register,
@@ -30,15 +37,28 @@ const CreateMessage = (props: Props) => {
     reset,
     formState: { errors, isDirty },
   } = useForm<Inputs>({
-    resolver: zodResolver(createNewMessageV),
-    defaultValues: { conversationId: params.id as string },
+    resolver: zodResolver(createNewMessageFrontV),
+    defaultValues: {
+      conversationId: params.id as string,
+    },
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    //console.log(data);
-    //const messages = ;
-    addNewData(data);
-    //  reset();
+    console.log({
+      ...data,
+      technologyId: Number(selectdTechnologyId),
+      model: selectdModel,
+    });
+
+    hanldeSendMessage &&
+      hanldeSendMessage(
+        JSON.stringify({
+          ...data,
+          technologyId: Number(selectdTechnologyId),
+          model: selectdModel,
+        })
+      );
+    reset();
   };
   useEffect(() => {
     if (errors.conversationId?.message || errors.content?.message) {
@@ -59,6 +79,12 @@ const CreateMessage = (props: Props) => {
               placeholder="Ask me any think"
               variant="bordered"
               color="default"
+              onKeyDown={(e) => {
+                if (e.key == "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(onSubmit)();
+                }
+              }}
               classNames={{
                 inputWrapper: "border-none shadow-none ",
               }}
@@ -70,11 +96,8 @@ const CreateMessage = (props: Props) => {
           <div className="flex items-end justify-between">
             <IconButton size={22} Icon={Paperclip} />
             <IconButton
-              isLoading={isUpdatePending}
-              isDisabled={
-                watch("content")?.length <= 0 ||
-                (isUpdatePending && !isUpdatedSuccess)
-              }
+              isLoading={isAiThink}
+              isDisabled={watch("content")?.length <= 0 || !isAiThinkCompleted}
               type="submit"
               size={22}
               Icon={SendHorizontal}

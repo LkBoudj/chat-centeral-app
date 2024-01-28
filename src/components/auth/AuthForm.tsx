@@ -1,12 +1,5 @@
-import { isCanSubmit } from "@/lib/utlis";
 import { Button, Image, Input } from "@nextui-org/react";
-import clsx from "clsx";
-import { watch } from "fs";
-import { register } from "module";
-import Link from "next/link";
 import React from "react";
-import { twMerge } from "tailwind-merge";
-import { Details } from "..";
 
 type Props = {
   title: string;
@@ -43,7 +36,12 @@ const AuthForm = ({
               color="primary"
               variant="bordered"
             >
-              <Image src="/images/google.png" width={20} height={20} />
+              <Image
+                src="/images/google.png"
+                alt="google"
+                width={20}
+                height={20}
+              />
               Continue with Google
             </Button>
 

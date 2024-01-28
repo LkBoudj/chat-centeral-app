@@ -4,12 +4,12 @@ import {
   loginSchema,
   backRegisterSchema,
 } from "./authantication";
-import { conversationMessagesV, createNewMessageV } from "./messages";
+import { conversationMessagesV, createNewMessageBackV } from "./messages";
 export {
   inputInfinte,
   registerSchema,
   loginSchema,
   backRegisterSchema,
   conversationMessagesV,
-  createNewMessageV,
+  createNewMessageBackV,
 };

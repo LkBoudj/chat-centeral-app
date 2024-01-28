@@ -4,6 +4,7 @@ import React from "react";
 
 type Props = {
   Icon: LucideIcon;
+  className?: string;
   size?: number;
   onClick?: (key?: any) => void;
   isDisabled?: boolean;
@@ -18,6 +19,7 @@ const IconButton = ({
   isDisabled,
   type,
   isLoading,
+  className,
 }: Props) => {
   return (
     <Button
@@ -28,6 +30,7 @@ const IconButton = ({
       size="sm"
       isIconOnly
       variant="light"
+      className={className}
     >
       <Icon size={size} />
     </Button>

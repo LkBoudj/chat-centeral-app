@@ -13,6 +13,8 @@ import ChatItemAction from "./chat/ChatItemAction ";
 import ListOfChats from "./chat/ListOfChats";
 import Message from "./chat/Message";
 import CreateMessage from "./chat/CreateMessage";
+import ChatOptions from "./chat/ChatOptions";
+import ChatOptionsItem from "./chat/ChatOptionsItem";
 
 export {
   ContainerMaxWind,
@@ -22,6 +24,8 @@ export {
   LkNavbar,
   ChatAside,
   ChatItemAction,
+  ChatOptions,
+  ChatOptionsItem,
   ListOfChats,
   Message,
   CreateMessage,

@@ -1,15 +1,15 @@
-class Controller {
+class Controllers {
   paginationData({
-    messages,
+    items,
     cursor,
     limit,
   }: {
-    messages: any[];
-    cursor?: number;
+    items: any[];
+    cursor: any;
     limit: number;
   }) {
     let nextCursor: typeof cursor | undefined = undefined;
-    const sortedData = messages.sort(function (p1, p2) {
+    const sortedData = items.sort(function (p1, p2) {
       if (p1.id < p2.id) return -1;
       if (p1.id > p2.id) return 1;
       return 0;
@@ -25,3 +25,5 @@ class Controller {
     };
   }
 }
+
+export default Controllers;

@@ -1,6 +1,28 @@
 import prismaConfig from "../configs/prismaConfig";
+import Controllers from "./Controler";
 
-class ConversationController {
+class ConversationController extends Controllers {
+  async infintyLoad({
+    limit,
+    skip,
+    cursor,
+    userId,
+  }: {
+    limit: number;
+    skip?: number;
+    cursor: string | null | undefined;
+    userId: number;
+  }) {
+    const conversation = await prismaConfig.conversation.findMany({
+      take: limit + 1,
+      skip,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: {
+        id: "desc",
+      },
+    });
+    return this.paginationData({ limit, items: conversation, cursor });
+  }
   async isExits({ userId, id }: { userId: number; id: string }) {
     const isExits = await prismaConfig.conversation.findUnique({
       where: {
@@ -19,6 +41,18 @@ class ConversationController {
     });
     return newConversation;
   }
+
+  async delete({ userId, id }: { userId: number; id: string }) {
+    const deleted = await prismaConfig.conversation.delete({
+      where: {
+        id,
+        userId,
+      },
+    });
+    console.log(deleted);
+  }
 }
 
-export default new ConversationController();
+const conversationController = new ConversationController();
+
+export default conversationController;

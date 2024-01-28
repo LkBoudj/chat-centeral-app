@@ -1,14 +1,14 @@
 import {
   conversationMessagesV,
-  createNewMessageV,
+  createNewMessageBackV,
   inputInfinte,
 } from "@/lib/validation";
 import { privateProcuder, router } from "../trpc";
-import prismaConfig from "@/lib/configs/prismaConfig";
-import slugify from "slugify";
+
 import { TRPCError } from "@trpc/server";
 import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
 import { ConversationController, MessageController } from "@/lib/controller";
+import TechnologiesContainer from "@/lib/technolgie_container";
 const appMessagesRouter = router({
   infiniteConversationMessages: privateProcuder
     .input(inputInfinte)
@@ -25,7 +25,7 @@ const appMessagesRouter = router({
     }),
 
   create: privateProcuder
-    .input(createNewMessageV)
+    .input(createNewMessageBackV)
     .use(async ({ next, ctx, input }) => {
       const { conversationId, content } = input;
 
@@ -57,14 +57,17 @@ const appMessagesRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { content, conversationId } = input;
 
-      const newMessage = await MessageController.create({
+      const userMessage: AppMessage = {
         content,
         conversationId: conversationId as string,
         technologyId: 1,
         userId: ctx.auth.id,
-      });
+      };
+      await MessageController.create(userMessage);
 
-      return newMessage;
+      return await TechnologiesContainer.generateTextCompletion({
+        userMessage,
+      });
     }),
 });
 
