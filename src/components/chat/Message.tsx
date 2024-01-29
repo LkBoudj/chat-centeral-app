@@ -62,6 +62,8 @@ const BodyMessage = ({
             transition-all
             place-self-start
             rounded-xl px-3 py-2  leading-[2.3]
+            w-full
+            max-w-full
             `,
         fromMachin
           ? "bg-[#fcfcfc] text-slate-800 "
@@ -93,7 +95,7 @@ const Message = ({
     >
       <div
         className={cn(
-          " max-w-[800px] flex  items-end   ",
+          " max-w-[1000px] flex  items-end   ",
           fromMachin && "flex-row-reverse"
         )}
       >

@@ -3,7 +3,7 @@
 import { useConversationHock } from "@/lib/hocks";
 import useFrontTechnology from "@/lib/hocks/useFrontTechnology";
 
-import { PropsWithChildren, createContext } from "react";
+import React, { PropsWithChildren, createContext } from "react";
 
 type ChatContextResponce = {
   currentConversationId: number | null;
@@ -11,7 +11,13 @@ type ChatContextResponce = {
 };
 export const chatContext = createContext<any>(null);
 
-const ChatContextProvider = ({ children }: PropsWithChildren) => {
+const ChatContextProvider = ({
+  children,
+  outValue,
+}: {
+  outValue?: any;
+  children: React.ReactNode;
+}) => {
   const {
     hanldeSlectModel,
     selectdModelId,
@@ -26,6 +32,7 @@ const ChatContextProvider = ({ children }: PropsWithChildren) => {
 
   const { handelDeleteConversation } = useConversationHock();
   const value = {
+    ...outValue,
     //--------- converaation ----------
     handelDeleteConversation,
     //--------- technology ----------

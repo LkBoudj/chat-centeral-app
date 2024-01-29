@@ -8,7 +8,7 @@ import { ContainerMaxWind, IconButton } from "..";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect } from "react";
 import { toast } from "react-hot-toast";
-
+import { useDropzone } from "react-dropzone";
 import { useParams } from "next/navigation";
 
 import { chatContext } from "../context/ChatContextProvider";
@@ -28,7 +28,13 @@ const CreateMessage = ({
   isAiThinkCompleted,
 }: Props) => {
   const params = useParams();
-  const { selectdTechnologyId, selectdModel } = useContext(chatContext);
+  const {
+    selectdTechnologyId,
+    selectdModel,
+    isUploadFileOpen,
+    onOpenUploadFile,
+    onOpenChangeUloadFile,
+  } = useContext(chatContext);
 
   const {
     register,
@@ -94,7 +100,7 @@ const CreateMessage = ({
             <IconButton size={22} Icon={Mic} />
           </div>
           <div className="flex items-end justify-between">
-            <IconButton size={22} Icon={Paperclip} />
+            <IconButton onPress={onOpenUploadFile} size={22} Icon={Paperclip} />
             <IconButton
               isLoading={isAiThink}
               isDisabled={watch("content")?.length <= 0 || !isAiThinkCompleted}

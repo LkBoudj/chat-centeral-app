@@ -1,15 +1,17 @@
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+import { LangChainStream, OpenAIStream, StreamingTextResponse } from "ai";
 
 import { MessageController } from "./controller";
 import { NextResponse } from "next/server";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { chatOpenAiModel } from "./langchain/library";
 
 class TechnologiesContainer {
   private openai: OpenAI;
 
   constructor() {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_APIKEY,
+      apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true, // defaults to process.env["OPENAI_API_KEY"]
     });
   }
@@ -55,6 +57,25 @@ class TechnologiesContainer {
     });
 
     return NextResponse.json(machinMessage);
+  }
+
+  async generateTextCompletionLngChain({
+    model,
+    userMessage,
+    stream,
+  }: {
+    userMessage: AppMessage;
+    stream?: boolean;
+    model?: string;
+  }) {
+    const prompt = ChatPromptTemplate.fromMessages([
+      ["system", "You are a world class for answer question"],
+      ["user", "{input}"],
+    ]);
+    const chain = prompt.pipe(chatOpenAiModel);
+    const streamResponse = await chain.stream({ input: userMessage.content });
+
+    return new StreamingTextResponse(streamResponse);
   }
 }
 const technologiesContainer = new TechnologiesContainer();

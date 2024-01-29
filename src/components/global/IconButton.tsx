@@ -10,6 +10,7 @@ type Props = {
   isDisabled?: boolean;
   isLoading?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
+  onPress?: (key?: any) => void;
 };
 
 const IconButton = ({
@@ -20,6 +21,7 @@ const IconButton = ({
   type,
   isLoading,
   className,
+  onPress,
 }: Props) => {
   return (
     <Button
@@ -31,6 +33,7 @@ const IconButton = ({
       isIconOnly
       variant="light"
       className={className}
+      onPress={onPress}
     >
       <Icon size={size} />
     </Button>
