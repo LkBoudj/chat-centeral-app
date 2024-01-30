@@ -1,3 +1,4 @@
+import { limit_infinite_messagess } from "@/lib/configs/infinte_scrolle_config";
 import { router, privateProcuder } from "../trpc";
 import prismaConfig from "@/lib/configs/prismaConfig";
 import { ConversationController } from "@/lib/controller";
@@ -12,7 +13,7 @@ const conversationsAppRouter = router({
       const { limit, skip, cursor } = input;
 
       return ConversationController.infintyLoad({
-        limit,
+        limit: limit_infinite_messagess,
         cursor,
         userId: ctx.auth.id,
         skip,

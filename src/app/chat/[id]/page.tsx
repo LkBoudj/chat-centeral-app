@@ -8,6 +8,7 @@ import { chatContext } from "@/components/context/ChatContextProvider";
 import { trpc } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { limit_infinite_messagess } from "@/lib/configs/infinte_scrolle_config";
 
 type Props = {
   params: { id: string };
@@ -45,14 +46,17 @@ const ConversationPage = ({ params }: Props) => {
           stream: null,
         };
       }
-      // const json = await res.json();
-      // if (json) {
-      //   console.log(json);
-      // }
-
+      const contentType = res.headers.get("Content-Type");
+      if (contentType == "application/json")
+        return {
+          message,
+          type: "json",
+          data: await res.json(),
+        };
       return {
         message,
-        stream: await res.body,
+        type: "stream",
+        data: await res.body,
       };
     },
     async onMutate(opts: any) {
@@ -62,7 +66,7 @@ const ConversationPage = ({ params }: Props) => {
         await utils.messages.infiniteConversationMessages.cancel();
         utils.messages.infiniteConversationMessages.getInfiniteData();
         utils.messages.infiniteConversationMessages.setInfiniteData(
-          { limit: 10, id: message.conversationId },
+          { limit: limit_infinite_messagess, id: message.conversationId },
           (data) => {
             if (!data) {
               return {
@@ -86,12 +90,68 @@ const ConversationPage = ({ params }: Props) => {
         );
       }
     },
-    async onSuccess(data) {
-      const { stream, message } = data;
-      if (!stream) {
+    async onSuccess(obj) {
+      const { data: aiResponse, message, type } = obj;
+      if (!aiResponse) {
         toast.error("There was a problem sending this message");
       }
-      const reader: any = stream?.getReader();
+
+      if (type == "json") {
+        await utils.messages.infiniteConversationMessages.cancel();
+        utils.messages.infiniteConversationMessages.getInfiniteData();
+
+        utils.messages.infiniteConversationMessages.setInfiniteData(
+          { limit: limit_infinite_messagess, id: message.conversationId },
+          (data) => {
+            if (!data) {
+              return {
+                pages: [],
+                pageParams: [],
+              };
+            }
+            data.pages[0].ietms = [...data.pages[0].ietms, aiResponse];
+            return data;
+          }
+        );
+      }
+    },
+    onError(_, __, context) {
+      console.log("onError", context);
+    },
+    onSettled(data, error, variables, context) {
+      // console.log(data);
+    },
+  });
+
+  const hanldeSendMessage = (data: any) => mutate(data);
+  useEffect(() => {}, [isAiThinkCompleted]);
+  return (
+    <div className=" w-full h-screen  bg-[#EEEEEE]">
+      <ChatAside />
+      <LkNavbar navsData={authNavigation} />
+
+      {isLoading && (
+        <div className="chat-area flex h-full items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+
+      {isSuccess && <ListOfMessages messages={messages} />}
+
+      <CreateMessage
+        hanldeSendMessage={hanldeSendMessage}
+        isAiThink={isPending}
+        isAiThinkCompleted={!isPending}
+      />
+    </div>
+  );
+};
+
+export default ConversationPage;
+
+/*
+
+const reader: any = data?.getReader();
       const decoder = new TextDecoder();
       let done = false;
       const cMId = crypto.randomUUID;
@@ -146,37 +206,5 @@ const ConversationPage = ({ params }: Props) => {
           }
         );
       }
-    },
-    onError(_, __, context) {
-      console.log(context);
-    },
-    onSettled(data, error, variables, context) {
-      console.log(data, error, variables, context);
-    },
-  });
 
-  const hanldeSendMessage = (data: any) => mutate(data);
-  useEffect(() => {}, [isAiThinkCompleted]);
-  return (
-    <div className=" w-full h-screen  bg-[#EEEEEE]">
-      <ChatAside />
-      <LkNavbar navsData={authNavigation} />
-
-      {isLoading && (
-        <div className="chat-area flex h-full items-center justify-center">
-          <Spinner />
-        </div>
-      )}
-
-      {isSuccess && <ListOfMessages messages={messages} />}
-
-      <CreateMessage
-        hanldeSendMessage={hanldeSendMessage}
-        isAiThink={isPending}
-        isAiThinkCompleted={!isPending}
-      />
-    </div>
-  );
-};
-
-export default ConversationPage;
+*/

@@ -13,13 +13,21 @@ export const comparePassword = async (pass: string, hash: string) => {
 
 export const saveImageFromURL = async (
   data: any[],
-  callback: ({ src, description }: { src: string; description?: string }) => any
+  callback: ({
+    src,
+    revised_prompt,
+    type,
+  }: {
+    src: string;
+    revised_prompt?: string;
+    type: string;
+  }) => any
 ) => {
   const filesData = await Promise.all(
     data.map(async (image) => {
       const res = await axios({
         method: "GET",
-        url: image.url,
+        url: image.src,
         responseType: "stream",
       });
       if (res.status) {
@@ -27,7 +35,11 @@ export const saveImageFromURL = async (
         const outputPath = path.join(process.cwd(), "public", fileName);
         res.data.pipe(fs.createWriteStream(outputPath));
 
-        return callback({ src: fileName, description: image.revised_prompt });
+        return callback({
+          src: fileName,
+          type: image.type,
+          revised_prompt: image.revised_prompt,
+        });
       }
       return null;
     })

@@ -45,16 +45,19 @@ const UploadFile = ({ isOpen, onOpenChange, onOpen }: Props) => {
       });
   };
 
-  const onDrop = useCallback((acceptedFiles: any) => {
-    setProgress(0);
-    acceptedFiles.forEach((files: any) => {
-      const formData = new FormData();
+  const onDrop = useCallback(
+    (acceptedFiles: any) => {
+      setProgress(0);
+      acceptedFiles.forEach((files: any) => {
+        const formData = new FormData();
 
-      formData.append("files", files);
+        formData.append("files", files);
 
-      upload_file(formData);
-    });
-  }, []);
+        upload_file(formData);
+      });
+    },
+    [setProgress, progress]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <Modal
@@ -72,7 +75,7 @@ const UploadFile = ({ isOpen, onOpenChange, onOpen }: Props) => {
               {isDragActive ? (
                 "ok"
               ) : (
-                <p>Drag 'n' drop some files here, or click to select files</p>
+                <p>Drag drop some files here, or click to select files</p>
               )}
               <Progress
                 size="sm"

@@ -7,6 +7,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { chatOpenAiModel } from "./langchain/library";
 import { saveImageFromURL } from "./helper";
 import mediaController from "./controller/media_controller";
+import { Message } from "@prisma/client";
 
 class TechnologiesContainer {
   private openai: OpenAI;
@@ -20,31 +21,43 @@ class TechnologiesContainer {
 
   async generateImageDallE({
     model,
-    userMessage,
+    content,
     userId,
-    messageId,
+    message,
   }: {
-    userMessage: AppMessage;
+    content: string;
     stream?: boolean;
     model?: string;
     userId: number;
-    messageId: number;
+    message: Message;
   }) {
     const response = await this.openai.images.generate({
-      prompt: userMessage.content,
+      prompt: content,
       model: "dall-e-3",
     });
 
-    saveImageFromURL(response.data, (data) => {
+    const media = response.data.map((m) => ({
+      src: m.url,
+      type: "image",
+      prompt: m.revised_prompt,
+      messageId: message.id,
+      userId,
+      createdAt: new Date(),
+      updadedAt: new Date(),
+    }));
+    saveImageFromURL(media, (data) => {
       return mediaController.create({
         userId,
         src: data.src,
-        type: "image",
-        messageId,
+        type: data.type,
+        messageId: message.id,
       });
     });
-
-    return NextResponse.json(response.data);
+    const aiMessage = {
+      ...message,
+      media,
+    };
+    return NextResponse.json(aiMessage);
   }
 
   async generateTextCompletion({
@@ -61,7 +74,7 @@ class TechnologiesContainer {
     const response: any = await this.openai.chat.completions.create({
       model: "gpt-4-0125-preview",
       stream: stream,
-      messages: [{ role: "user", content: userMessage.content }],
+      messages: [{ role: "user", content: userMessage.content as string }],
     });
 
     if (stream == true) {

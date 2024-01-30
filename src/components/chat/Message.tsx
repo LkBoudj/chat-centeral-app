@@ -6,6 +6,7 @@ import { Media, Technology } from "@prisma/client";
 import ReactMarkdown from "react-markdown";
 import { Prism } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { forwardRef } from "react";
 
 const isRightToLift = (text: string) => {
   const regex = /[\u0600-\u06FF]/;
@@ -38,7 +39,7 @@ const MessageMedia = ({
         )}
       >
         {media.map((m) => (
-          <Image className="w-[250px] rounded" src={m.src} />
+          <Image key={m.id} className="w-[250px] rounded" src={m.src} />
         ))}
       </div>
     </div>
@@ -98,27 +99,32 @@ const BodyMessage = ({
     </ReactMarkdown>
   );
 };
+
+type MessageType = {
+  id?: any;
+  fromMachin?: boolean;
+  content: any;
+  technology?: Technology;
+  media?: Media[];
+  ref?: HTMLDivElement;
+};
 const Message = ({
   id,
   content,
   fromMachin,
   technology,
   media,
-}: {
-  id?: any;
-  fromMachin?: boolean;
-  content: any;
-  technology?: Technology;
-  media?: Media[];
-}) => {
+  ref,
+}: MessageType) => {
   return (
     <div
+      ref={ref}
       className={cn(
-        "text-[14px] w-full  flex space-y-2",
+        "text-[14px] w-full  flex",
         fromMachin ? " justify-start" : "justify-end"
       )}
     >
-      <div className="w-full max-w-[1000px]">
+      <div className=" max-w-[1000px]  space-y-2">
         {fromMachin && (
           <span className="px-1 capitalize  font-semibold text-slate-800">
             {technology?.name ?? siteConfig.name}

@@ -82,9 +82,9 @@ export async function POST(req: NextRequest) {
       });
       return TechnologiesContainer.generateImageDallE({
         model: model,
-        userMessage,
+        message: aiMessage,
         userId: auth.id,
-        messageId: aiMessage.id,
+        content: content,
       });
     }
 
