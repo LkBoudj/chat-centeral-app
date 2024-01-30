@@ -1,16 +1,49 @@
-import { Avatar, cn } from "@nextui-org/react";
+import { Image, Avatar, cn } from "@nextui-org/react";
 import { Bot } from "lucide-react";
 import moment from "moment";
 import siteConfig from "@/lib/configs/siteConfig";
-import { Technology } from "@prisma/client";
+import { Media, Technology } from "@prisma/client";
 import ReactMarkdown from "react-markdown";
 import { Prism } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
+
 const isRightToLift = (text: string) => {
   const regex = /[\u0600-\u06FF]/;
   return regex.test(text);
 };
 
+const MessageFotter = ({ technology }: { technology: Technology }) => (
+  <div>
+    {technology?.logo ? (
+      <Avatar className="w-[28px] h-[28px]" src={technology?.logo} />
+    ) : (
+      <Bot className=" " size={50} />
+    )}
+  </div>
+);
+const MessageMedia = ({
+  media,
+  fromMachin,
+}: {
+  media: Media[];
+  fromMachin?: boolean;
+}) => {
+  return (
+    <div className={cn(`w-full flex `, !fromMachin && "justify-end")}>
+      <div
+        className={cn(
+          " w-full my-4 max-w-lg grid gap-4 ",
+          `  grid-cols-${media.length > 1 ? 2 : 1}`,
+          !fromMachin && "justify-end"
+        )}
+      >
+        {media.map((m) => (
+          <Image className="w-[250px] rounded" src={m.src} />
+        ))}
+      </div>
+    </div>
+  );
+};
 const BodyMessage = ({
   fromMachin,
   content,
@@ -19,15 +52,6 @@ const BodyMessage = ({
   content: string;
 }) => {
   return (
-    // <div
-    //   className={cn(
-    //     " rounded-xl px-3 py-2 font-medium leading-[2.3] ",
-
-    //     fromMachin
-    //       ? "bg-[#fcfcfc] text-slate-800 "
-    //       : "bg-gradient-to-r from-indigo-500 to-blue-600 text-white "
-    //   )}
-    // >
     <ReactMarkdown
       components={{
         code(props) {
@@ -72,7 +96,6 @@ const BodyMessage = ({
     >
       {content}
     </ReactMarkdown>
-    // </div>
   );
 };
 const Message = ({
@@ -80,43 +103,38 @@ const Message = ({
   content,
   fromMachin,
   technology,
+  media,
 }: {
   id?: any;
   fromMachin?: boolean;
   content: any;
   technology?: Technology;
+  media?: Media[];
 }) => {
   return (
     <div
       className={cn(
-        "text-[14px] w-full  flex  ",
+        "text-[14px] w-full  flex space-y-2",
         fromMachin ? " justify-start" : "justify-end"
       )}
     >
-      <div
-        className={cn(
-          " max-w-[1000px] flex  items-end   ",
-          fromMachin && "flex-row-reverse"
+      <div className="w-full max-w-[1000px]">
+        {fromMachin && (
+          <span className="px-1 capitalize  font-semibold text-slate-800">
+            {technology?.name ?? siteConfig.name}
+          </span>
         )}
-      >
-        {/* <HeaderMessage technology={technology} fromMachin={fromMachin} /> */}
-        <div className="space-y-2">
-          {fromMachin && (
-            <span className="px-2 capitalize  font-semibold text-slate-800">
-              {technology?.name ?? siteConfig.name}
-            </span>
-          )}
+        {content ? (
           <BodyMessage content={content} fromMachin={fromMachin} />
-        </div>
-        <div className="mx-1"></div>
-        <div>
-          {fromMachin &&
-            (technology?.logo ? (
-              <Avatar className="w-[28px] h-[28px]" src={technology?.logo} />
-            ) : (
-              <Bot className=" " size={50} />
-            ))}
-        </div>
+        ) : (
+          ""
+        )}
+        {media?.length ? (
+          <MessageMedia fromMachin={fromMachin} media={media} />
+        ) : (
+          ""
+        )}
+        {fromMachin && technology && <MessageFotter technology={technology} />}
       </div>
     </div>
   );

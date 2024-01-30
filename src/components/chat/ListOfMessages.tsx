@@ -18,6 +18,7 @@ const ListOfMessages = ({ messages }: { messages?: any[] }) => {
               id={message?.id}
               content={message?.content}
               fromMachin={message?.fromMachin ?? false}
+              media={message?.media}
             />
           ))
         ) : (

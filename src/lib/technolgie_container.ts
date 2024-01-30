@@ -5,6 +5,8 @@ import { MessageController } from "./controller";
 import { NextResponse } from "next/server";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { chatOpenAiModel } from "./langchain/library";
+import { saveImageFromURL } from "./helper";
+import mediaController from "./controller/media_controller";
 
 class TechnologiesContainer {
   private openai: OpenAI;
@@ -14,6 +16,35 @@ class TechnologiesContainer {
       apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true, // defaults to process.env["OPENAI_API_KEY"]
     });
+  }
+
+  async generateImageDallE({
+    model,
+    userMessage,
+    userId,
+    messageId,
+  }: {
+    userMessage: AppMessage;
+    stream?: boolean;
+    model?: string;
+    userId: number;
+    messageId: number;
+  }) {
+    const response = await this.openai.images.generate({
+      prompt: userMessage.content,
+      model: "dall-e-3",
+    });
+
+    saveImageFromURL(response.data, (data) => {
+      return mediaController.create({
+        userId,
+        src: data.src,
+        type: "image",
+        messageId,
+      });
+    });
+
+    return NextResponse.json(response.data);
   }
 
   async generateTextCompletion({

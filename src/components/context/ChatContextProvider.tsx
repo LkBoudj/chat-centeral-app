@@ -2,8 +2,9 @@
 
 import { useConversationHock } from "@/lib/hocks";
 import useFrontTechnology from "@/lib/hocks/useFrontTechnology";
+import { Media } from "@prisma/client";
 
-import React, { PropsWithChildren, createContext } from "react";
+import React, { PropsWithChildren, createContext, useState } from "react";
 
 type ChatContextResponce = {
   currentConversationId: number | null;
@@ -31,6 +32,9 @@ const ChatContextProvider = ({
   } = useFrontTechnology();
 
   const { handelDeleteConversation } = useConversationHock();
+
+  const [file, setFile] = useState<Media>();
+  const [progress, setProgress] = useState(0);
   const value = {
     ...outValue,
     //--------- converaation ----------
@@ -45,6 +49,11 @@ const ChatContextProvider = ({
     modelsSelectedTech,
     loadTechsSuccess,
     technologies,
+    // media
+    file,
+    setFile,
+    progress,
+    setProgress,
   };
   return <chatContext.Provider value={value}>{children}</chatContext.Provider>;
 };

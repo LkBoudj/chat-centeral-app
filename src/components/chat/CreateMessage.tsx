@@ -34,6 +34,8 @@ const CreateMessage = ({
     isUploadFileOpen,
     onOpenUploadFile,
     onOpenChangeUloadFile,
+    file,
+    setFile,
   } = useContext(chatContext);
 
   const {
@@ -50,16 +52,11 @@ const CreateMessage = ({
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log({
-      ...data,
-      technologyId: Number(selectdTechnologyId),
-      model: selectdModel,
-    });
-
     hanldeSendMessage &&
       hanldeSendMessage(
         JSON.stringify({
           ...data,
+          fileId: file?.id ?? null,
           technologyId: Number(selectdTechnologyId),
           model: selectdModel,
         })

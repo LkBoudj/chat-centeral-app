@@ -6,10 +6,11 @@ import {
   ModalContent,
   Progress,
 } from "@nextui-org/react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { chatContext } from "../context/ChatContextProvider";
 type Props = {
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
@@ -17,8 +18,10 @@ type Props = {
 };
 
 const UploadFile = ({ isOpen, onOpenChange, onOpen }: Props) => {
-  const [progress, setProgress] = useState(0);
+  const { progress, setProgress, setFile } = useContext(chatContext);
+
   const upload_file = async (formData: FormData) => {
+    setFile(null);
     setProgress(0.5);
     axios
       .post("/api/upload", formData, {
@@ -33,8 +36,10 @@ const UploadFile = ({ isOpen, onOpenChange, onOpen }: Props) => {
       })
       .then((res) => {
         onOpen && onOpen();
-        setProgress(0);
-        const { success } = res.data;
+        //setProgress(0);
+        const { success, media } = res.data;
+        setFile(media);
+
         if (success) toast.success("Tthe uploaded successfully");
         else toast.error("We've encountered a problem loading");
       });

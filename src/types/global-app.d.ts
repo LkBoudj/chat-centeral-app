@@ -1,5 +1,5 @@
 type AppMessage = {
-  content: string;
+  content?: string;
   conversationId: string;
   technologyId: number;
   userId: number;

@@ -5,9 +5,12 @@ import { TRPCError } from "@trpc/server";
 import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
 import { ConversationController, MessageController } from "@/lib/controller";
 import TechnologiesContainer from "@/lib/technolgie_container";
+import mediaController from "@/lib/controller/media_controller";
+import technologyController from "@/lib/controller/technology_controller";
 
 export async function POST(req: NextRequest) {
-  const { content, technologyId, conversationId, model } = await req.json();
+  const { content, technologyId, conversationId, model, fileId } =
+    await req.json();
 
   const session = await getAuthSession();
   const auth = session?.user;
@@ -16,10 +19,9 @@ export async function POST(req: NextRequest) {
     content,
     conversationId,
     technologyId,
+    fileId,
     model,
   });
-
-  //console.log(validation);
 
   if (!validation.success) {
     return NextResponse.json(validation.error, { status: 400 });
@@ -38,6 +40,13 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  const isFileExits: any = fileId
+    ? await mediaController.isExits({
+        userId: auth.id,
+        id: fileId as number,
+      })
+    : false;
+
   const userMessage: AppMessage = {
     content,
     conversationId: validation.data.conversationId as string,
@@ -45,11 +54,44 @@ export async function POST(req: NextRequest) {
     userId: auth.id,
   };
 
-  await MessageController.create(userMessage);
+  const newMessage = await MessageController.create(userMessage);
 
-  return TechnologiesContainer.generateTextCompletion({
-    model: model,
-    userMessage,
-    stream: true,
-  });
+  // if (isFileExits) {
+  //   const updatedFile = await mediaController.update({
+  //     id: isFileExits?.id,
+  //     userId: auth.id,
+  //     messageId: newMessage.id,
+  //   });
+
+  //   return TechnologiesContainer.generateTextCompletionVison({
+  //     model: model,
+  //     path: updatedFile?.src,
+  //     userMessage,
+  //     stream: true,
+  //   });
+  // }
+  const isTechExits = await technologyController.isExits({ id: technologyId });
+
+  if (isTechExits) {
+    if (isTechExits.refTech.trim().toLowerCase().startsWith("dall")) {
+      const aiMessage = await MessageController.create({
+        userId: auth.id,
+        fromMachin: true,
+        conversationId: userMessage.conversationId,
+        technologyId,
+      });
+      return TechnologiesContainer.generateImageDallE({
+        model: model,
+        userMessage,
+        userId: auth.id,
+        messageId: aiMessage.id,
+      });
+    }
+
+    return TechnologiesContainer.generateTextCompletion({
+      model: model,
+      userMessage,
+      stream: true,
+    });
+  }
 }

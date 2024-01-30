@@ -11,7 +11,8 @@ import TechnologiesContainer from "@/lib/technolgie_container";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId } = await req.json();
+    const { content, technologyId, conversationId, model, fileId } =
+      await req.json();
 
     const session = await getAuthSession();
     const auth = session?.user;
@@ -45,6 +46,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     await TechnologiesContainer.generateTextCompletion({ userMessage });
     return NextResponse.json({ conversationId: newConversation.id });
   } catch (e: any) {
+    console.log(e);
+
     return NextResponse.json(e, { status: 400 });
   }
 }

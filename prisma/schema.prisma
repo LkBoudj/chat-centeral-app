@@ -70,6 +70,7 @@ model User {
   roles                  Role
   prompts                Prompt[]            @relation("creator")
   UsersLikerPrompts      UsersLikerPrompts[]
+  Media                  Media[]
 }
 
 //DateTime 
@@ -125,8 +126,11 @@ model Message {
 }
 
 model Media {
-  messageId Int      @id @unique @db.UnsignedInt
-  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId Int?     @db.UnsignedInt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @db.UnsignedInt
   src       String   @db.LongText
   type      String
   createdAt DateTime @default(now())

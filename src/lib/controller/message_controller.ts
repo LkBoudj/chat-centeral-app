@@ -52,6 +52,7 @@ class MessageController {
       include: {
         technology: true,
         user: true,
+        media: true,
       },
       orderBy: {
         id: "desc",

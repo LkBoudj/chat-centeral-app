@@ -45,6 +45,10 @@ const ConversationPage = ({ params }: Props) => {
           stream: null,
         };
       }
+      // const json = await res.json();
+      // if (json) {
+      //   console.log(json);
+      // }
 
       return {
         message,
