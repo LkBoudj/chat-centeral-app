@@ -38,8 +38,15 @@ const MessageMedia = ({
           !fromMachin && "justify-end"
         )}
       >
-        {media.map((m) => (
-          <Image key={m.id} className="w-[250px] rounded" src={m.src} />
+        {media.map((m, index) => (
+          <Image
+            key={Date.now()}
+            alt={"ai image"}
+            width={250}
+            height={250}
+            className="w-[250px] rounded"
+            src={m.src}
+          />
         ))}
       </div>
     </div>
@@ -106,44 +113,41 @@ type MessageType = {
   content: any;
   technology?: Technology;
   media?: Media[];
-  ref?: HTMLDivElement;
+  ref?: any;
 };
-const Message = ({
-  id,
-  content,
-  fromMachin,
-  technology,
-  media,
-  ref,
-}: MessageType) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "text-[14px] w-full  flex",
-        fromMachin ? " justify-start" : "justify-end"
-      )}
-    >
-      <div className=" max-w-[1000px]  space-y-2">
-        {fromMachin && (
-          <span className="px-1 capitalize  font-semibold text-slate-800">
-            {technology?.name ?? siteConfig.name}
-          </span>
+const Message = forwardRef<HTMLDivElement, MessageType>(
+  ({ id, content, fromMachin, technology, media }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "text-[14px] w-full  flex",
+          fromMachin ? " justify-start" : "justify-end"
         )}
-        {content ? (
-          <BodyMessage content={content} fromMachin={fromMachin} />
-        ) : (
-          ""
-        )}
-        {media?.length ? (
-          <MessageMedia fromMachin={fromMachin} media={media} />
-        ) : (
-          ""
-        )}
-        {fromMachin && technology && <MessageFotter technology={technology} />}
+      >
+        <div className=" max-w-[1000px]  space-y-2">
+          {fromMachin && (
+            <span className="px-1 capitalize  font-semibold text-slate-800">
+              {technology?.name ?? siteConfig.name}
+            </span>
+          )}
+          {content ? (
+            <BodyMessage content={content} fromMachin={fromMachin} />
+          ) : (
+            ""
+          )}
+          {media?.length ? (
+            <MessageMedia fromMachin={fromMachin} media={media} />
+          ) : (
+            ""
+          )}
+          {fromMachin && technology && (
+            <MessageFotter technology={technology} />
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  }
+);
+Message.displayName = "Message";
 export default Message;

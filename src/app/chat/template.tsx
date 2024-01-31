@@ -19,6 +19,13 @@ const ChatTemplate = ({ children }: PropsWithChildren) => {
         onOpen={onOpenUploadFile}
         onOpenChange={onOpenChangeUloadFile}
       />
+      <div className="fixed z-50 top-0 left-0 bg-red-600 text-white">
+        {process.env.NODE_ENV == "production" ? (
+          <div>You are in production mode</div>
+        ) : (
+          <div>You are in devement mode</div>
+        )}
+      </div>
       {children}
     </ChatContextProvider>
   );

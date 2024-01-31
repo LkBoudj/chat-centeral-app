@@ -20,7 +20,7 @@ const ConversationPage = ({ params }: Props) => {
   const utils = trpc.useUtils();
   const { data, isLoading, isSuccess } =
     trpc.messages.infiniteConversationMessages.useInfiniteQuery(
-      { limit: 10, id: params.id },
+      { limit: limit_infinite_messagess, id: params.id },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
       }
@@ -60,71 +60,137 @@ const ConversationPage = ({ params }: Props) => {
       };
     },
     async onMutate(opts: any) {
-      setAiMessage("");
       const message = JSON.parse(opts);
       if (selectdTechnology) {
+        const id = Date.now();
         await utils.messages.infiniteConversationMessages.cancel();
         utils.messages.infiniteConversationMessages.getInfiniteData();
         utils.messages.infiniteConversationMessages.setInfiniteData(
           { limit: limit_infinite_messagess, id: message.conversationId },
           (data) => {
-            if (!data) {
-              return {
-                pages: [],
-                pageParams: [],
-              };
+            if (data) {
+              data.pages[0].ietms = [
+                ...data.pages[0].ietms,
+                {
+                  ...message,
+                  id: Date.now(),
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              ];
             }
-            data.pages[0].ietms = [
-              ...data.pages[0].ietms,
-
-              {
-                id: 10,
-                technology: selectdTechnology,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                ...message,
-              },
-            ];
             return data;
           }
         );
       }
     },
     async onSuccess(obj) {
+      setAiMessage("");
       const { data: aiResponse, message, type } = obj;
       if (!aiResponse) {
         toast.error("There was a problem sending this message");
       }
 
       if (type == "json") {
+        console.log("______json data: ", aiResponse);
+
         await utils.messages.infiniteConversationMessages.cancel();
         utils.messages.infiniteConversationMessages.getInfiniteData();
 
         utils.messages.infiniteConversationMessages.setInfiniteData(
           { limit: limit_infinite_messagess, id: message.conversationId },
           (data) => {
-            if (!data) {
-              return {
-                pages: [],
-                pageParams: [],
-              };
+            console.log("is_data", data);
+
+            if (data) {
+              setAiMessage(aiResponse?.content);
+              console.log(
+                "befor",
+                data.pages[0].ietms[data.pages[0].ietms.length - 1]
+              );
+
+              data.pages[0].ietms = [...data.pages[0].ietms, aiResponse];
+              console.log(
+                "after",
+                data.pages[0].ietms[data.pages[0].ietms.length - 1]
+              );
             }
-            data.pages[0].ietms = [...data.pages[0].ietms, aiResponse];
+
             return data;
           }
         );
+      } else {
+        const reader: any = aiResponse?.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+        const cMId = crypto.randomUUID();
+        let textResponse = "";
+
+        while (!done) {
+          const { value, done: doneReading } = await reader?.read();
+          const chunkValue = decoder.decode(value);
+          done = doneReading;
+
+          textResponse += chunkValue;
+          setAiMessage(textResponse);
+          await utils.messages.infiniteConversationMessages.cancel();
+
+          utils.messages.infiniteConversationMessages.getInfiniteData();
+
+          utils.messages.infiniteConversationMessages.setInfiniteData(
+            { limit: limit_infinite_messagess, id: message.conversationId },
+            (data) => {
+              if (!data) {
+                return {
+                  pages: [],
+                  pageParams: [],
+                };
+              }
+              let items = data.pages[0].ietms;
+              const isExts = items.find((item) => {
+                return item.id == cMId;
+              });
+
+              if (isExts) {
+                items = items.map((item) => {
+                  if (item.id == cMId)
+                    return {
+                      ...item,
+                      content: textResponse,
+                    };
+                  return item;
+                });
+              } else {
+                items = [
+                  ...items,
+                  {
+                    id: cMId,
+                    fromMachin: true,
+                    content: textResponse,
+                  },
+                ];
+              }
+              data.pages[0].ietms = items;
+              return data;
+            }
+          );
+        }
       }
     },
     onError(_, __, context) {
       console.log("onError", context);
+      setAiMessage("");
+      // utils.messages.infiniteConversationMessages.setData({id:context})
+      // .getFileMessages.setData(
+      //   { fileId },
+      //   { messages: context?.previousMessages ?? [] }
+      // )
     },
-    onSettled(data, error, variables, context) {
-      // console.log(data);
-    },
+    onSettled(data, error, variables, context) {},
   });
 
   const hanldeSendMessage = (data: any) => mutate(data);
-  useEffect(() => {}, [isAiThinkCompleted]);
+
   return (
     <div className=" w-full h-screen  bg-[#EEEEEE]">
       <ChatAside />
@@ -151,60 +217,6 @@ export default ConversationPage;
 
 /*
 
-const reader: any = data?.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      const cMId = crypto.randomUUID;
-      let textResponse = "";
 
-      while (!done) {
-        const { value, done: doneReading } = await reader?.read();
-        const chunkValue = decoder.decode(value);
-        done = doneReading;
-
-        textResponse += chunkValue;
-        setAiMessage(textResponse);
-        await utils.messages.infiniteConversationMessages.cancel();
-
-        utils.messages.infiniteConversationMessages.getInfiniteData();
-
-        utils.messages.infiniteConversationMessages.setInfiniteData(
-          { limit: 10, id: message.conversationId },
-          (data) => {
-            if (!data) {
-              return {
-                pages: [],
-                pageParams: [],
-              };
-            }
-            let items = data.pages[0].ietms;
-            const isExts = items.find((item) => {
-              return item.id == cMId;
-            });
-
-            if (isExts) {
-              items = items.map((item) => {
-                if (item.id == cMId)
-                  return {
-                    ...item,
-                    content: textResponse,
-                  };
-                return item;
-              });
-            } else {
-              items = [
-                ...items,
-                {
-                  id: cMId,
-                  fromMachin: true,
-                  content: textResponse,
-                },
-              ];
-            }
-            data.pages[0].ietms = items;
-            return data;
-          }
-        );
-      }
 
 */

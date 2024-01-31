@@ -56,20 +56,18 @@ export async function POST(req: NextRequest) {
 
   const newMessage = await MessageController.create(userMessage);
 
-  // if (isFileExits) {
-  //   const updatedFile = await mediaController.update({
-  //     id: isFileExits?.id,
-  //     userId: auth.id,
-  //     messageId: newMessage.id,
-  //   });
+  if (isFileExits) {
+    const updatedFile = await mediaController.update({
+      id: isFileExits?.id,
+      userId: auth.id,
+      messageId: newMessage.id,
+    });
 
-  //   return TechnologiesContainer.generateTextCompletionVison({
-  //     model: model,
-  //     path: updatedFile?.src,
-  //     userMessage,
-  //     stream: true,
-  //   });
-  // }
+    return TechnologiesContainer.generateTextCompletionVison({
+      path: updatedFile?.src,
+      userMessage,
+    });
+  }
   const isTechExits = await technologyController.isExits({ id: technologyId });
 
   if (isTechExits) {

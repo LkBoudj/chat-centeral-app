@@ -1,51 +1,21 @@
-import prismaConfig from "@/lib/configs/prismaConfig";
-import { Message } from "@prisma/client";
+import { convertImageToBaseFromUrl } from "@/lib/helper";
 import { NextRequest, NextResponse } from "next/server";
-import { HumanMessage, AIMessage } from "@langchain/core/messages";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { chatOpenAiModel } from "@/lib/langchain/library";
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { Document } from "@langchain/core/documents";
+import fs from "fs";
+import path from "path";
 
 export async function GET(req: NextRequest) {
   try {
-    const messages = await prismaConfig.message.findMany();
+    // const imageFile = path.join(
+    //   process.cwd(),
+    //   "public",
+    //   "media",
+    //   "media_1706673830507.jpg"
+    // );
+    // const openTheFile = fs.readFileSync(imageFile);
+    // const base64Image = openTheFile.toString("base64");
 
-    const hnaldeMessages = messages.map((message: Message) => {
-      return message.fromMachin
-        ? new Document({
-            pageContent: `AiMessage:${message.content}`,
-          })
-        : new Document({
-            pageContent: `HumenMessage:${message.content}`,
-          });
-    });
-
-    const prompt = ChatPromptTemplate.fromTemplate(`
-    
-    Answer the following question based on the context provided if you find it, otherwise search outside and write the source , dont write The text does not provide information :
-  
-
-        <context>
-         my name is hichen
-         {context}
-        </context>
-     
-     Question: {input}
-    
-    `);
-    chatOpenAiModel.modelName = "gpt-4";
-    const documentChain = await createStuffDocumentsChain({
-      llm: chatOpenAiModel,
-      prompt,
-    });
-
-    const result = await documentChain.invoke({
-      input: "create login page with nextjs ",
-      context: hnaldeMessages,
-    });
-
-    return NextResponse.json(result);
+    const json = await convertImageToBaseFromUrl("media_1706673830507.jpg");
+    return NextResponse.json(json);
   } catch (e: any) {
     return NextResponse.json(e);
   }

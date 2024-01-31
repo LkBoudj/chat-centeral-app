@@ -48,22 +48,19 @@ const UploadFile = ({ isOpen, onOpenChange, onOpen }: Props) => {
   const onDrop = useCallback(
     (acceptedFiles: any) => {
       setProgress(0);
-      acceptedFiles.forEach((files: any) => {
-        const formData = new FormData();
+      // acceptedFiles.forEach((files: any) => {
+      const formData = new FormData();
 
-        formData.append("files", files);
+      formData.append("files", acceptedFiles[0]);
 
-        upload_file(formData);
-      });
+      upload_file(formData);
+      //  });
     },
-    [setProgress, progress]
+    [setProgress, upload_file]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={progress > 0 ? () => {} : onOpenChange}
-    >
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         <Card className="h-64">
           <CardBody className="h-full  ">

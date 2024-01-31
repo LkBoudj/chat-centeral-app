@@ -5,7 +5,7 @@ import { MessageController } from "./controller";
 import { NextResponse } from "next/server";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { chatOpenAiModel } from "./langchain/library";
-import { saveImageFromURL } from "./helper";
+import { convertImageToBaseFromUrl, saveImageFromURL } from "./helper";
 import mediaController from "./controller/media_controller";
 import { Message } from "@prisma/client";
 
@@ -69,8 +69,6 @@ class TechnologiesContainer {
     stream?: boolean;
     model?: string;
   }) {
-    console.log(model);
-
     const response: any = await this.openai.chat.completions.create({
       model: "gpt-4-0125-preview",
       stream: stream,
@@ -118,6 +116,50 @@ class TechnologiesContainer {
     ]);
     const chain = prompt.pipe(chatOpenAiModel);
     const streamResponse = await chain.stream({ input: userMessage.content });
+
+    return new StreamingTextResponse(streamResponse);
+  }
+
+  async generateTextCompletionVison({
+    model,
+    userMessage,
+    stream,
+  }: {
+    path: string;
+    userMessage: AppMessage;
+    stream?: boolean;
+    model?: string;
+  }) {
+    const json = await convertImageToBaseFromUrl(
+      "/media/media_1706673830507.jpg"
+    );
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-vision-preview",
+      stream: true,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: userMessage.content as string },
+            {
+              type: "image_url",
+              image_url: {
+                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+              },
+            },
+          ],
+        },
+      ],
+    });
+    const streamResponse = OpenAIStream(response, {
+      async onCompletion(completion) {
+        await MessageController.create({
+          ...userMessage,
+          content: completion,
+          fromMachin: true,
+        });
+      },
+    });
 
     return new StreamingTextResponse(streamResponse);
   }

@@ -21,7 +21,8 @@ const useFrontTechnology = () => {
       setSelectedTechnology(tech);
       const models = tech?.models?.split("#") ?? [];
       setModelSelectedTech(models);
-      setSelectedModel(selectdModel ?? "");
+      setSelectedModel(models[0] ?? null);
+      setSelectedModelId(models[0] ? 0 : null);
     }
   };
 

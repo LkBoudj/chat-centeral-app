@@ -47,3 +47,10 @@ export const saveImageFromURL = async (
 
   return filesData;
 };
+
+export const convertImageToBaseFromUrl = async (nameFile: string) => {
+  const imageFile = path.join(process.cwd(), "public", nameFile);
+  const openTheFile = fs.readFileSync(imageFile);
+  const base64Image = openTheFile.toString("base64");
+  return base64Image;
+};
