@@ -62,7 +62,6 @@ const ConversationPage = ({ params }: Props) => {
     async onMutate(opts: any) {
       const message = JSON.parse(opts);
       if (selectdTechnology) {
-        const id = Date.now();
         await utils.messages.infiniteConversationMessages.cancel();
         utils.messages.infiniteConversationMessages.getInfiniteData();
         utils.messages.infiniteConversationMessages.setInfiniteData(

@@ -11,7 +11,7 @@ export const createNewMessageFrontV = z.object({
 
 export const createNewMessageBackV = z.object({
   conversationId: z.string().nullish(),
-  fileId: z.string().nullish(),
+  fileId: z.number().nullish(),
   technologyId: z.number().min(1, "the content is required"),
   content: z.string().min(1, "the content is required"),
 });
