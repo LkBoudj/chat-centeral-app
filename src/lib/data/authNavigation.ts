@@ -1,5 +1,10 @@
 import { MessageCircleMore, FileText, BrainCircuit } from "lucide-react";
-import { conversations_page, prompts_page } from "../configs/routes_name";
+import {
+  conversations_page,
+  dash_techs_page,
+  dash_users_page,
+  prompts_page,
+} from "../configs/routes_name";
 
 const size = 42.16;
 export const authNavigation: NavItem[] = [
@@ -26,5 +31,18 @@ export const authNavigation: NavItem[] = [
     Icon: FileText,
     backgroundPositionX: size * 3,
     backgroundPositionY: -0.5,
+  },
+];
+
+export const dashNavigation: NavItem[] = [
+  {
+    name: "users",
+    path: dash_users_page,
+    Icon: MessageCircleMore,
+  },
+  {
+    name: "technologies",
+    path: dash_techs_page,
+    Icon: MessageCircleMore,
   },
 ];

@@ -1,6 +1,6 @@
 "use client";
 import { z } from "zod";
-import Form from "../global/Form";
+import Form from "../global/form/Form";
 import { Textarea } from "@nextui-org/react";
 import { Mic, SendHorizontal, Paperclip } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";

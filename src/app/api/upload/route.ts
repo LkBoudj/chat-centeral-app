@@ -13,7 +13,7 @@ const uploadFiles = async (files: File) => {
 
     const { size, type: t } = blob;
     const type = t.split("/")[1];
-    const name = `/media/media_${Date.now()}.${type}`;
+    const name = `/media/images/media_${Date.now()}.${type}`;
     const src = path.join(process.cwd(), "public", name);
 
     fs.writeFileSync(src, buffer);

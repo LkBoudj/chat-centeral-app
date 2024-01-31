@@ -15,7 +15,8 @@ import Message from "./chat/Message";
 import CreateMessage from "./chat/CreateMessage";
 import ChatOptions from "./chat/ChatOptions";
 import ChatOptionsItem from "./chat/ChatOptionsItem";
-
+// dashboard
+import DashboardAside from "./dashboard/DashboardAside";
 export {
   ContainerMaxWind,
   IconButton,
@@ -29,4 +30,6 @@ export {
   ListOfChats,
   Message,
   CreateMessage,
+  //dashboard
+  DashboardAside,
 };

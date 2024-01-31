@@ -31,7 +31,7 @@ export const saveImageFromURL = async (
         responseType: "stream",
       });
       if (res.status) {
-        const fileName = "/media/media_" + Date.now() + ".jpg";
+        const fileName = "/media/images/media_" + Date.now() + ".jpg";
         const outputPath = path.join(process.cwd(), "public", fileName);
         res.data.pipe(fs.createWriteStream(outputPath));
 
@@ -53,4 +53,10 @@ export const convertImageToBaseFromUrl = async (nameFile: string) => {
   const openTheFile = fs.readFileSync(imageFile);
   const base64Image = openTheFile.toString("base64");
   return base64Image;
+};
+
+export const createAudioFile = async (nameFile: string, buffer: Buffer) => {
+  const filePath = path.join(process.cwd(), "public", nameFile);
+  const vioce = fs.writeFileSync(filePath, buffer);
+  return nameFile;
 };

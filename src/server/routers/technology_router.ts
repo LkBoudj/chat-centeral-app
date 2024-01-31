@@ -6,6 +6,9 @@ const technologyAppRouter = router({
   showAll: privateProcuder.query(async () => {
     return await TechnologyController.showAll();
   }),
+  create: privateProcuder.query(async () => {
+    return await TechnologyController.showAll();
+  }),
 });
 
 export default technologyAppRouter;

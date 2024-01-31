@@ -5,9 +5,15 @@ import { MessageController } from "./controller";
 import { NextResponse } from "next/server";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { chatOpenAiModel } from "./langchain/library";
-import { convertImageToBaseFromUrl, saveImageFromURL } from "./helper";
+import {
+  convertImageToBaseFromUrl,
+  createAudioFile,
+  saveImageFromURL,
+} from "./helper";
 import mediaController from "./controller/media_controller";
 import { Message } from "@prisma/client";
+import path from "path";
+import fs from "fs";
 
 class TechnologiesContainer {
   private openai: OpenAI;
@@ -45,6 +51,7 @@ class TechnologiesContainer {
       createdAt: new Date(),
       updadedAt: new Date(),
     }));
+
     saveImageFromURL(media, (data) => {
       return mediaController.create({
         userId,
@@ -124,17 +131,18 @@ class TechnologiesContainer {
     model,
     userMessage,
     stream,
+    path,
   }: {
     path: string;
     userMessage: AppMessage;
     stream?: boolean;
     model?: string;
   }) {
-    const json = await convertImageToBaseFromUrl(
-      "/media/media_1706673830507.jpg"
-    );
+    const base64_image = await convertImageToBaseFromUrl(path);
+
     const response = await this.openai.chat.completions.create({
       model: "gpt-4-vision-preview",
+      max_tokens: 1200,
       stream: true,
       messages: [
         {
@@ -144,7 +152,8 @@ class TechnologiesContainer {
             {
               type: "image_url",
               image_url: {
-                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                url: `data:image/jpeg;base64,${base64_image}`,
+                detail: "high",
               },
             },
           ],
@@ -162,6 +171,37 @@ class TechnologiesContainer {
     });
 
     return new StreamingTextResponse(streamResponse);
+  }
+
+  async genrateVioce({
+    model,
+    content,
+    userId,
+    message,
+  }: {
+    content: string;
+    stream?: boolean;
+    model?: string;
+    userId: number;
+    message: Message;
+  }) {
+    const mp3 = await this.openai.audio.speech.create({
+      model: model ?? "tts-1",
+      voice: "alloy",
+      input: content,
+    });
+
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+
+    const name = `media/audio/speech_${Date.now()}.mp3`;
+    const pathFile = await createAudioFile(name, buffer);
+
+    await mediaController.create({
+      userId,
+      src: pathFile,
+      type: "audio",
+      messageId: message.id,
+    });
   }
 }
 const technologiesContainer = new TechnologiesContainer();

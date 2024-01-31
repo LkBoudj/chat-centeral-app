@@ -70,7 +70,6 @@ const ListOfMessages = ({ messages }: { messages?: any[] }) => {
       ref={scrollListMessages}
       className="w-full  lg:pr-[370px]  h-screen chat-area scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
     >
-      <Image alt="test" src="/media/media_1706676134883.jpg" />
       <ContainerMaxWind className="w-full max-w-7xl mx-auto flex flex-col pt-4 space-y-4 px-5 pb-96">
         {messages?.length ? mapForMessages : <InitailtMessage />}
       </ContainerMaxWind>
