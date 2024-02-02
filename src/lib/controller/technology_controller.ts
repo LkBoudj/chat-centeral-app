@@ -10,12 +10,14 @@ class TechnologyController {
     });
   }
   async create({
+    refTech,
     name,
     logo,
     models,
     status = true,
   }: {
     name: string;
+    refTech?: string;
     logo?: string;
     models?: string;
     status?: boolean;
@@ -23,7 +25,7 @@ class TechnologyController {
     return await prismaConfig.technology.create({
       data: {
         name,
-        refTech: name.trim().toLowerCase().split(" ").join(""),
+        refTech: (refTech ?? name).trim().toLowerCase().split(" ").join(""),
         logo,
         models,
         status,

@@ -22,6 +22,44 @@ const MessageFotter = ({ technology }: { technology: Technology }) => (
     )}
   </div>
 );
+
+const MediaType = ({ media }: { media: Media }) => {
+  const type = media.type.trim().toLowerCase();
+
+  if (type.startsWith("image")) {
+    return (
+      <Image
+        key={Date.now()}
+        alt={"ai image"}
+        width={250}
+        height={250}
+        className="w-[250px] rounded"
+        src={media.src}
+      />
+    );
+  }
+  if (type.startsWith("audio")) {
+    return (
+      <div>
+        <audio controls>
+          <source src={media.src} type="audio/mp3" />
+          Your browser does not support the video tag.
+        </audio>
+      </div>
+    );
+  }
+
+  if (type.startsWith("vide")) {
+    return (
+      <video width="320" height="240" controls>
+        <source src="movie.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    );
+  }
+
+  return null;
+};
 const MessageMedia = ({
   media,
   fromMachin,
@@ -39,14 +77,7 @@ const MessageMedia = ({
         )}
       >
         {media.map((m, index) => (
-          <Image
-            key={Date.now()}
-            alt={"ai image"}
-            width={250}
-            height={250}
-            className="w-[250px] rounded"
-            src={m.src}
-          />
+          <MediaType key={index} media={m} />
         ))}
       </div>
     </div>
@@ -136,6 +167,7 @@ const Message = forwardRef<HTMLDivElement, MessageType>(
           ) : (
             ""
           )}
+
           {media?.length ? (
             <MessageMedia fromMachin={fromMachin} media={media} />
           ) : (

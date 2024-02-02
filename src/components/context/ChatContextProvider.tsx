@@ -4,7 +4,7 @@ import { useConversationHock } from "@/lib/hocks";
 import useFrontTechnology from "@/lib/hocks/useFrontTechnology";
 import { Media } from "@prisma/client";
 
-import React, { PropsWithChildren, createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 type ChatContextResponce = {
   currentConversationId: number | null;
@@ -21,11 +21,9 @@ const ChatContextProvider = ({
 }) => {
   const {
     hanldeSlectModel,
-    selectdModelId,
     selectdTechnology,
     handelSelecteTechnology,
     selectdModel,
-    selectdTechnologyId,
     modelsSelectedTech,
     loadTechsSuccess,
     technologies,
@@ -41,11 +39,9 @@ const ChatContextProvider = ({
     handelDeleteConversation,
     //--------- technology ----------
     hanldeSlectModel,
-    selectdModelId,
     selectdTechnology,
     handelSelecteTechnology,
     selectdModel,
-    selectdTechnologyId,
     modelsSelectedTech,
     loadTechsSuccess,
     technologies,

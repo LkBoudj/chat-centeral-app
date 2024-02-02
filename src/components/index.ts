@@ -15,14 +15,18 @@ import Message from "./chat/Message";
 import CreateMessage from "./chat/CreateMessage";
 import ChatOptions from "./chat/ChatOptions";
 import ChatOptionsItem from "./chat/ChatOptionsItem";
+import TehcnologoySelect from "./chat/TehcnologoySelect";
 // dashboard
 import DashboardAside from "./dashboard/DashboardAside";
+import CustomTooltip from "./global/CustomTooltip";
+import SelecteModel from "./chat/SelecteModel";
 export {
   ContainerMaxWind,
   IconButton,
   Details,
   AuthForm,
   LkNavbar,
+  //chat
   ChatAside,
   ChatItemAction,
   ChatOptions,
@@ -30,6 +34,10 @@ export {
   ListOfChats,
   Message,
   CreateMessage,
+  TehcnologoySelect,
+  SelecteModel,
   //dashboard
   DashboardAside,
+  //GLOBA
+  CustomTooltip,
 };

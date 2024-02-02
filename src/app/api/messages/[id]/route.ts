@@ -4,62 +4,97 @@ import { createNewMessageBackV } from "@/lib/validation";
 import { TRPCError } from "@trpc/server";
 import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
 import { ConversationController, MessageController } from "@/lib/controller";
-import TechnologiesContainer from "@/lib/technolgie_container";
+
 import mediaController from "@/lib/controller/media_controller";
 import technologyController from "@/lib/controller/technology_controller";
 
+import technologiesContainer from "@/lib/technolgie_container";
+import prismaConfig from "@/lib/configs/prismaConfig";
+
 export async function POST(req: NextRequest) {
-  const { content, technologyId, conversationId, model, fileId } =
-    await req.json();
+  try {
+    const { content, technologyId, conversationId, model, fileId } =
+      await req.json();
 
-  const session = await getAuthSession();
-  const auth = session?.user;
+    const session = await getAuthSession();
+    const userId = session?.user.id;
 
-  const validation: any = await createNewMessageBackV.safeParseAsync({
-    content,
-    conversationId,
-    technologyId,
-    fileId,
-    model,
-  });
-
-  if (!validation.success) {
-    return NextResponse.json(validation.error, { status: 400 });
-  }
-
-  const isExits = await ConversationController.isExits({
-    userId: auth.id,
-    id: conversationId,
-  });
-
-  if (!isExits) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: CONVARSATION_NOT_FOUND,
-      cause: "theError",
+    const validation: any = await createNewMessageBackV.safeParseAsync({
+      content,
+      conversationId,
+      technologyId,
+      fileId,
+      model,
     });
+
+    if (!validation.success) {
+      return NextResponse.json(validation.error, { status: 400 });
+    }
+
+    const isExits = await ConversationController.isExits({
+      userId,
+      id: conversationId,
+    });
+
+    if (!isExits) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: CONVARSATION_NOT_FOUND,
+        cause: "theError",
+      });
+    }
+
+    const isFileExits: any = fileId
+      ? await mediaController.isExits({
+          userId,
+          id: fileId as number,
+        })
+      : null;
+
+    const userMessage: AppMessage = {
+      content,
+      conversationId: validation.data.conversationId as string,
+      technologyId: 1,
+      userId,
+    };
+
+    const newMessage = await MessageController.create(userMessage);
+
+    const isTechExits = await technologyController.isExits({
+      id: technologyId,
+    });
+
+    if (isTechExits) {
+      const oldMessages = await prismaConfig.message.findMany({
+        where: {
+          conversationId,
+          userId,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+      return technologiesContainer.handelAiTechNologies({
+        userMessage,
+        model,
+        path: isFileExits?.src,
+        oldMessages,
+        refTech: isTechExits.refTech,
+      });
+    }
+  } catch (e: any) {
+    const errros =
+      process.env.NODE_ENV == "development" ? e : "your message not send";
+    return NextResponse.json(errros, { status: 400 });
   }
+}
 
-  const isFileExits: any = fileId
-    ? await mediaController.isExits({
-        userId: auth.id,
-        id: fileId as number,
-      })
-    : false;
-
-  const userMessage: AppMessage = {
-    content,
-    conversationId: validation.data.conversationId as string,
-    technologyId: 1,
-    userId: auth.id,
-  };
-
-  const newMessage = await MessageController.create(userMessage);
-
-  if (isFileExits) {
+/**
+  
+ if (isFileExits) {
     const updatedFile = await mediaController.update({
       id: isFileExits?.id,
-      userId: auth.id,
+      userId,
       messageId: newMessage.id,
     });
 
@@ -68,12 +103,9 @@ export async function POST(req: NextRequest) {
       userMessage,
     });
   }
-  const isTechExits = await technologyController.isExits({ id: technologyId });
-
-  if (isTechExits) {
-    if (isTechExits.refTech.trim().toLowerCase().startsWith("dall")) {
+  if (isTechExits.refTech.trim().toLowerCase().startsWith("dall")) {
       const aiMessage = await MessageController.create({
-        userId: auth.id,
+        userId,
         fromMachin: true,
         conversationId: userMessage.conversationId,
         technologyId,
@@ -81,15 +113,22 @@ export async function POST(req: NextRequest) {
       return TechnologiesContainer.generateImageDallE({
         model: model,
         message: aiMessage,
-        userId: auth.id,
+        userId,
         content: content,
       });
     }
-
+    
+    const formattedPrevMessages = oldMessages.map((msg) => ({
+      role: !msg.fromMachin ? ("user" as const) : ("assistant" as const),
+      content: msg.content,
+    }));
     return TechnologiesContainer.generateTextCompletion({
+      oldMessages: formattedPrevMessages,
       model: model,
       userMessage,
       stream: true,
     });
-  }
-}
+
+
+
+ */

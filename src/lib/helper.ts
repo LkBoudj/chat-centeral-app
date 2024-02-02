@@ -2,8 +2,7 @@ import bcrypt from "bcrypt";
 import path from "path";
 import fs from "fs";
 import axios from "axios";
-import mediaController from "./controller/media_controller";
-import { Media } from "@prisma/client";
+
 export const hashPassword = async (pass: string) => {
   return await bcrypt.hash(pass, 10);
 };
@@ -48,6 +47,7 @@ export const saveImageFromURL = async (
   return filesData;
 };
 
+export const saveAudio = async () => {};
 export const convertImageToBaseFromUrl = async (nameFile: string) => {
   const imageFile = path.join(process.cwd(), "public", nameFile);
   const openTheFile = fs.readFileSync(imageFile);
@@ -59,4 +59,41 @@ export const createAudioFile = async (nameFile: string, buffer: Buffer) => {
   const filePath = path.join(process.cwd(), "public", nameFile);
   const vioce = fs.writeFileSync(filePath, buffer);
   return nameFile;
+};
+
+export const uploadFiles = async (
+  files: File,
+  folder = "/media/images",
+  fileName = "media"
+) => {
+  const blob = files as Blob;
+  const bytes = await blob.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+
+  const { size, type: t } = blob;
+  const type = t.split("/")[1];
+  const name = `${folder}/${fileName}_${Date.now()}.${type}`;
+  const src = path.join(process.cwd(), "public", name);
+
+  fs.writeFileSync(src, buffer);
+
+  return {
+    src: "/" + name,
+    type,
+  };
+};
+
+export const isFileExists = (floder: string, nameFile: string) => {
+  const filePath = path.join(process.cwd(), "public", floder, nameFile);
+  return fs.existsSync(filePath);
+};
+
+export const removeFile = (floder: string, nameFile: string) => {
+  const filePath = path.join(process.cwd(), "public", floder, nameFile);
+  return fs.unlinkSync(filePath);
+};
+export const removeFileIfEexits = (floder: string, nameFile: string) => {
+  if (isFileExists(floder, nameFile)) {
+    removeFile(floder, nameFile);
+  }
 };

@@ -1,84 +1,139 @@
+"use client";
 import {
   FormInput,
+  FormModel,
   FormSwitchInput,
-  FormTextarea,
 } from "@/components/global/form";
-import Form from "@/components/global/form/Form";
-import { schemCreateTechFront } from "@/lib/validation/technology_validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Textarea } from "@nextui-org/react";
 import {
-  FieldValues,
-  RegisterOptions,
-  SubmitHandler,
-  UseFormRegisterReturn,
-  useForm,
-} from "react-hook-form";
-import { z } from "zod";
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from "@nextui-org/react";
 
-type Props = {};
+import { IconButton } from "@/components";
+import { Minus, PlusIcon } from "lucide-react";
+
+import { useContext, useEffect } from "react";
+import { techContext } from "@/components/context/TechnologyContextProvider";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { schemCreateTechFront } from "@/lib/validation/technology_validation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Inputs = z.infer<typeof schemCreateTechFront>;
+const CreateTechnology = () => {
+  const { onOpenChange, isOpen, setCustomErros, customErrors, createItem } =
+    useContext(techContext);
 
-const CreateTechnology = (props: Props) => {
   const {
     control,
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schemCreateTechFront),
-    defaultValues: { status: true },
+    defaultValues: {
+      status: true,
+    },
   });
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control, // control props comes from useForm (optional: if you are using FormContext)
+      name: "models", // unique name for your Field Array
+    }
+  );
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const formData = new FormData();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+    formData.set("logo", data.logo[0]);
+    formData.set("name", data.name);
+    formData.set("models", data.models);
+    formData.set("refTech", data.refTech);
+    formData.set("status", data.status as any);
+
+    const result = await createItem(formData);
+    result && reset();
   };
+  useEffect(() => {
+    if (Object.keys(errors).length) {
+      setCustomErros(errors);
+    }
+  }, [errors]);
   return (
-    <div className="w-full h-full p-2 space-y-8 flex flex-col justify-center items-center">
-      <h1 className="font-bold text-xl ">Create Technology</h1>
-      <Form
-        handleSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-lg mx-auto space-y-4"
-      >
-        <FormInput
-          classNames={{
-            label: "top-[8px]",
-          }}
-          id="logo"
-          label="logo"
-          type="file"
-          register={register}
-          errors={errors}
-        />
-        FromInput
-        <FormInput id="name" label="Name" register={register} errors={errors} />
-        <FormInput
-          id="refTech"
-          label="Ref"
-          register={register}
-          errors={errors}
-        />
-        <div>
-          <FormSwitchInput control={control} label="Status" name="status" />
-        </div>
-        <FormTextarea
-          id="models"
-          register={register}
-          errors={errors}
-          label="Models"
-        />
-        <FormTextarea
-          id="description"
-          register={register}
-          errors={errors}
-          label="Description"
-        />
-        <Button className="w-full" color="primary" type="submit">
-          create
-        </Button>
-      </Form>
-    </div>
+    <FormModel
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={"Create New Technology"}
+      typeForm={"create"}
+      handleSubmit={handleSubmit(onSubmit)}
+    >
+      <FormInput.FormInputImageFile
+        id="logo"
+        label="logo"
+        customErrors={customErrors}
+        register={register}
+      />
+
+      <FormInput.FromInputController
+        control={control}
+        customErrors={customErrors}
+        id="name"
+        label="Name"
+      />
+      <FormInput.FromInputController
+        control={control}
+        id="refTech"
+        label="Ref"
+      />
+
+      <div>
+        <FormSwitchInput control={control} label="Status" name="status" />
+      </div>
+      <Card>
+        <CardHeader>
+          <span className="text-sm text-slate-500">Models</span>
+        </CardHeader>
+        <CardBody className="space-y-4">
+          {fields.map((field, index) => (
+            <div className="flex items-center gap-2" key={index}>
+              <FormInput.FromInputController
+                control={control}
+                id={`models[${index}]`}
+                placeholder="Name"
+              />
+
+              <IconButton
+                className="text-red-700 bg-red-100 hover:bg-red-500"
+                Icon={Minus}
+                onClick={() => {
+                  remove(index);
+                }}
+                size={20}
+              />
+            </div>
+          ))}
+        </CardBody>
+        <CardFooter>
+          <Button
+            //@ts-ignore
+            onClick={() => append("")}
+            size="sm"
+            variant="light"
+            color="primary"
+          >
+            <PlusIcon size={20} />
+            <span>Add More</span>
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <Button className="w-full" color="primary" type="submit">
+        create
+      </Button>
+    </FormModel>
   );
 };
 

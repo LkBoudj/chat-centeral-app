@@ -17,3 +17,8 @@ export const cn = (...input: ClassValue[]) => {
 export const isCanSubmit = (shema: any, data: any) => {
   return shema.safeParse({ ...data }).success;
 };
+
+export const isArabicChar = (char: string) => {
+  const arabicPattern = /[\u0600-\u06FF]/;
+  return arabicPattern.test(char);
+};

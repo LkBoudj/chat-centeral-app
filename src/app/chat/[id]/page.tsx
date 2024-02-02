@@ -84,37 +84,21 @@ const ConversationPage = ({ params }: Props) => {
       }
     },
     async onSuccess(obj) {
-      setAiMessage("");
       const { data: aiResponse, message, type } = obj;
       if (!aiResponse) {
         toast.error("There was a problem sending this message");
       }
 
       if (type == "json") {
-        console.log("______json data: ", aiResponse);
-
         await utils.messages.infiniteConversationMessages.cancel();
         utils.messages.infiniteConversationMessages.getInfiniteData();
 
         utils.messages.infiniteConversationMessages.setInfiniteData(
           { limit: limit_infinite_messagess, id: message.conversationId },
           (data) => {
-            console.log("is_data", data);
-
             if (data) {
-              setAiMessage(aiResponse?.content);
-              console.log(
-                "befor",
-                data.pages[0].ietms[data.pages[0].ietms.length - 1]
-              );
-
               data.pages[0].ietms = [...data.pages[0].ietms, aiResponse];
-              console.log(
-                "after",
-                data.pages[0].ietms[data.pages[0].ietms.length - 1]
-              );
             }
-
             return data;
           }
         );
@@ -178,7 +162,7 @@ const ConversationPage = ({ params }: Props) => {
     },
     onError(_, __, context) {
       console.log("onError", context);
-      setAiMessage("");
+
       // utils.messages.infiniteConversationMessages.setData({id:context})
       // .getFileMessages.setData(
       //   { fileId },

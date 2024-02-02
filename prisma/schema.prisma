@@ -98,7 +98,7 @@ model Conversation {
 
 model Technology {
   id          Int       @id @default(autoincrement()) @db.UnsignedInt
-  refTech     String
+  refTech     String    @unique
   name        String    @unique
   description Json?
   logo        String?

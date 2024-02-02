@@ -13,7 +13,26 @@ export async function GET(req: NextRequest) {
     });
     await technologyController.create({
       name: "Gpt 3",
-      logo: "/technologies/gpt4.jpg",
+      logo: "/technologies/gpt3.jpg",
+    });
+
+    await technologyController.create({
+      name: "Dall-e",
+      logo: "/technologies/dall.jpg",
+      models: "dall-e-1#dall-e-3",
+    });
+    await technologyController.create({
+      name: "Text To Speach",
+      refTech: "tts",
+      logo: "/technologies/tts.jpg",
+      models: "tts-1#tts-1-hd",
+    });
+
+    await technologyController.create({
+      name: "Speacg To Text",
+      refTech: "stt",
+      logo: "/technologies/tts.jpg",
+      models: "whisper-1",
     });
 
     return NextResponse.json("ok");

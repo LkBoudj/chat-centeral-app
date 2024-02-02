@@ -4,26 +4,8 @@ import path from "path";
 import prismaConfig from "@/lib/configs/prismaConfig";
 import { getAuthSession } from "@/lib/configs/nextAuthOption";
 import mediaController from "@/lib/controller/media_controller";
+import { uploadFiles } from "@/lib/helper";
 
-const uploadFiles = async (files: File) => {
-  if (files) {
-    const blob = files as unknown as Blob;
-    const bytes = await blob.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const { size, type: t } = blob;
-    const type = t.split("/")[1];
-    const name = `/media/images/media_${Date.now()}.${type}`;
-    const src = path.join(process.cwd(), "public", name);
-
-    fs.writeFileSync(src, buffer);
-
-    return {
-      src: name,
-      type,
-    };
-  }
-};
 export async function POST(req: Request) {
   try {
     const filesData = await req.formData();

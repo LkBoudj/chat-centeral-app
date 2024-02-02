@@ -4,55 +4,40 @@ import { useEffect, useState } from "react";
 const useFrontTechnology = () => {
   const { data: technologies, isSuccess: loadTechsSuccess } =
     trpc.technology.showAll.useQuery();
-
   const [selectdTechnology, setSelectedTechnology] = useState<any>(null);
-  const [selectdTechnologyId, setSelectedTechnologyId] = useState<any>(null);
   const [modelsSelectedTech, setModelSelectedTech] = useState<any[]>([]);
   const [selectdModel, setSelectedModel] = useState<any>("");
-  const [selectdModelId, setSelectedModelId] = useState<any>(0);
 
   const handelSelecteTechnology = (key: any) => {
-    setSelectedTechnologyId(key.target.value);
-    const id = Number(key.target.value);
-    //@ts-ignore
-    const tech = technologies.find((tech) => tech.id == id);
+    setSelectedTechnology(key);
 
-    if (tech) {
-      setSelectedTechnology(tech);
-      const models = tech?.models?.split("#") ?? [];
-      setModelSelectedTech(models);
-      setSelectedModel(models[0] ?? null);
-      setSelectedModelId(models[0] ? 0 : null);
-    }
+    const mySlectedModel =
+      (key?.models?.trim() != "" ? key?.models?.trim().split("#") : []) ?? [];
+    setModelSelectedTech(mySlectedModel ?? []);
+    setSelectedModel(mySlectedModel[0] ?? "");
   };
 
   const hanldeSlectModel = (key: any) => {
-    setSelectedModelId(key.target.value);
-    const index = Number(key.target.value);
-    setSelectedModel(modelsSelectedTech[index] ?? "");
+    setSelectedModel(key);
   };
   useEffect(() => {
     if (technologies?.length) {
-      const tech = technologies[0];
-      setSelectedTechnology(tech);
-
-      setSelectedTechnologyId(String(tech.id));
-      if (technologies[0].models != "") {
-        const models = technologies[0].models?.split("#") ?? [];
-        setModelSelectedTech(models);
-        setSelectedModel(models[0]);
-        setSelectedModelId("0");
-      }
+      setSelectedTechnology(technologies[0]);
+      const modelsSelecetd =
+        (technologies[0]?.models?.trim() != ""
+          ? technologies[0]?.models?.trim().split("#")
+          : []) ?? [];
+      setModelSelectedTech(modelsSelecetd ?? []);
+      setSelectedModel(modelsSelecetd[0] ?? "");
     }
   }, [loadTechsSuccess, technologies]);
 
   return {
     hanldeSlectModel,
-    selectdModelId,
+
     selectdTechnology,
     handelSelecteTechnology,
     selectdModel,
-    selectdTechnologyId,
     modelsSelectedTech,
     loadTechsSuccess,
     technologies,

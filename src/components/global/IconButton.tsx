@@ -11,9 +11,11 @@ type Props = {
   isLoading?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
   onPress?: (key?: any) => void;
+  endContent?: React.ReactNode;
 };
 
 const IconButton = ({
+  endContent,
   Icon,
   size = 20,
   onClick,
@@ -29,6 +31,7 @@ const IconButton = ({
       isLoading={isLoading}
       isDisabled={isDisabled}
       onClick={onClick}
+      endContent={endContent}
       size="sm"
       isIconOnly
       variant="light"
