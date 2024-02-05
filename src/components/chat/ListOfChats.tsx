@@ -18,6 +18,8 @@ import { cn } from "@/lib/utlis";
 import { Conversation } from "@prisma/client";
 import { useParams } from "next/navigation";
 
+import { conversations_page } from "@/lib/configs/routes_name";
+
 type Props = {
   items: Conversation[];
   isHaveNext?: boolean;
@@ -36,12 +38,20 @@ const ConversationItemOption = ({
   const isActive: boolean = item.id == id;
   return (
     <div className="flex items-center justify-between pr-14">
-      <p className="text-sm font-semibold truncate   ">{item.title}</p>
+      <Link
+        className={cn(
+          ` h-full  w-full `,
+          isActive ? "text-blue-500" : "text-slate-800"
+        )}
+        href={`${conversations_page}/${item.id}`}
+      >
+        <p className="text-sm font-semibold truncate py-3  ">{item.title}</p>
+      </Link>
       <div className="absolute   w-24 justify-end h-full flex items-center right-0">
         {isActive ? (
           <ChatItemAction id={item.id} />
         ) : (
-          <span className="text-[11px] py-3 px-2">
+          <span className="text-[11px]  px-2">
             {moment(item.updatedAt).startOf("hour").fromNow()}
           </span>
         )}
@@ -88,9 +98,8 @@ const ListOfChats = ({
             {items?.map((item, i) => {
               return (
                 <ListboxItem
-                  href={`/chat/${item.id}`}
                   className={cn(
-                    "aside-item-chat rounded-none py-4",
+                    "aside-item-chat rounded-none ",
                     item.id == id && "border-l-3 border-blue-600 border-b-0"
                   )}
                   key={item.id.toString()}

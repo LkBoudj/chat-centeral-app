@@ -18,6 +18,9 @@ class ConversationController extends Controllers {
       take: limit + 1,
       skip,
       cursor: cursor ? { id: cursor } : undefined,
+      where: {
+        userId,
+      },
       orderBy: {
         id: "desc",
       },
@@ -44,13 +47,19 @@ class ConversationController extends Controllers {
   }
 
   async delete({ userId, id }: { userId: number; id: string }) {
-    const deleted = await prismaConfig.conversation.delete({
-      where: {
-        id,
-        userId,
-      },
-    });
-    console.log(deleted);
+    try {
+      const isExits = await this.isExits({ userId, id });
+      if (isExits) {
+        await prismaConfig.conversation.delete({
+          where: {
+            id,
+            userId,
+          },
+        });
+      }
+    } catch (e: any) {
+      console.log("have problem in delete", e);
+    }
   }
 }
 

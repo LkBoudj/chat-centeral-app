@@ -1,7 +1,7 @@
 "use client";
 
 import { useConversationHock } from "@/lib/hocks";
-import useFrontTechnology from "@/lib/hocks/useFrontTechnology";
+import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
 import { Media } from "@prisma/client";
 
 import React, { createContext, useState } from "react";
@@ -29,7 +29,16 @@ const ChatContextProvider = ({
     technologies,
   } = useFrontTechnology();
 
-  const { handelDeleteConversation } = useConversationHock();
+  const {
+    handelNextPageC,
+    handlePreviousPageC,
+    pageC,
+    isSuccessC,
+    isHaveNextC,
+    chats,
+    handelDeleteConversation,
+    setChats,
+  } = useConversationHock();
 
   const [file, setFile] = useState<Media>();
   const [progress, setProgress] = useState(0);
@@ -37,6 +46,13 @@ const ChatContextProvider = ({
     ...outValue,
     //--------- converaation ----------
     handelDeleteConversation,
+    handelNextPageC,
+    handlePreviousPageC,
+    pageC,
+    isSuccessC,
+    isHaveNextC,
+    chats,
+    setChats,
     //--------- technology ----------
     hanldeSlectModel,
     selectdTechnology,

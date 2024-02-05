@@ -11,12 +11,12 @@ type Props = {
 const ChatItemAction = ({ id }: Props) => {
   const { handelDeleteConversation } = useContext(chatContext);
   return (
-    <div className="flex items-center ">
-      <IconButton
+    <div className="flex items-center h-full">
+      {/* <IconButton
         className="p-0 hover:text-blue-500 "
         Icon={Pencil}
         size={15}
-      />
+      /> */}
       <IconButton
         className="p-0 hover:text-red-600 "
         Icon={Trash2}

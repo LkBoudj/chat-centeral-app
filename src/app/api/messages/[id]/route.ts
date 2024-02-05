@@ -10,8 +10,9 @@ import technologyController from "@/lib/controller/technology_controller";
 
 import technologiesContainer from "@/lib/technolgie_container";
 import prismaConfig from "@/lib/configs/prismaConfig";
+import { headers } from "next/headers";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const { content, technologyId, conversationId, model, fileId } =
       await req.json();
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
           createdAt: "asc",
         },
       });
+
       return technologiesContainer.handelAiTechNologies({
         userMessage,
         model,

@@ -12,6 +12,7 @@ import {
 } from "./helper";
 import mediaController from "./controller/media_controller";
 import { Message } from "@prisma/client";
+import { headers } from "next/headers";
 
 interface AiInput {
   refTech?: string;
@@ -20,7 +21,24 @@ interface AiInput {
   stream?: boolean;
   model?: string;
   path?: string;
+  headers?: any;
 }
+
+interface BaseAiInput {
+  userMessage: AppMessage;
+  model?: string;
+  headers?: any;
+}
+
+interface DallInput extends BaseAiInput {}
+interface GPT4Input extends BaseAiInput {
+  oldMessages?: any[];
+}
+interface VisionInput extends BaseAiInput {
+  oldMessages?: any[];
+  path: string;
+}
+interface voiceInput extends BaseAiInput {}
 class TechnologiesContainer {
   private openai: OpenAI;
 
@@ -35,16 +53,11 @@ class TechnologiesContainer {
     oldMessages,
     model,
     userMessage,
-    stream,
-  }: {
-    oldMessages?: any[];
-    userMessage: AppMessage;
-    stream?: boolean;
-    model?: string;
-  }) {
+    headers,
+  }: GPT4Input) {
     const response: any = await this.openai.chat.completions.create({
       model: model ?? "gpt-4-0125-preview",
-      stream: stream,
+      stream: true,
       messages: [
         {
           role: "system",
@@ -67,38 +80,21 @@ class TechnologiesContainer {
       ],
     });
 
-    if (stream == true) {
-      //@ts-ignore
-      const streamResponse = OpenAIStream(response, {
-        async onCompletion(completion) {
-          await MessageController.create({
-            ...userMessage,
-            content: completion,
-            fromMachin: true,
-          });
-        },
-      });
-
-      return new StreamingTextResponse(streamResponse);
-    }
-
-    const aiResponse = response.choices[0].message.content;
-
-    const machinMessage = await MessageController.create({
-      ...userMessage,
-      content: aiResponse,
-      fromMachin: true,
+    const streamResponse = OpenAIStream(response, {
+      async onCompletion(completion) {
+        await MessageController.create({
+          ...userMessage,
+          content: completion,
+          fromMachin: true,
+        });
+      },
     });
 
-    return NextResponse.json(machinMessage);
+    return new StreamingTextResponse(streamResponse, {
+      headers,
+    });
   }
-  async generateImageDallE({
-    model,
-    userMessage,
-  }: {
-    userMessage: AppMessage;
-    model?: string;
-  }) {
+  async generateImageDallE({ model, userMessage, headers }: DallInput) {
     const response = await this.openai.images.generate({
       prompt: userMessage.content ?? "",
       model: model ?? "dall-e-3",
@@ -132,20 +128,15 @@ class TechnologiesContainer {
       ...message,
       media,
     };
-    return NextResponse.json(aiMessage, { status: 200 });
+    return NextResponse.json(aiMessage, { status: 200, headers });
   }
 
   async generateTextCompletionVison({
     model,
     userMessage,
-    stream,
     path,
-  }: {
-    path: string;
-    userMessage: AppMessage;
-    stream?: boolean;
-    model?: string;
-  }) {
+    headers,
+  }: VisionInput) {
     const base64_image = await convertImageToBaseFromUrl(path);
 
     const response = await this.openai.chat.completions.create({
@@ -178,48 +169,12 @@ class TechnologiesContainer {
       },
     });
 
-    return new StreamingTextResponse(streamResponse);
-  }
-
-  async analyzeUserInput({ content }: { content: string }) {
-    const response: any = await this.openai.chat.completions.create({
-      model: "gpt-4-0125-preview",
-      messages: [
-        {
-          role: "system",
-          content: "You are a world-class human text analyst.",
-        },
-        {
-          role: "system",
-          content: `Analyze the text of the user's next request and determine whether the user wants to create an image or has another type of request. Based on your understanding, return a structured json object. If the user request is to create an image, your JSON object must have a request type of 'image'
-          Include the number of photos if present, or make it one if not specified
-          and Includes a new, improved prompt that allows the AI to create a beautiful image of Dall-e,, 
-          set the requestType to "other" and capture the essence of the user's need in the prompts attribute.
-          and do not try to make up an new structured  json object Maintain the structure of JSON the user wants to return.`,
-        },
-        {
-          role: "user",
-          content: `user structur json {"requestType": "image","prompts": "","options":{"n":1,"quealt":"standard"|"hd","size":"sm"|"md"|"lg",}}
-          
-          or other 
-          {"requestType": "text","prompts": "",} 
-          
-          User Request Text: "${content}"
-        
-        Expected AI Output:`,
-        },
-      ],
+    return new StreamingTextResponse(streamResponse, {
+      headers,
     });
-
-    return response.choices[0].message.content as string;
   }
-  async genrateVioce({
-    model,
-    userMessage,
-  }: {
-    userMessage: AppMessage;
-    model?: string;
-  }) {
+
+  async genrateVioce({ model, userMessage, headers }: voiceInput) {
     const mp3 = await this.openai.audio.speech.create({
       model: model ?? "tts-1",
       voice: "alloy",
@@ -249,7 +204,7 @@ class TechnologiesContainer {
       media,
     };
 
-    return NextResponse.json(aiMessage, { status: 200 });
+    return NextResponse.json(aiMessage, { status: 200, headers });
   }
 
   async handelAiTechNologies({
@@ -257,6 +212,7 @@ class TechnologiesContainer {
     oldMessages,
     model,
     userMessage,
+    headers,
   }: AiInput) {
     switch (refTech?.trim().toLowerCase()) {
       case "gpt4":
@@ -264,24 +220,26 @@ class TechnologiesContainer {
           oldMessages,
           model,
           userMessage,
-          stream: true,
+          headers,
         });
       case "gpt3":
         return await this.generateTextCompletion({
           oldMessages,
           model,
           userMessage,
-          stream: true,
+          headers,
         });
       case "dall-e":
         return await this.generateImageDallE({
           model,
           userMessage,
+          headers,
         });
       case "tts":
         return await this.genrateVioce({
           model,
           userMessage,
+          headers,
         });
       default:
         console.log("no tech selected");
