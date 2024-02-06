@@ -61,8 +61,7 @@ const UpdateTechnology = () => {
     if (Object.keys(errors).length) {
       setCustomErros(errors);
     }
-    console.log(errors);
-  }, [errors]);
+  }, [errors, setCustomErros]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const formData = new FormData();
 

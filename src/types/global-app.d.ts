@@ -4,4 +4,5 @@ type AppMessage = {
   technologyId: number;
   userId: number;
   fromMachin?: boolean;
+  media?: any;
 };

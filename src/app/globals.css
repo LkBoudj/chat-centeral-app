@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .chat-area {
-  max-height: calc(100% - 260px);
+  max-height: calc(100% - 192px) !important;
+  height: 100%;
 }
 
 @layer base {

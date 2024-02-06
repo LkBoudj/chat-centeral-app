@@ -18,7 +18,7 @@ const TechnologyPage = (props: Props) => {
     useContext(techContext);
   useEffect(() => {
     getItems();
-  }, []);
+  }, [getItems]);
   return (
     <ScrollShadow className="w-full h-full space-y-2">
       {isOpen && <CreateTechnology />}

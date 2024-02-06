@@ -1,11 +1,47 @@
 import prismaConfig from "../configs/prismaConfig";
 
 class MediaController {
+  async findMany({
+    id,
+    userId,
+    type,
+  }: {
+    userId?: number;
+    id?: number;
+    type?: string;
+  }) {
+    const medias = await prismaConfig.media.findMany({
+      where: {
+        id,
+        userId,
+        type: {
+          startsWith: type ?? "",
+        },
+      },
+    });
+
+    return medias;
+  }
+  async blongToMessage({
+    messageId,
+    mediaId,
+  }: {
+    messageId: number;
+    mediaId: number;
+  }) {
+    await prismaConfig.messageMedias.create({
+      data: {
+        messageId,
+        mediaId,
+      },
+    });
+
+    return true;
+  }
   async create({
     src,
     type,
     userId,
-    messageId,
   }: {
     userId: number;
     src: string;
@@ -17,7 +53,6 @@ class MediaController {
         src,
         type,
         userId,
-        messageId,
       },
     });
 
@@ -43,7 +78,6 @@ class MediaController {
         src,
         type,
         userId,
-        messageId,
       },
       where: {
         id,

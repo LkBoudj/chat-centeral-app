@@ -74,7 +74,7 @@ const useTechnologyHoeck = () => {
           return items[key];
       }
     },
-    [items, selectedItem]
+    [handelEditItemButton, deleteItem]
   );
 
   return {

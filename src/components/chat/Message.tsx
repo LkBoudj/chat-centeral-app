@@ -7,6 +7,8 @@ import ReactMarkdown from "react-markdown";
 import { Prism } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { forwardRef } from "react";
+import { MediaContainer } from "./CustmMediaMediaComponent";
+import CopyPaste from "./CopyPaste";
 
 const isRightToLift = (text: string) => {
   const regex = /[\u0600-\u06FF]/;
@@ -23,66 +25,6 @@ const MessageFotter = ({ technology }: { technology: Technology }) => (
   </div>
 );
 
-const MediaType = ({ media }: { media: Media }) => {
-  const type = media.type.trim().toLowerCase();
-
-  if (type.startsWith("image")) {
-    return (
-      <Image
-        key={Date.now()}
-        alt={"ai image"}
-        width={250}
-        height={250}
-        className="w-[250px] rounded"
-        src={media.src}
-      />
-    );
-  }
-  if (type.startsWith("audio")) {
-    return (
-      <div>
-        <audio controls>
-          <source src={media.src} type="audio/mp3" />
-          Your browser does not support the video tag.
-        </audio>
-      </div>
-    );
-  }
-
-  if (type.startsWith("vide")) {
-    return (
-      <video width="320" height="240" controls>
-        <source src="movie.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    );
-  }
-
-  return null;
-};
-const MessageMedia = ({
-  media,
-  fromMachin,
-}: {
-  media: Media[];
-  fromMachin?: boolean;
-}) => {
-  return (
-    <div className={cn(`w-full flex `, !fromMachin && "justify-end")}>
-      <div
-        className={cn(
-          " w-full my-4 max-w-lg grid gap-4 ",
-          `  grid-cols-${media.length > 1 ? 2 : 1}`,
-          !fromMachin && "justify-end"
-        )}
-      >
-        {media.map((m, index) => (
-          <MediaType key={index} media={m} />
-        ))}
-      </div>
-    </div>
-  );
-};
 const BodyMessage = ({
   fromMachin,
   content,
@@ -93,6 +35,7 @@ const BodyMessage = ({
   return (
     <ReactMarkdown
       components={{
+        pre: CopyPaste,
         code(props) {
           const { children, className, node, ...rest } = props;
           const match = /language-(\w+)/.exec(className || "");
@@ -156,7 +99,7 @@ const Message = forwardRef<HTMLDivElement, MessageType>(
           fromMachin ? " justify-start" : "justify-end"
         )}
       >
-        <div className=" max-w-[1000px]  space-y-2">
+        <div className=" max-w-[1000px]  space-y-1">
           {fromMachin && (
             <span className="px-1 capitalize  font-semibold text-slate-800">
               {technology?.name ?? siteConfig.name}
@@ -169,7 +112,7 @@ const Message = forwardRef<HTMLDivElement, MessageType>(
           )}
 
           {media?.length ? (
-            <MessageMedia fromMachin={fromMachin} media={media} />
+            <MediaContainer fromMachin={fromMachin} media={media ?? []} />
           ) : (
             ""
           )}

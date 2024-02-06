@@ -1,21 +1,15 @@
 "use client";
 import { z } from "zod";
 import Form from "../global/form/Form";
-import {
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Select,
-  SelectItem,
-  Textarea,
-  User,
-  cn,
-} from "@nextui-org/react";
-import { Mic, SendHorizontal, Paperclip } from "lucide-react";
+import { Image, Textarea, cn } from "@nextui-org/react";
+import { Mic, SendHorizontal, Paperclip, XIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ContainerMaxWind, IconButton, TehcnologoySelect } from "..";
+import {
+  ContainerMaxWind,
+  CustmMediaMediaComponent,
+  IconButton,
+  TehcnologoySelect,
+} from "..";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -41,13 +35,8 @@ const CreateMessage = ({
 }: Props) => {
   const [textArabicDirection, setTextArabicDirection] = useState(false);
   const params = useParams();
-  const {
-    selectdModel,
-
-    onOpenUploadFile,
-    selectdTechnology,
-    file,
-  } = useContext(chatContext);
+  const { selectdModel, setFile, onOpenUploadFile, selectdTechnology, file } =
+    useContext(chatContext);
 
   const {
     register,
@@ -66,29 +55,46 @@ const CreateMessage = ({
       toast.error("your message not sened");
     }
   }, [errors, isDirty]);
-  useEffect(() => {
-    if (watch("content")?.length == 1) {
-      const isArabic = isArabicChar(watch("content"));
-      setTextArabicDirection(isArabic);
-      console.log(isArabic);
-    }
-  }, [watch("content")]);
+  // useEffect(() => {
+  //   if (watch("content")?.length == 1) {
+  //     const isArabic = isArabicChar(watch("content"));
+  //     setTextArabicDirection(isArabic);
+  //   }
+  // }, []);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    hanldeSendMessage &&
-      hanldeSendMessage(
-        JSON.stringify({
-          ...data,
-          fileId: file?.id ?? null,
-          technologyId: selectdTechnology?.id,
-          model: selectdModel,
-        })
-      );
+    const message = {
+      ...data,
+      media: file,
+      technologyId: selectdTechnology?.id,
+      model: selectdModel,
+    };
+
+    hanldeSendMessage && hanldeSendMessage(JSON.stringify(message));
+    setFile(null);
     reset();
   };
 
   return (
-    <div className="absolute bottom-[12px] w-full left-0 px-4 lg:pr-[370px]">
-      <ContainerMaxWind className=" max-w-7xl mx-auto ">
+    <div className="absolute bottom-[12px] z-50 w-full left-0 px-4 lg:pr-[370px]">
+      <ContainerMaxWind className=" max-w-7xl mx-auto space-y-8">
+        {file && (
+          <div className="w-full flex space-x-2 ">
+            <div className="relative ">
+              <CustmMediaMediaComponent.MediaType
+                className="relative z-40"
+                width={150}
+                heigth={150}
+                media={file}
+              />
+              <IconButton
+                onClick={() => setFile(null)}
+                className="absolute bg-white top-0 right-0 z-[999999]"
+                Icon={XIcon}
+              />
+            </div>
+          </div>
+        )}
+
         <Form
           handleSubmit={handleSubmit(onSubmit)}
           className="bg-white rounded-xl ring-1 p-5 "

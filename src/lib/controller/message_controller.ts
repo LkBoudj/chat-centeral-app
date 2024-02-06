@@ -26,6 +26,7 @@ class MessageController {
       nextCursor,
     };
   }
+
   async infintyLoad({
     limit,
     skip,
@@ -52,13 +53,43 @@ class MessageController {
       include: {
         technology: true,
         user: true,
-        media: true,
+        media: {
+          include: {
+            medias: true,
+          },
+        },
       },
       orderBy: {
         id: "desc",
       },
     });
     return this.paginationData({ limit, messages, cursor });
+  }
+
+  async all({
+    userId,
+    conversationId,
+  }: {
+    userId: number;
+    conversationId: string;
+  }) {
+    const messages = await prismaConfig.message.findMany({
+      where: {
+        userId,
+        conversationId,
+      },
+      include: {
+        technology: true,
+        user: true,
+        media: {
+          include: {
+            medias: true,
+          },
+        },
+      },
+    });
+
+    return messages ?? [];
   }
 
   async create({
@@ -78,6 +109,7 @@ class MessageController {
       },
       include: {
         conversation: true,
+        media: true,
       },
     });
   }

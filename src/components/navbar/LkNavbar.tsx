@@ -1,17 +1,10 @@
 "use client";
 import { cn } from "@/lib/utlis";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Button,
-} from "@nextui-org/react";
+import { NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 
-import { Bot } from "lucide-react";
 import { usePathname } from "next/navigation";
-import AuthanticationButton from "./AuthanticationButton";
+
+import NavContainer from "./NavContainer";
 
 type Props = {
   navsData: NavItem[];
@@ -21,14 +14,7 @@ const LkNavbar = ({ navsData }: Props) => {
   const pathName = usePathname();
 
   return (
-    <Navbar isBlurred={false} maxWidth="full" className=" z-40   ">
-      <div className="mr-8">
-        <NavbarBrand className="flex items-center space-x-1">
-          <Bot size={30} className="text-blue-800" />
-          <p className="font-bold text-inherit">CENTERAL</p>
-        </NavbarBrand>
-      </div>
-
+    <NavContainer>
       <NavbarContent
         className="hidden space-x-2 sm:flex gap-4 w-full"
         justify="start"
@@ -61,12 +47,7 @@ const LkNavbar = ({ navsData }: Props) => {
           )
         )}
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <AuthanticationButton />
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+    </NavContainer>
   );
 };
 

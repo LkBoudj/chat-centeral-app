@@ -10,24 +10,42 @@ import technologyController from "@/lib/controller/technology_controller";
 
 import technologiesContainer from "@/lib/technolgie_container";
 import prismaConfig from "@/lib/configs/prismaConfig";
-import { headers } from "next/headers";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId, model, fileId } =
+    const { content, technologyId, conversationId, model, media } =
       await req.json();
-
     const session = await getAuthSession();
     const userId = session?.user.id;
 
+    const user = await prismaConfig.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
     const validation: any = await createNewMessageBackV.safeParseAsync({
       content,
       conversationId,
       technologyId,
-      fileId,
+      fileId: media?.id,
       model,
     });
 
+    if (user && user?.msgCounter < user?.messagesMax) {
+      await prismaConfig.user.update({
+        data: {
+          msgCounter: user?.msgCounter + 1,
+        },
+        where: {
+          id: userId,
+        },
+      });
+    } else {
+      return NextResponse.json(
+        { message: "Your balance has expired" },
+        { status: 400 }
+      );
+    }
     if (!validation.success) {
       return NextResponse.json(validation.error, { status: 400 });
     }
@@ -45,13 +63,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
     }
 
-    const isFileExits: any = fileId
-      ? await mediaController.isExits({
-          userId,
-          id: fileId as number,
-        })
-      : null;
-
     const userMessage: AppMessage = {
       content,
       conversationId: validation.data.conversationId as string,
@@ -59,7 +70,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
       userId,
     };
 
+    const isFileExits: any = validation.data.fileId
+      ? await mediaController.isExits({
+          userId,
+          id: media?.id,
+        })
+      : null;
+
     const newMessage = await MessageController.create(userMessage);
+
+    if (isFileExits) {
+      await mediaController.blongToMessage({
+        mediaId: isFileExits.id,
+        messageId: newMessage.id,
+      });
+    }
 
     const isTechExits = await technologyController.isExits({
       id: technologyId,
@@ -82,6 +107,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         path: isFileExits?.src,
         oldMessages,
         refTech: isTechExits.refTech,
+        userId,
       });
     }
   } catch (e: any) {
@@ -90,47 +116,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json(errros, { status: 400 });
   }
 }
-
-/**
-  
- if (isFileExits) {
-    const updatedFile = await mediaController.update({
-      id: isFileExits?.id,
-      userId,
-      messageId: newMessage.id,
-    });
-
-    return TechnologiesContainer.generateTextCompletionVison({
-      path: updatedFile?.src,
-      userMessage,
-    });
-  }
-  if (isTechExits.refTech.trim().toLowerCase().startsWith("dall")) {
-      const aiMessage = await MessageController.create({
-        userId,
-        fromMachin: true,
-        conversationId: userMessage.conversationId,
-        technologyId,
-      });
-      return TechnologiesContainer.generateImageDallE({
-        model: model,
-        message: aiMessage,
-        userId,
-        content: content,
-      });
-    }
-    
-    const formattedPrevMessages = oldMessages.map((msg) => ({
-      role: !msg.fromMachin ? ("user" as const) : ("assistant" as const),
-      content: msg.content,
-    }));
-    return TechnologiesContainer.generateTextCompletion({
-      oldMessages: formattedPrevMessages,
-      model: model,
-      userMessage,
-      stream: true,
-    });
-
-
-
- */

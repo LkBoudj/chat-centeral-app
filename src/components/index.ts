@@ -20,6 +20,9 @@ import TehcnologoySelect from "./chat/TehcnologoySelect";
 import DashboardAside from "./dashboard/DashboardAside";
 import CustomTooltip from "./global/CustomTooltip";
 import SelecteModel from "./chat/SelecteModel";
+import CustmMediaMediaComponent from "./chat/CustmMediaMediaComponent";
+import Section from "./Section";
+import LogoIcon from "./LogoIcon";
 export {
   ContainerMaxWind,
   IconButton,
@@ -35,9 +38,12 @@ export {
   Message,
   CreateMessage,
   TehcnologoySelect,
+  CustmMediaMediaComponent,
   SelecteModel,
   //dashboard
   DashboardAside,
   //GLOBA
   CustomTooltip,
+  Section,
+  LogoIcon,
 };

@@ -9,21 +9,31 @@ import { TRPCError } from "@trpc/server";
 import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
 import { ConversationController, MessageController } from "@/lib/controller";
 import TechnologiesContainer from "@/lib/technolgie_container";
+import { z } from "zod";
 const appMessagesRouter = router({
   infiniteConversationMessages: privateProcuder
     .input(inputInfinte)
     .input(conversationMessagesV)
     .query(async ({ input, ctx }) => {
       const { limit, skip, cursor, id } = input;
-      return MessageController.infintyLoad({
-        cursor,
-        limit,
-        skip,
+      return MessageController.all({
         conversationId: id,
         userId: ctx.auth.id,
       });
     }),
-
+  all: privateProcuder
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { id } = input;
+      return await MessageController.all({
+        conversationId: id,
+        userId: ctx.auth.id,
+      });
+    }),
   create: privateProcuder
     .input(createNewMessageBackV)
     .use(async ({ next, ctx, input }) => {

@@ -61,7 +61,7 @@ const CreateTechnology = () => {
     if (Object.keys(errors).length) {
       setCustomErros(errors);
     }
-  }, [errors]);
+  }, [errors, setCustomErros]);
   return (
     <FormModel
       isOpen={isOpen}

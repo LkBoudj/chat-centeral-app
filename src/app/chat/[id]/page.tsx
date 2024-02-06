@@ -16,16 +16,16 @@ type Props = {
 
 const ConversationPage = ({ params }: Props) => {
   const [aiMessage, setAiMessage] = useState("");
-  const { selectdTechnology } = useContext(chatContext);
-  const utils = trpc.useUtils();
-  const { data, isLoading, isSuccess } =
-    trpc.messages.infiniteConversationMessages.useInfiniteQuery(
-      { limit: limit_infinite_messagess, id: params.id },
-      {
-        getNextPageParam: (lastPage) => lastPage?.nextCursor,
-      }
-    );
-  const messages = data?.pages[0]?.ietms ?? [];
+  const {
+    selectdTechnology,
+    setCurrentConversationId,
+    isSuccessM,
+    isLoadingM,
+    messages,
+    setMessages,
+    handelNextPageM,
+    isHaveNextM,
+  } = useContext(chatContext);
 
   const {
     mutate,
@@ -61,26 +61,17 @@ const ConversationPage = ({ params }: Props) => {
     },
     async onMutate(opts: any) {
       const message = JSON.parse(opts);
+
       if (selectdTechnology) {
-        await utils.messages.infiniteConversationMessages.cancel();
-        utils.messages.infiniteConversationMessages.getInfiniteData();
-        utils.messages.infiniteConversationMessages.setInfiniteData(
-          { limit: limit_infinite_messagess, id: message.conversationId },
-          (data) => {
-            if (data) {
-              data.pages[0].ietms = [
-                ...data.pages[0].ietms,
-                {
-                  ...message,
-                  id: Date.now(),
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-              ];
-            }
-            return data;
-          }
-        );
+        setMessages((messages: any[]) => [
+          ...messages,
+          {
+            ...message,
+            id: Date.now(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]);
       }
     },
     async onSuccess(obj) {
@@ -90,102 +81,65 @@ const ConversationPage = ({ params }: Props) => {
       }
 
       if (type == "json") {
-        await utils.messages.infiniteConversationMessages.cancel();
-        utils.messages.infiniteConversationMessages.getInfiniteData();
-
-        utils.messages.infiniteConversationMessages.setInfiniteData(
-          { limit: limit_infinite_messagess, id: message.conversationId },
-          (data) => {
-            if (data) {
-              data.pages[0].ietms = [...data.pages[0].ietms, aiResponse];
-            }
-            return data;
-          }
-        );
+        setMessages((messages: any[]) => [...messages, aiResponse]);
       } else {
+        const id = crypto.randomUUID() + "_" + Date.now();
+
+        let aiMessage = {
+          id,
+          content: "",
+          fromMachin: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        const newData = [...messages, aiMessage];
+        setMessages(newData);
         const reader: any = aiResponse?.getReader();
         const decoder = new TextDecoder();
-        let done = false;
-        const cMId = crypto.randomUUID();
-        let textResponse = "";
 
-        while (!done) {
-          const { value, done: doneReading } = await reader?.read();
+        let responseText = "";
+        while (true) {
+          const { value, done } = await reader?.read();
           const chunkValue = decoder.decode(value);
-          done = doneReading;
+          responseText += chunkValue;
 
-          textResponse += chunkValue;
-          setAiMessage(textResponse);
-          await utils.messages.infiniteConversationMessages.cancel();
-
-          utils.messages.infiniteConversationMessages.getInfiniteData();
-
-          utils.messages.infiniteConversationMessages.setInfiniteData(
-            { limit: limit_infinite_messagess, id: message.conversationId },
-            (data) => {
-              if (!data) {
-                return {
-                  pages: [],
-                  pageParams: [],
-                };
-              }
-              let items = data.pages[0].ietms;
-              const isExts = items.find((item) => {
-                return item.id == cMId;
-              });
-
-              if (isExts) {
-                items = items.map((item) => {
-                  if (item.id == cMId)
-                    return {
-                      ...item,
-                      content: textResponse,
-                    };
-                  return item;
-                });
-              } else {
-                items = [
-                  ...items,
-                  {
-                    id: cMId,
-                    fromMachin: true,
-                    content: textResponse,
-                  },
-                ];
-              }
-              data.pages[0].ietms = items;
-              return data;
+          const updatedMessages = newData.map((message: any) => {
+            if (message.id == id) {
+              message.content = responseText;
             }
-          );
+            return message;
+          });
+          setMessages(updatedMessages);
+          if (done) break;
         }
       }
     },
-    onError(_, __, context) {
-      console.log("onError", context);
-
-      // utils.messages.infiniteConversationMessages.setData({id:context})
-      // .getFileMessages.setData(
-      //   { fileId },
-      //   { messages: context?.previousMessages ?? [] }
-      // )
-    },
+    onError(_, __, context) {},
     onSettled(data, error, variables, context) {},
   });
 
-  const hanldeSendMessage = (data: any) => mutate(data);
+  const hanldeSendMessage = (data: any) => {
+    mutate(data);
+  };
 
+  useEffect(() => {
+    setCurrentConversationId(params.id);
+  }, [params.id]);
+  // useEffect(() => {
+  //   console.log(messages);
+  // }, [messages]);
   return (
-    <div className=" w-full h-screen  bg-[#EEEEEE]">
+    <div className=" w-full h-screen overflow-hidden  bg-[#EEEEEE]">
       <ChatAside />
       <LkNavbar navsData={authNavigation} />
 
-      {isLoading && (
+      {isLoadingM && (
         <div className="chat-area flex h-full items-center justify-center">
           <Spinner />
         </div>
       )}
 
-      {isSuccess && <ListOfMessages messages={messages} />}
+      {isSuccessM && <ListOfMessages messages={messages} />}
 
       <CreateMessage
         hanldeSendMessage={hanldeSendMessage}

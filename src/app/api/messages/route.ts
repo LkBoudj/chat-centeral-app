@@ -8,15 +8,35 @@ import { ConversationController, MessageController } from "@/lib/controller";
 import technologyController from "@/lib/controller/technology_controller";
 import technologiesContainer from "@/lib/technolgie_container";
 import mediaController from "@/lib/controller/media_controller";
+import prismaConfig from "@/lib/configs/prismaConfig";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId, model, fileId } =
+    const { content, technologyId, conversationId, model, media } =
       await req.json();
 
     const session = await getAuthSession();
     const userId = session?.user.id;
-
+    const user = await prismaConfig.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user && user?.msgCounter < user?.messagesMax) {
+      await prismaConfig.user.update({
+        data: {
+          msgCounter: user?.msgCounter + 1,
+        },
+        where: {
+          id: userId,
+        },
+      });
+    } else {
+      return NextResponse.json(
+        { message: "Your balance has expired" },
+        { status: 400 }
+      );
+    }
     const validation: any = await createNewMessageBackV.safeParseAsync({
       content,
       conversationId,
@@ -43,17 +63,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
       userId,
     };
 
+    const isFileExits: any = validation.data.fileId
+      ? await mediaController.isExits({
+          userId,
+          id: media?.id,
+        })
+      : null;
+
+    const newMessage = await MessageController.create(userMessage);
+
+    if (isFileExits) {
+      await mediaController.blongToMessage({
+        mediaId: isFileExits.id,
+        messageId: newMessage.id,
+      });
+    }
+
     const isTechExits = await technologyController.isExits({
       id: technologyId,
     });
     if (isTechExits) {
-      const isFileExits: any = fileId
-        ? await mediaController.isExits({
-            userId,
-            id: fileId as number,
-          })
-        : null;
-      await MessageController.create(userMessage);
       return technologiesContainer.handelAiTechNologies({
         userMessage,
         model,

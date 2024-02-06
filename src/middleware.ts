@@ -1,10 +1,21 @@
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { conversations_page } from "./lib/configs/routes_name";
 
 export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const url = req.nextUrl.pathname;
+    const role = token?.user.roles?.toLowerCase();
     var isAuth;
+    if (
+      url.startsWith("/dashboard") &&
+      !["admin", "superadmin"].includes(role)
+    ) {
+      return NextResponse.rewrite(
+        new URL(conversations_page, "http://localhost:3000/chat")
+      );
+    }
 
     // if (url.startsWith("/chat") && token?.user.roles) {
     //   const roles = req.nextauth.token?.user.roles;

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const media = await mediaController.create({
       userId: auth.id,
       src: fileData?.src as string,
-      type: fileData?.type as string,
+      type: `image/${fileData?.type}` as string,
     });
 
     return NextResponse.json({ success: true, media });

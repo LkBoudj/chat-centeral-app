@@ -78,7 +78,7 @@ export const uploadFiles = async (
   fs.writeFileSync(src, buffer);
 
   return {
-    src: "/" + name,
+    src: name,
     type,
   };
 };

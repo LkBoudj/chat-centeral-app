@@ -132,7 +132,7 @@ const FormInputImageFile = ({
 
   return (
     <div className="relative ">
-      <Image className="w-32  mx-auto" src={srcImage} />
+      <Image className="w-32  mx-auto" alt="" src={srcImage} />
       {!readOnly && (
         <input
           {...register(id)}
