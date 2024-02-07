@@ -1,6 +1,6 @@
 "use client";
 import { ContainerMaxWind, MediaFiles } from "@/components";
-import { Form } from "@/components/global/form";
+import { Form, FormTextarea } from "@/components/global/form";
 import FromInput from "@/components/global/form/FormInput";
 import { schemaUser } from "@/lib/validation/user_validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,12 +47,26 @@ const UserInformation = () => {
     resolver: zodResolver(schemaUser),
   });
   return (
-    <Form>
+    <Form className="space-y-4">
       <FromInput.FromInputRegister
         id="name"
-        label=""
+        label="Name"
         register={register}
         customErrors={errors}
+      />
+      <FromInput.FromInputRegister
+        id="email"
+        label="Email"
+        type="email"
+        register={register}
+        customErrors={errors}
+      />
+      <FormTextarea
+        id="description"
+        label="Description"
+        type="description"
+        register={register}
+        errors={errors}
       />
     </Form>
   );
@@ -72,7 +86,7 @@ const page = (props: Props) => {
       </ContainerMaxWind>
       <ContainerMaxWind className="px-5 transform -translate-y-20 flex flex-col  h-full max-h-96 min-h-96">
         <Tabs aria-label="Options">
-          <Tab className="h-full  " key="informatin" title="Photos">
+          <Tab className="h-full  " key="informatin" title="Information">
             <UserInformation />
           </Tab>
           <Tab className="h-full  " key="photos" title="Photos">
