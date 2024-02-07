@@ -91,7 +91,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
 
     if (isTechExits) {
-      const oldMessages = await prismaConfig.message.findMany({
+      const oldMessagesData = await prismaConfig.message.findMany({
         where: {
           conversationId,
           userId,
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         userMessage,
         model,
         path: isFileExits?.src,
-        oldMessages,
+        oldMessagesData,
         refTech: isTechExits.refTech,
         userId,
       });

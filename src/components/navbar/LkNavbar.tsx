@@ -5,6 +5,10 @@ import { NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 
 import NavContainer from "./NavContainer";
+import { IconButton } from "..";
+import { Settings } from "lucide-react";
+import { useContext } from "react";
+import { chatContext } from "../context/ChatContextProvider";
 
 type Props = {
   navsData: NavItem[];
@@ -12,9 +16,17 @@ type Props = {
 
 const LkNavbar = ({ navsData }: Props) => {
   const pathName = usePathname();
-
+  const { setShowAsideChat, isShowAsideChat } = useContext(chatContext);
   return (
-    <NavContainer>
+    <NavContainer
+      endContent={
+        <IconButton
+          Icon={Settings}
+          onClick={() => setShowAsideChat(!isShowAsideChat)}
+          className=" lg:hidden "
+        />
+      }
+    >
       <NavbarContent
         className="hidden space-x-2 sm:flex gap-4 w-full"
         justify="start"
@@ -37,11 +49,6 @@ const LkNavbar = ({ navsData }: Props) => {
               as={Link}
               href={path}
             >
-              {/* <Icon className={color} size={16} /> */}
-              {/* <div
-                  className="w-[20px] h-[20px] overflow-hidden bg-[url('/images/g.png')] bg-cover bg-repeat-none"
-                  style={{ backgroundPositionX, backgroundPositionY }}
-                ></div> */}
               <span>{name}</span>
             </NavbarItem>
           )

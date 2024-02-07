@@ -16,9 +16,10 @@ import { useState } from "react";
 
 type Props = {
   children: React.ReactNode;
+  endContent?: React.ReactNode;
 };
 
-const NavContainer = ({ children }: Props) => {
+const NavContainer = ({ children, endContent }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <Navbar isBlurred={false} maxWidth="full" className=" z-40   ">
@@ -34,9 +35,10 @@ const NavContainer = ({ children }: Props) => {
       {children}
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
+        <NavbarItem className="flex">
           <AuthanticationButton />
         </NavbarItem>
+        {endContent && <NavbarItem className="flex">{endContent}</NavbarItem>}
       </NavbarContent>
     </Navbar>
   );

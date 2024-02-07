@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { LangChainStream, OpenAIStream, StreamingTextResponse } from "ai";
+import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { MessageController } from "./controller";
 import { NextResponse } from "next/server";
@@ -11,38 +11,45 @@ import {
 } from "./helper";
 import mediaController from "./controller/media_controller";
 
-import messageController from "./controller/message_controller";
 import prismaConfig from "./configs/prismaConfig";
+
+import { ChatOpenAI } from "@langchain/openai";
+
+import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 
 interface BaseAiInput {
   userMessage: AppMessage;
   model?: string;
   headers?: any;
   userId?: number;
+  oldMessages?: string;
 }
 
 interface DallInput extends BaseAiInput {}
-interface GPT4Input extends BaseAiInput {
-  oldMessages?: any[];
-}
+interface GPT4Input extends BaseAiInput {}
 interface VisionInput extends BaseAiInput {
-  oldMessages?: any[];
   path: string;
 }
 interface voiceInput extends BaseAiInput {}
 
 interface AiInput extends BaseAiInput {
   refTech?: string;
-  oldMessages?: any[];
+  oldMessagesData?: any[];
   path?: string;
 }
 class TechnologiesContainer {
   private openai: OpenAI;
-
+  private langChainOpenAi: ChatOpenAI;
   constructor() {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true, // defaults to process.env["OPENAI_API_KEY"]
+    });
+
+    this.langChainOpenAi = new ChatOpenAI({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      streaming: true,
     });
   }
 
@@ -63,13 +70,10 @@ class TechnologiesContainer {
         },
         {
           role: "user",
-          content: `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n, if the question is incomplete, say complete your question. Say it politely. 
+          content: `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n. 
           
           PREVIOUS CONVERSATION:
-          ${oldMessages?.map((message) => {
-            if (message.role === "user") return `User: ${message.content}\n`;
-            return `Assistant: ${message.content}\n`;
-          })}
+          ${oldMessages}
 
           USER INPUT: ${userMessage.content}
           `,
@@ -103,7 +107,7 @@ class TechnologiesContainer {
       conversationId: userMessage.conversationId,
       technologyId: userMessage.technologyId,
     });
-    const media = response.data.map((m) => ({
+    const mediaData = response.data.map((m) => ({
       src: m.url,
       type: "image",
       prompt: m.revised_prompt,
@@ -113,7 +117,7 @@ class TechnologiesContainer {
       updadedAt: new Date(),
     }));
 
-    saveImageFromURL(media, async (data) => {
+    saveImageFromURL(mediaData, async (data) => {
       const createdMedia = await mediaController.create({
         userId: userMessage.userId,
         src: data.src,
@@ -127,7 +131,7 @@ class TechnologiesContainer {
       });
     });
 
-    const aiMessage = await prismaConfig.message.findUnique({
+    const aiMessage: any = await prismaConfig.message.findUnique({
       where: {
         userId,
         id: message.id,
@@ -140,7 +144,15 @@ class TechnologiesContainer {
         },
       },
     });
-    return NextResponse.json(aiMessage, { status: 200, headers });
+
+    const media = mediaData.map((d) => ({
+      medias: d,
+    }));
+    const aiMessageCreated = {
+      ...aiMessage,
+      media,
+    };
+    return NextResponse.json(aiMessageCreated, { status: 200, headers });
   }
 
   async generateTextCompletionVison({
@@ -148,6 +160,7 @@ class TechnologiesContainer {
     userMessage,
     path,
     headers,
+    oldMessages,
   }: VisionInput) {
     const base64_image = await convertImageToBaseFromUrl(path);
 
@@ -157,9 +170,24 @@ class TechnologiesContainer {
       stream: true,
       messages: [
         {
+          role: "system",
+          content:
+            "Use the following parts of previous conversations if the question is related to markdown format.",
+        },
+
+        {
           role: "user",
           content: [
-            { type: "text", text: userMessage.content as string },
+            {
+              type: "text",
+              text: `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n. 
+          
+            PREVIOUS CONVERSATION:
+            ${oldMessages}
+  
+            USER INPUT: ${userMessage.content}
+            `,
+            },
             {
               type: "image_url",
               image_url: {
@@ -230,19 +258,68 @@ class TechnologiesContainer {
     return NextResponse.json(aiMessage, { status: 200, headers });
   }
 
+  async handelLangChainOpenAi({
+    oldMessages,
+    model,
+    userMessage,
+    headers,
+  }: GPT4Input) {
+    const TEMPLATE = `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n.
+
+    PREVIOUS CONVERSATION:
+    {chat_history}
+
+    User: {input}
+    AI:`;
+
+    const prompt = PromptTemplate.fromTemplate(TEMPLATE);
+
+    this.langChainOpenAi.modelName = model as string;
+
+    const outputParser = new StringOutputParser();
+
+    const chain = prompt.pipe(this.langChainOpenAi).pipe(outputParser);
+
+    const response: any = await chain.stream({
+      chat_history: oldMessages as string,
+      input: userMessage.content as string,
+    });
+
+    const streamResponse = OpenAIStream(response, {
+      async onCompletion(completion) {
+        await MessageController.create({
+          ...userMessage,
+          content: completion,
+          fromMachin: true,
+        });
+      },
+    });
+
+    return new StreamingTextResponse(streamResponse, {
+      headers,
+    });
+  }
   async handelAiTechNologies({
     refTech,
-    oldMessages,
+    oldMessagesData,
     model,
     userMessage,
     headers,
     path,
     userId,
   }: AiInput) {
+    const oldMessages = oldMessagesData
+      ?.map((message: any) => {
+        if (message.role === "user") return `User: ${message.content}\n`;
+        return `Assistant: ${message.content}\n`;
+      })
+      .join("\n");
+
     if (path) {
       return this.generateTextCompletionVison({
         path,
         userMessage,
+        oldMessages,
         model,
         userId,
       });
@@ -257,7 +334,7 @@ class TechnologiesContainer {
           userId,
         });
       case "gpt3":
-        return await this.generateTextCompletion({
+        return this.generateTextCompletion({
           oldMessages,
           model,
           userMessage,

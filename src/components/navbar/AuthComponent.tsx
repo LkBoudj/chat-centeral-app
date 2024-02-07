@@ -1,12 +1,41 @@
-import { Avatar } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
+import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
 type Props = {};
 
 const AuthComponent = (props: Props) => {
+  const { data: session } = useSession();
   return (
     <div>
-      <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+      <Dropdown>
+        <DropdownTrigger>
+          <Button variant="light">
+            <Avatar src={session && session.user.image} />
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu aria-label="Static Actions">
+          <DropdownItem key="profile" href="/profile">
+            Profile
+          </DropdownItem>
+
+          <DropdownItem
+            onClick={() => signOut()}
+            key="logout"
+            className="text-danger"
+            color="danger"
+          >
+            Log out
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     </div>
   );
 };

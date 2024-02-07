@@ -14,8 +14,6 @@ const useMessageHoock = () => {
     id: currentConversationId,
   });
   useEffect(() => {
-    console.log(data);
-
     if (data) {
       setMessages(data);
     }

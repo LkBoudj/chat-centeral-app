@@ -5,6 +5,7 @@ import { useConversationHock } from "@/lib/hocks";
 import useMessageHoock from "@/lib/hocks/message/useMessageHoock";
 import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
 import { Media } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 import React, { createContext, useEffect, useState } from "react";
 
@@ -21,6 +22,8 @@ const ChatContextProvider = ({
   outValue?: any;
   children: React.ReactNode;
 }) => {
+  const { data: session, status } = useSession();
+  const sessionUser = session?.user;
   const {
     hanldeSlectModel,
     selectdTechnology,
@@ -67,7 +70,8 @@ const ChatContextProvider = ({
   } = useMessageHoock();
   const value = {
     ...outValue,
-
+    //--- session
+    sessionUser,
     //---
     handelTextToCopy,
     copy,

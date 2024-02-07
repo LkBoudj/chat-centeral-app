@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import technologiesContainer from "@/lib/technolgie_container";
 import mediaController from "@/lib/controller/media_controller";
+import { tree } from "next/dist/build/templates/app-page";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ media });
+    return NextResponse.json(media);
   } catch (e: any) {
     return NextResponse.json(e);
   }

@@ -16,6 +16,7 @@ type Props = {
 
 const ConversationPage = ({ params }: Props) => {
   const [aiMessage, setAiMessage] = useState("");
+
   const {
     selectdTechnology,
     setCurrentConversationId,
@@ -23,8 +24,7 @@ const ConversationPage = ({ params }: Props) => {
     isLoadingM,
     messages,
     setMessages,
-    handelNextPageM,
-    isHaveNextM,
+    sessionUser,
   } = useContext(chatContext);
 
   const {
@@ -133,19 +133,20 @@ const ConversationPage = ({ params }: Props) => {
       <ChatAside />
       <LkNavbar navsData={authNavigation} />
 
-      {isLoadingM && (
+      {isLoadingM ? (
         <div className="chat-area flex h-full items-center justify-center">
           <Spinner />
         </div>
+      ) : (
+        <>
+          {isSuccessM && <ListOfMessages messages={messages} />}
+          <CreateMessage
+            hanldeSendMessage={hanldeSendMessage}
+            isAiThink={isPending}
+            isAiThinkCompleted={!isPending}
+          />
+        </>
       )}
-
-      {isSuccessM && <ListOfMessages messages={messages} />}
-
-      <CreateMessage
-        hanldeSendMessage={hanldeSendMessage}
-        isAiThink={isPending}
-        isAiThinkCompleted={!isPending}
-      />
     </div>
   );
 };

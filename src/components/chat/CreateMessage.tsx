@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
 import Form from "../global/form/Form";
-import { Image, Textarea, cn } from "@nextui-org/react";
+import { Image, Link, Textarea, cn } from "@nextui-org/react";
 import { Mic, SendHorizontal, Paperclip, XIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { chatContext } from "../context/ChatContextProvider";
 import { createNewMessageFrontV } from "@/lib/validation/messages";
 import { isArabicChar } from "@/lib/utlis";
+import { useSession } from "next-auth/react";
 
 type Props = {
   hanldeSendMessage?: (key?: any) => void;
@@ -35,8 +36,14 @@ const CreateMessage = ({
 }: Props) => {
   const [textArabicDirection, setTextArabicDirection] = useState(false);
   const params = useParams();
-  const { selectdModel, setFile, onOpenUploadFile, selectdTechnology, file } =
-    useContext(chatContext);
+  const {
+    selectdModel,
+    setFile,
+    onOpenUploadFile,
+    selectdTechnology,
+    file,
+    sessionUser,
+  } = useContext(chatContext);
 
   const {
     register,
@@ -95,49 +102,62 @@ const CreateMessage = ({
           </div>
         )}
 
-        <Form
-          handleSubmit={handleSubmit(onSubmit)}
-          className="bg-white rounded-xl ring-1 p-5 "
-        >
-          <div className="flex items-start">
-            <div className="flex items-center w-full">
-              <TehcnologoySelect />
+        {sessionUser && sessionUser?.msgCounter < sessionUser?.messagesMax ? (
+          <Form
+            handleSubmit={handleSubmit(onSubmit)}
+            className="bg-white rounded-xl ring-1 p-5 "
+          >
+            <div className="flex items-start">
+              <div className="flex items-center w-full">
+                <TehcnologoySelect />
 
-              <Textarea
-                {...register("content")}
-                minRows={1}
-                placeholder="Ask me any think"
-                variant="bordered"
-                color="default"
-                onKeyDown={(e) => {
-                  if (e.key == "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit(onSubmit)();
-                  }
-                }}
-                classNames={{
-                  inputWrapper: "border-none shadow-none ",
-                  input: textArabicDirection && `text-right`,
-                }}
-                className={cn(
-                  `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full `
-                )}
+                <Textarea
+                  {...register("content")}
+                  minRows={1}
+                  placeholder="Ask me any think"
+                  variant="bordered"
+                  color="default"
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(onSubmit)();
+                    }
+                  }}
+                  classNames={{
+                    inputWrapper: "border-none shadow-none ",
+                    input: textArabicDirection && `text-right`,
+                  }}
+                  className={cn(
+                    `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full `
+                  )}
+                />
+              </div>
+
+              <IconButton size={22} Icon={Mic} />
+            </div>
+            <div className="flex items-end justify-between">
+              <IconButton
+                onPress={onOpenUploadFile}
+                size={22}
+                Icon={Paperclip}
+              />
+              <IconButton
+                isLoading={isAiThink}
+                isDisabled={
+                  watch("content")?.length <= 0 || !isAiThinkCompleted
+                }
+                type="submit"
+                size={22}
+                Icon={SendHorizontal}
               />
             </div>
-
-            <IconButton size={22} Icon={Mic} />
-          </div>
-          <div className="flex items-end justify-between">
-            <IconButton onPress={onOpenUploadFile} size={22} Icon={Paperclip} />
-            <IconButton
-              isLoading={isAiThink}
-              isDisabled={watch("content")?.length <= 0 || !isAiThinkCompleted}
-              type="submit"
-              size={22}
-              Icon={SendHorizontal}
-            />
-          </div>
-        </Form>
+          </Form>
+        ) : (
+          <p className="w-full bg-white/50 p-5 text-center">
+            You must purchase credit to send this message{" "}
+            <Link href="/subscription"> manage your subscription </Link>
+          </p>
+        )}
       </ContainerMaxWind>
     </div>
   );

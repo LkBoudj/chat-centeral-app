@@ -12,7 +12,7 @@ const useInfiniteConversation = () => {
     fetchNextPage,
   } = trpc.conversations.infiniteChats.useInfiniteQuery(
     {
-      limit: 10,
+      limit: 5,
     },
     {
       getNextPageParam: (next) => next.nextCursor,
@@ -42,9 +42,9 @@ const useInfiniteConversation = () => {
   };
 
   useEffect(() => {
-    setChats(data?.pages[pageC - 1].ietms);
+    setChats(data?.pages[pageC - 1]?.ietms);
 
-    setIsHaveNext(data?.pages[pageC - 1].nextCursor ? true : false);
+    setIsHaveNext(data?.pages[pageC - 1]?.nextCursor ? true : false);
   }, [data, pageC, setIsHaveNext, setChats]);
 
   return {
