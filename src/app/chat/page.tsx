@@ -120,10 +120,7 @@ const ChatPage = (props: Props) => {
   const hanldeSendMessage = (data: any) => mutate(data);
 
   return (
-    <div className=" w-full h-screen  bg-[#EEEEEE]">
-      <ChatAside />
-      <LkNavbar navsData={authNavigation} />
-
+    <>
       {messages.length ? (
         <ListOfMessages messages={messages} />
       ) : (
@@ -135,7 +132,7 @@ const ChatPage = (props: Props) => {
         isAiThink={isPending}
         isAiThinkCompleted={!isPending}
       />
-    </div>
+    </>
   );
 };
 

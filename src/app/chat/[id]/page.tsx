@@ -125,14 +125,9 @@ const ConversationPage = ({ params }: Props) => {
   useEffect(() => {
     setCurrentConversationId(params.id);
   }, [params.id]);
-  // useEffect(() => {
-  //   console.log(messages);
-  // }, [messages]);
-  return (
-    <div className=" w-full h-screen overflow-hidden  bg-[#EEEEEE]">
-      <ChatAside />
-      <LkNavbar navsData={authNavigation} />
 
+  return (
+    <>
       {isLoadingM ? (
         <div className="chat-area flex h-full items-center justify-center">
           <Spinner />
@@ -147,7 +142,7 @@ const ConversationPage = ({ params }: Props) => {
           />
         </>
       )}
-    </div>
+    </>
   );
 };
 

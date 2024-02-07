@@ -91,7 +91,7 @@ export const MediaContainerGrid = ({
   media: Media[];
   fromMachin?: boolean;
   className?: string;
-  handelSelectFile: (key: Media) => void;
+  handelSelectFile?: (key: Media) => void;
 }) => {
   return (
     <ScrollShadow
@@ -102,7 +102,10 @@ export const MediaContainerGrid = ({
       )}
     >
       {media.map((m, index) => (
-        <div key={index} onClick={() => handelSelectFile(m)}>
+        <div
+          key={index}
+          onClick={() => handelSelectFile && handelSelectFile(m)}
+        >
           <MediaType media={m} />
         </div>
       ))}

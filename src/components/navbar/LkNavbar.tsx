@@ -5,28 +5,17 @@ import { NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 
 import NavContainer from "./NavContainer";
-import { IconButton } from "..";
-import { Settings } from "lucide-react";
-import { useContext } from "react";
-import { chatContext } from "../context/ChatContextProvider";
 
 type Props = {
   navsData: NavItem[];
+  endContent?: React.ReactNode;
 };
 
-const LkNavbar = ({ navsData }: Props) => {
+const LkNavbar = ({ navsData, endContent }: Props) => {
   const pathName = usePathname();
-  const { setShowAsideChat, isShowAsideChat } = useContext(chatContext);
+
   return (
-    <NavContainer
-      endContent={
-        <IconButton
-          Icon={Settings}
-          onClick={() => setShowAsideChat(!isShowAsideChat)}
-          className=" lg:hidden "
-        />
-      }
-    >
+    <NavContainer endContent={endContent}>
       <NavbarContent
         className="hidden space-x-2 sm:flex gap-4 w-full"
         justify="start"

@@ -23,6 +23,7 @@ import SelecteModel from "./chat/SelecteModel";
 import CustmMediaMediaComponent from "./chat/CustmMediaMediaComponent";
 import Section from "./Section";
 import LogoIcon from "./LogoIcon";
+import MediaFiles from "./global/MediaFiles";
 export {
   ContainerMaxWind,
   IconButton,
@@ -46,4 +47,5 @@ export {
   CustomTooltip,
   Section,
   LogoIcon,
+  MediaFiles,
 };
