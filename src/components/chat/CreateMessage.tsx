@@ -62,12 +62,14 @@ const CreateMessage = ({
       toast.error("your message not sened");
     }
   }, [errors, isDirty]);
-  // useEffect(() => {
-  //   if (watch("content")?.length == 1) {
-  //     const isArabic = isArabicChar(watch("content"));
-  //     setTextArabicDirection(isArabic);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (watch("content")?.length == 1) {
+      const isArabic = isArabicChar(watch("content"));
+      setTextArabicDirection(isArabic);
+    } else if (watch("content")?.length == 0) {
+      setTextArabicDirection(false);
+    }
+  }, [watch("content")]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const message = {
       ...data,
@@ -117,6 +119,7 @@ const CreateMessage = ({
                   placeholder="Ask me any think"
                   variant="bordered"
                   color="default"
+                  dir={textArabicDirection ? "rtl" : "ltr"}
                   onKeyDown={(e) => {
                     if (e.key == "Enter" && !e.shiftKey) {
                       e.preventDefault();
