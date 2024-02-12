@@ -19,7 +19,7 @@ const GuestComponnet = (props: Props) => {
         className="text-slate-700 rounded-none"
         as={Link}
         color="primary"
-        href="/regiser"
+        href="/register"
         variant="light"
       >
         Sign Up

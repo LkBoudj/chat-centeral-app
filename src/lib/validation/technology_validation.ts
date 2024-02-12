@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { ACCEPTED_IMAGE_MIME_TYPES } from "../configs/validition_config";
+
 import prismaConfig from "../configs/prismaConfig";
-import { zfd } from "zod-form-data";
 
 export const schemCreateTechFront = z.object({
   name: z.string().trim().min(1, {
@@ -24,11 +23,7 @@ export const schemCreateTechFront = z.object({
 
       return models;
     }),
-  logo: z.any().refine((files) => {
-    if (!files?.length) return true;
-
-    return ACCEPTED_IMAGE_MIME_TYPES.includes(files[0].type);
-  }, "Your file type is not accepted"),
+  logo: z.string().nullable().nullish(),
 });
 
 export const schemCreateTechBack = schemCreateTechFront.merge(
@@ -70,10 +65,11 @@ export const schemCreateTechBack = schemCreateTechFront.merge(
         }
       ),
     models: z.string(),
-    status: z.any().transform((data) => data == "true"),
-    logo: z.any().refine((file) => {
-      if (!file || file == "undefined") return true;
-      return ACCEPTED_IMAGE_MIME_TYPES.includes(file.type);
-    }, "Your file type is not accepted"),
+  })
+);
+
+export const schemEditTechBack = schemCreateTechFront.merge(
+  z.object({
+    id: z.number(),
   })
 );

@@ -1,7 +1,7 @@
 import { Spinner, Image } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import { useState, useCallback, useEffect } from "react";
-import { MediaContainerGrid } from "../chat/CustmMediaMediaComponent";
+import { MediaContainerGrid } from "../../chat/CustmMediaMediaComponent";
 
 const MediaFiles = ({
   type,
@@ -26,6 +26,9 @@ const MediaFiles = ({
     getDtat();
   }, [getDtat]);
 
+  // const handelDeleteFile = async (id: number) => {
+  //    const res = await fetch(`/api/media?type=${type}`);
+  // };
   return (
     <div className="w-full h-full  flex items-center justify-center">
       {loading ? (

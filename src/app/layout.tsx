@@ -3,9 +3,6 @@ import type { Metadata } from "next";
 import { Inter, Open_Sans, Cairo } from "next/font/google";
 import Provider from "@/components/providers";
 import { cn } from "@/lib/utlis";
-
-const inter = Inter({ subsets: ["latin"] });
-const OpenSans = Open_Sans({ subsets: ["latin"] });
 const cairo = Cairo({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Chat Central",

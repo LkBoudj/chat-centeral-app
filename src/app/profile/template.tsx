@@ -1,17 +1,21 @@
 "use client";
-import { LkNavbar } from "@/components";
+import { LkNavbar, UploadExplorer } from "@/components";
+import { globalContext } from "@/components/context/GolobalContextProvider";
+import UserContextProvider from "@/components/context/UserContextProvider";
 import { authNavigation } from "@/lib/data/authNavigation";
 
 type Props = {
   children: React.ReactNode;
+  params?: {};
+  searchParams?: {};
 };
-
-const ProfileTemplate = ({ children }: Props) => {
+const ProfileTemplate = ({ children, params, searchParams }: Props) => {
   return (
-    <div>
+    <UserContextProvider defaultVal={params}>
       <LkNavbar navsData={authNavigation} />
+
       {children}
-    </div>
+    </UserContextProvider>
   );
 };
 

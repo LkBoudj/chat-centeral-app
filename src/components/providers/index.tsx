@@ -5,6 +5,7 @@ import { PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import TrpcProvider from "./TrpcProvider";
 import { useRouter } from "next/navigation";
+import { GolobalContextProvider } from "../context";
 const Provider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
@@ -12,8 +13,10 @@ const Provider = ({ children }: PropsWithChildren) => {
     <SessionProvider>
       <TrpcProvider>
         <NextUIProvider navigate={router.push}>
-          <Toaster />
-          {children}
+          <GolobalContextProvider defaultVal={undefined}>
+            <Toaster />
+            {children}
+          </GolobalContextProvider>
         </NextUIProvider>
       </TrpcProvider>
     </SessionProvider>

@@ -2,7 +2,7 @@ type AppMessage = {
   content?: string;
   conversationId: string;
   technologyId: number;
-  userId: number;
+  userId: string;
   fromMachin?: boolean;
   media?: any;
 };

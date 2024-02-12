@@ -1,4 +1,5 @@
 "use client";
+import { hanldeCustomErrorsZod } from "@/lib/utlis";
 import { useDisclosure } from "@nextui-org/react";
 import React, { PropsWithChildren, createContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -16,41 +17,34 @@ const TechnologyContextProvider = ({ children }: PropsWithChildren) => {
   const [selectedItem, setSelectedItem] = useState<any>();
   const [items, setItems] = useState<any[]>([]);
   const [customErrors, setCustomErros] = useState({});
+  const [isLoading, setIsloading] = useState(true);
   const getItems = async () => {
+    setIsloading(true);
     const res = await fetch("/api/dashboard/technology");
 
     if (res.ok) {
       const json = await res.json();
       setItems(json.items);
+      setIsloading(false);
     }
   };
 
-  const createItem = async (body: FormData) => {
+  const createItem = async (body: string) => {
     const res = await fetch("/api/dashboard/technology", {
       method: "post",
       body,
     });
 
+    const { item, success, errors } = await res.json();
     if (!res.ok) {
-      const result = await res.json();
-      if (!result.success) {
-        let customBackErrors = {};
-        result?.errors?.forEach((e: any) => {
-          customBackErrors = {
-            ...customBackErrors,
-            [e.path[0]]: {
-              message: e.message,
-            },
-          };
-          return {
-            [e.path[0]]: e.message,
-          };
-        });
-        setCustomErros(customBackErrors);
+      if (!success) {
+        hanldeCustomErrorsZod(errors, setCustomErros);
       }
       toast.error("there is a problem");
     } else {
       toast.success("Your Technology created successfully");
+      setCustomErros({});
+      setItems([...items, item]);
       onOpenChange && onOpenChange();
       return true;
     }
@@ -58,6 +52,10 @@ const TechnologyContextProvider = ({ children }: PropsWithChildren) => {
     return false;
   };
 
+  const handelCreate = () => {
+    setCustomErros({});
+    onOpen();
+  };
   const deleteItem = async (id: any) => {
     const res = await fetch("/api/dashboard/technology", {
       method: "DELETE",
@@ -77,6 +75,7 @@ const TechnologyContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const handelEditItemButton = (item: any) => {
+    setCustomErros({});
     setSelectedItem(item);
     onOpenU();
   };
@@ -106,6 +105,7 @@ const TechnologyContextProvider = ({ children }: PropsWithChildren) => {
       }
     } else {
       toast.success("Your Technology updated successfully");
+      setCustomErros({});
       onOpenChangeU && onOpenChangeU();
 
       const updatedItems: any[] = items.map((item: any) => {
@@ -141,6 +141,10 @@ const TechnologyContextProvider = ({ children }: PropsWithChildren) => {
     deleteItem,
     handelEditItemButton,
     updateItem,
+    handelCreate,
+    //---
+    isLoading,
+    setIsloading,
   };
   return <techContext.Provider value={value}>{children}</techContext.Provider>;
 };

@@ -11,8 +11,8 @@ datasource db {
 }
 
 model Account {
-  id                Int      @id @default(autoincrement()) @db.UnsignedInt
-  userId            Int      @db.UnsignedInt
+  id                String   @id @unique @default(uuid())
+  userId            String
   type              String
   provider          String
   providerAccountId String
@@ -33,7 +33,7 @@ model Account {
 model Session {
   id           Int      @id @default(autoincrement()) @db.UnsignedInt
   sessionToken String   @unique
-  userId       Int      @db.UnsignedInt
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
@@ -46,9 +46,10 @@ enum Role {
 }
 
 model User {
-  id                     Int                 @id @default(autoincrement()) @db.UnsignedInt
+  id                     String              @id @unique @default(uuid())
   name                   String?
   email                  String?             @unique
+  description            String?
   password               String?
   emailVerified          DateTime?
   image                  String?
@@ -88,7 +89,7 @@ model Conversation {
 
   description String?
   user        User      @relation("conversaton_creator", fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int       @db.UnsignedInt
+  userId      String
   users       User[]    @relation("conversation_members")
   photo       String?
   messages    Message[]
@@ -113,7 +114,7 @@ model Technology {
 model Message {
   id             Int             @id @default(autoincrement()) @db.UnsignedInt
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         Int             @db.UnsignedInt
+  userId         String
   conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId String
   fromMachin     Boolean?        @default(false)
@@ -129,7 +130,7 @@ model Media {
   id        Int             @id @default(autoincrement()) @db.UnsignedInt
   message   MessageMedias[]
   user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int             @db.UnsignedInt
+  userId    String
   src       String          @db.LongText
   type      String
   createdAt DateTime        @default(now())
@@ -167,7 +168,7 @@ model Prompt {
   excerpt           String              @db.VarChar(60)
   technology        Technology?         @relation(fields: [technologyId], references: [id])
   user              User                @relation("creator", fields: [userId], references: [id], onDelete: Cascade)
-  userId            Int                 @db.UnsignedInt
+  userId            String
   license           License             @default(free)
   technologyId      Int?                @db.UnsignedInt
   content           String              @db.LongText
@@ -183,7 +184,7 @@ model UsersLikerPrompts {
   prompt   Prompt @relation(fields: [promptId], references: [id])
   promptId Int    @db.UnsignedInt
   user     User   @relation(fields: [userId], references: [id])
-  userId   Int    @db.UnsignedInt
+  userId   String
 
   @@id([promptId, userId])
 }
@@ -198,7 +199,7 @@ model Tag {
 model Comment {
   id        Int      @id @default(autoincrement()) @db.UnsignedInt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @db.UnsignedInt
+  userId    String
   content   String?  @db.LongText
   propmt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptId  Int      @db.UnsignedInt

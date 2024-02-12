@@ -17,8 +17,10 @@ const AuthComponent = (props: Props) => {
     <div>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="light">
-            <Avatar src={session && session.user.image} />
+          <Button className="bg-transparent" variant="light">
+            <Avatar
+              src={(session && session.user.image) ?? "/images/default.jpeg"}
+            />
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">

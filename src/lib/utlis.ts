@@ -22,3 +22,22 @@ export const isArabicChar = (char: string) => {
   const arabicPattern = /[\u0600-\u06FF]/;
   return arabicPattern.test(char);
 };
+
+export const hanldeCustomErrorsZod = (
+  errors: any[],
+  callback: (key?: any) => void
+) => {
+  let customBackErrors = {};
+  errors?.forEach((e: any) => {
+    customBackErrors = {
+      ...customBackErrors,
+      [e.path[0]]: {
+        message: e.message,
+      },
+    };
+    return {
+      [e.path[0]]: e.message,
+    };
+  });
+  callback(customBackErrors);
+};

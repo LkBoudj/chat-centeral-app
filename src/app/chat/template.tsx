@@ -1,5 +1,5 @@
 "use client";
-import { ChatAside, IconButton, LkNavbar } from "@/components";
+import { ChatAside, IconButton, LkNavbar, UploadExplorer } from "@/components";
 import UploadFile from "@/components/chat/UploadFile";
 import ChatContextProvider from "@/components/context/ChatContextProvider";
 import { authNavigation } from "@/lib/data/authNavigation";
@@ -9,28 +9,30 @@ import { Settings } from "lucide-react";
 import { PropsWithChildren, useState } from "react";
 
 const ChatTemplate = ({ children }: PropsWithChildren) => {
-  const {
-    isOpen: isUploadFileOpen,
-    onOpen: onOpenUploadFile,
-    onOpenChange: onOpenChangeUloadFile,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isUploadFileOpen,
+  //   onOpen: onOpenUploadFile,
+  //   onOpenChange: onOpenChangeUloadFile,
+  // } = useDisclosure();
   const [isShowAsideChat, setShowAsideChat] = useState<boolean>(false);
 
   return (
     <ChatContextProvider
-      outValue={{
-        isUploadFileOpen,
-        onOpenUploadFile,
-        onOpenChangeUloadFile,
-        isShowAsideChat,
-        setShowAsideChat,
-      }}
+      outValue={
+        {
+          // isUploadFileOpen,
+          // onOpenUploadFile,
+          // onOpenChangeUloadFile,
+          // isShowAsideChat,
+          // setShowAsideChat,
+        }
+      }
     >
-      <UploadFile
+      {/* <UploadFile
         isOpen={isUploadFileOpen}
         onOpen={onOpenUploadFile}
         onOpenChange={onOpenChangeUloadFile}
-      />
+      /> */}
 
       <ChatAside />
 

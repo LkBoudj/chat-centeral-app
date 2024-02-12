@@ -37,7 +37,7 @@ class MessageController {
     limit: number;
     skip?: number;
     cursor: number | null | undefined;
-    userId: number;
+    userId: string;
     conversationId: string;
   }) {
     const messages = await prismaConfig.message.findMany({
@@ -70,7 +70,7 @@ class MessageController {
     userId,
     conversationId,
   }: {
-    userId: number;
+    userId: string;
     conversationId: string;
   }) {
     const messages = await prismaConfig.message.findMany({

@@ -12,7 +12,7 @@ class ConversationController extends Controllers {
     limit: number;
     skip?: number;
     cursor: string | null | undefined;
-    userId: number;
+    userId: string;
   }) {
     const conversation = await prismaConfig.conversation.findMany({
       take: limit + 1,
@@ -27,7 +27,7 @@ class ConversationController extends Controllers {
     });
     return this.paginationData({ limit, items: conversation, cursor });
   }
-  async isExits({ userId, id }: { userId: number; id: string }) {
+  async isExits({ userId, id }: { userId: string; id: string }) {
     const isExits = await prismaConfig.conversation.findUnique({
       where: {
         userId,
@@ -36,7 +36,7 @@ class ConversationController extends Controllers {
     });
     return isExits;
   }
-  async create({ userId, title }: { userId: number; title: string }) {
+  async create({ userId, title }: { userId: string; title: string }) {
     const newConversation = await prismaConfig.conversation.create({
       data: {
         userId,
@@ -46,7 +46,7 @@ class ConversationController extends Controllers {
     return newConversation;
   }
 
-  async delete({ userId, id }: { userId: number; id: string }) {
+  async delete({ userId, id }: { userId: string; id: string }) {
     try {
       const isExits = await this.isExits({ userId, id });
       if (isExits) {

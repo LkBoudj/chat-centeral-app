@@ -43,7 +43,7 @@ class MediaController {
     type,
     userId,
   }: {
-    userId: number;
+    userId: string;
     src: string;
     type: string;
     messageId?: number;
@@ -67,7 +67,7 @@ class MediaController {
     messageId,
   }: {
     id: number;
-    userId: number;
+    userId: string;
     src?: string;
     type?: string;
     messageId?: number;

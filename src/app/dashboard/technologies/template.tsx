@@ -1,4 +1,4 @@
-import TechnologyContextProvider from "@/components/context/TechnologyContextProvider";
+import TechnologyContextProvider from "@/components/context/dashboard/TechnologyContextProvider";
 import React, { PropsWithChildren } from "react";
 
 const TechTemplate = ({ children }: PropsWithChildren) => {

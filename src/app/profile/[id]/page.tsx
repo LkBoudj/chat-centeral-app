@@ -15,12 +15,13 @@ import { Tab } from "@nextui-org/react";
 import React, { useContext } from "react";
 
 type Props = {
-  params: {};
+  params?: any;
   searchParams: {};
 };
 
-const ProfilePage = () => {
-  const { userData, isLoading, isError } = useContext(userContext);
+const ProfilePage = ({ params, searchParams }: Props) => {
+  const { userData, isLoading, isError, user } = useContext(userContext);
+  const { id } = params;
   const { onOpenUploadFile } = useContext(globalContext);
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
@@ -29,12 +30,12 @@ const ProfilePage = () => {
       <div className="py-16 w-full bg-cover bg-center bg-repeat-none bg-[url('/images/bg_c.webp')]"></div>
       <ContainerMaxWind className=" transform -translate-y-24 flex items-center justify-center px-5 ">
         <CustomAvatarUser
-          canEdit={true}
           onClick={onOpenUploadFile}
+          canEdit={user.id == id}
           src={userData?.image ?? ""}
           defualt="/images/default.jpeg"
           name={userData?.name ?? ""}
-          email={userData?.email ?? ""}
+          email={user.id == id && userData?.email ? userData?.email : ""}
           description={userData?.description ?? ""}
         />
       </ContainerMaxWind>
@@ -42,7 +43,7 @@ const ProfilePage = () => {
         <Explorer
           startComponent={
             <Tab className="h-full w-full" key="informatin" title="Information">
-              <UserInformation readonly={false} />
+              <UserInformation readonly={user.id != id} />
             </Tab>
           }
           types={["image", "audio", "video", "pdf"]}

@@ -5,6 +5,7 @@ import {
   FormSwitchInput,
 } from "@/components/global/form";
 import {
+  Avatar,
   Button,
   Card,
   CardBody,
@@ -18,13 +19,14 @@ import { Minus, PlusIcon } from "lucide-react";
 
 import { useTechnologyHoeck } from "@/lib/hocks";
 import { useContext, useEffect } from "react";
-import { techContext } from "@/components/context/TechnologyContextProvider";
+import { techContext } from "@/components/context/dashboard/TechnologyContextProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { schemCreateTechFront } from "@/lib/validation/technology_validation";
+import { schemEditTechBack } from "@/lib/validation/technology_validation";
 import { date, z } from "zod";
+import { globalContext } from "@/components/context/GolobalContextProvider";
 
-type Inputs = z.infer<typeof schemCreateTechFront>;
+type Inputs = z.infer<typeof schemEditTechBack>;
 const UpdateTechnology = () => {
   const {
     onOpenChangeU,
@@ -43,8 +45,9 @@ const UpdateTechnology = () => {
     getValues,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(schemCreateTechFront),
+    resolver: zodResolver(schemEditTechBack),
     defaultValues: {
+      id: selectedItem.id,
       name: selectedItem.name,
       refTech: selectedItem.refTech,
       status: selectedItem.status,
@@ -57,22 +60,15 @@ const UpdateTechnology = () => {
       name: "models", // unique name for your Field Array
     }
   );
+
+  const { onOpenUploadFile, file, setFile } = useContext(globalContext);
   useEffect(() => {
     if (Object.keys(errors).length) {
       setCustomErros(errors);
     }
   }, [errors, setCustomErros]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const formData = new FormData();
-
-    formData.set("id", selectedItem.id);
-    formData.set("logo", data.logo[0]);
-    formData.set("name", data.name);
-    formData.set("models", data.models);
-    formData.set("refTech", data.refTech);
-    formData.set("status", data.status as any);
-
-    await updateItem(formData);
+    await updateItem(JSON.stringify(data));
   };
 
   return (
@@ -84,13 +80,9 @@ const UpdateTechnology = () => {
       edit={true}
       handleSubmit={handleSubmit(onSubmit)}
     >
-      <FormInput.FormInputImageFile
-        register={register}
-        id="logo"
-        label="logo"
-        src={`${selectedItem.logo}`}
-        customErrors={customErrors}
-      />
+      <div className="flex items-center justify-center mb-4">
+        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+      </div>
 
       <FormInput.FromInputController
         control={control}

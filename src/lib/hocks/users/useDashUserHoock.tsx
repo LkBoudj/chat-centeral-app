@@ -1,29 +1,21 @@
 import { IconButton } from "@/components";
-import { techContext } from "@/components/context/TechnologyContextProvider";
-
+import { dashUserContext } from "@/components/context/dashboard/DashUserContextProvider";
 import { Chip, Tooltip, User } from "@nextui-org/react";
 import { Eye, Edit, Delete } from "lucide-react";
 import React, { useCallback, useContext } from "react";
-import toast from "react-hot-toast";
+
+type Props = {};
 
 const columns = [
   { label: "name", key: "name" },
-  { label: "ref", key: "refTech" },
-  { label: "models", key: "models" },
   { label: "status", key: "status" },
+  { label: "role", key: "roles" },
   { label: "createdAt", key: "updatedAt" },
   { label: "ACTIONS", key: "actions" },
 ];
-
-const useTechnologyHoeck = () => {
-  const {
-    handelEditItemButton,
-    items,
-    deleteItem,
-
-    selectedItem,
-  } = useContext(techContext);
-
+const useDashUserHoock = () => {
+  const { handelEditItemButton, items, deleteItem, selectedItem } =
+    useContext(dashUserContext);
   const renderCell = useCallback(
     (items: any, key: string) => {
       const data = items[key];
@@ -33,7 +25,8 @@ const useTechnologyHoeck = () => {
           return (
             <User
               name={data}
-              avatarProps={{ radius: "lg", src: `${items.logo}` }}
+              avatarProps={{ radius: "lg", src: `${items.image}` }}
+              description={items.email}
             />
           );
         case "status":
@@ -83,4 +76,5 @@ const useTechnologyHoeck = () => {
     renderCell,
   };
 };
-export default useTechnologyHoeck;
+
+export default useDashUserHoock;

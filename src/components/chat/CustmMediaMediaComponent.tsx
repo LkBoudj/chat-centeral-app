@@ -1,6 +1,8 @@
 import { cn, Image, ScrollShadow } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import React from "react";
+import IconButton from "../global/IconButton";
+import { XIcon } from "lucide-react";
 
 type Props = {};
 
@@ -87,11 +89,13 @@ export const MediaContainerGrid = ({
   fromMachin,
   className,
   handelSelectFile,
+  handelDeleteMedia,
 }: {
   media: Media[];
   fromMachin?: boolean;
   className?: string;
   handelSelectFile?: (key: Media) => void;
+  handelDeleteMedia?: (key: Media) => void;
 }) => {
   return (
     <ScrollShadow
@@ -104,8 +108,10 @@ export const MediaContainerGrid = ({
       {media.map((m, index) => (
         <div
           key={index}
+          className="p-1 max-h-32 overflow-hidden flex items-center justify-center bg-red-50"
           onClick={() => handelSelectFile && handelSelectFile(m)}
         >
+          {handelDeleteMedia && <IconButton Icon={XIcon} />}
           <MediaType media={m} />
         </div>
       ))}

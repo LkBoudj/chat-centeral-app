@@ -5,6 +5,7 @@ import {
   FormSwitchInput,
 } from "@/components/global/form";
 import {
+  Avatar,
   Button,
   Card,
   CardBody,
@@ -16,22 +17,24 @@ import { IconButton } from "@/components";
 import { Minus, PlusIcon } from "lucide-react";
 
 import { useContext, useEffect } from "react";
-import { techContext } from "@/components/context/TechnologyContextProvider";
+import { techContext } from "@/components/context/dashboard/TechnologyContextProvider";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { schemCreateTechFront } from "@/lib/validation/technology_validation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { globalContext } from "@/components/context/GolobalContextProvider";
 
 type Inputs = z.infer<typeof schemCreateTechFront>;
 const CreateTechnology = () => {
   const { onOpenChange, isOpen, setCustomErros, customErrors, createItem } =
     useContext(techContext);
-
+  const { onOpenUploadFile, file, setFile } = useContext(globalContext);
   const {
     control,
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schemCreateTechFront),
@@ -46,17 +49,14 @@ const CreateTechnology = () => {
     }
   );
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const formData = new FormData();
-
-    formData.set("logo", data.logo[0]);
-    formData.set("name", data.name);
-    formData.set("models", data.models);
-    formData.set("refTech", data.refTech);
-    formData.set("status", data.status as any);
-
-    const result = await createItem(formData);
+    const result = await createItem(JSON.stringify(data));
     result && reset();
   };
+  useEffect(() => {
+    if (file?.src) {
+      setValue("logo", file?.src);
+    }
+  }, [file]);
   useEffect(() => {
     if (Object.keys(errors).length) {
       setCustomErros(errors);
@@ -70,12 +70,9 @@ const CreateTechnology = () => {
       typeForm={"create"}
       handleSubmit={handleSubmit(onSubmit)}
     >
-      <FormInput.FormInputImageFile
-        id="logo"
-        label="logo"
-        customErrors={customErrors}
-        register={register}
-      />
+      <div className="flex items-center justify-center mb-4">
+        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+      </div>
 
       <FormInput.FromInputController
         control={control}

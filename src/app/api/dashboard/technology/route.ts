@@ -20,20 +20,8 @@ export async function GET(req: NextRequest) {
 }
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const formDate = await req.formData();
-    const logo: File | null = formDate.get("logo") as File;
-    const name: string = formDate.get("name") as string;
-    const refTech: string = formDate.get("refTech") as string;
-    const models: string = formDate.get("models") as string;
-    const status: string = formDate.get("status") as string;
-
-    const validation = await schemCreateTechBack.safeParseAsync({
-      logo,
-      name,
-      refTech,
-      models,
-      status,
-    });
+    const data = await req.json();
+    const validation = await schemCreateTechBack.safeParseAsync(data);
 
     if (!validation.success) {
       const result = {
@@ -42,19 +30,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
       return NextResponse.json(result, { status: 400 });
     }
-    let logoFile: any = null;
-    if (logo) {
-      logoFile = await uploadFiles(logo, "images/technologies", "tech");
-    }
 
     const tech = await prismaConfig.technology.create({
       data: {
         ...validation.data,
         refTech: validation.data.refTech.trim().replace(" ", "_"),
-        logo: logoFile?.src ?? null,
       },
     });
-    return NextResponse.json({ items: tech, success: true }, { status: 200 });
+    return NextResponse.json({ item: tech, success: true }, { status: 200 });
   } catch (e: any) {
     return NextResponse.json(e, { status: 400 });
   }
@@ -62,30 +45,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export async function PUT(req: NextRequest, res: NextResponse) {
   try {
-    const formDate = await req.formData();
-    const logo: File | null = formDate.get("logo") as File;
-    const id: string = formDate.get("id") as string;
-    const name: string = formDate.get("name") as string;
-    const refTech: string = formDate.get("refTech") as string;
-    const models: string = formDate.get("models") as string;
-    const status: string = formDate.get("status") as string;
+    const data = await req.json();
 
-    let techItem: any = null;
+    let isExist = await prismaConfig.technology.findUnique({
+      where: {
+        id: data.id,
+      },
+    });
 
+    if (!isExist) {
+      const result = {
+        success: false,
+        errors: [],
+      };
+      return NextResponse.json(result, { status: 400 });
+    }
     const schemCreateTechFrontUpdate = schemCreateTechBack.merge(
       z.object({
-        id: z
-          .string()
-          .min(1, "id is required")
-          .refine(async (data) => {
-            techItem = await prismaConfig.technology.findUnique({
-              where: {
-                id: parseInt(id),
-              },
-            });
-            if (techItem) return true;
-            return false;
-          }),
         name: z
           .string()
           .trim()
@@ -98,7 +74,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
                 where: {
                   name: data,
                   NOT: {
-                    id: parseInt(id),
+                    id: isExist.id,
                   },
                 },
               });
@@ -118,7 +94,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
                 where: {
                   refTech: data,
                   NOT: {
-                    id: parseInt(id),
+                    id: isExist.id,
                   },
                 },
               });
@@ -130,14 +106,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
           ),
       })
     );
-    const validation = await schemCreateTechFrontUpdate.safeParseAsync({
-      id,
-      logo,
-      name,
-      refTech,
-      models,
-      status,
-    });
+    const validation = await schemCreateTechFrontUpdate.safeParseAsync(data);
 
     if (!validation.success) {
       const result = {
@@ -146,32 +115,22 @@ export async function PUT(req: NextRequest, res: NextResponse) {
       };
       return NextResponse.json(result, { status: 400 });
     }
-    let logoFile = null;
-
-    if (logo && typeof logo != "string") {
-      logoFile = await uploadFiles(logo, "images/technologies", "tech");
-      if (techItem && techItem?.logo) {
-        removeFileIfEexits("images/technology", techItem?.logo);
-      }
-    }
 
     const tech = await prismaConfig.technology.update({
       data: {
         models: validation.data.models,
         name: validation.data.name,
         refTech: validation.data.refTech.trim().replace(" ", "_"),
-        logo: logoFile?.src ?? techItem?.logo,
+        logo: validation.data.logo,
         status: validation.data.status,
       },
       where: {
-        id: parseInt(id),
+        id: data.id,
       },
     });
 
     return NextResponse.json({ item: tech, success: true }, { status: 200 });
   } catch (e: any) {
-    console.log("errrrrrrr=>", e);
-
     return NextResponse.json(e, { status: 400 });
   }
 }

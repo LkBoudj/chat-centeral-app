@@ -4,10 +4,13 @@ import { limit_infinite_messagess } from "@/lib/configs/infinte_scrolle_config";
 import { useConversationHock } from "@/lib/hocks";
 import useMessageHoock from "@/lib/hocks/message/useMessageHoock";
 import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
+import { useDisclosure } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import UploadExplorer from "../global/explorer/UploadExplorer";
+import { globalContext } from "./GolobalContextProvider";
 
 type ChatContextResponce = {
   currentConversationId: number | null;
@@ -45,8 +48,16 @@ const ChatContextProvider = ({
     setChats,
   } = useConversationHock();
 
+  const {
+    isOpen: isUploadFileOpen,
+    onOpen: onOpenUploadFile,
+    onOpenChange: onOpenChangeUloadFile,
+    onClose,
+  } = useDisclosure();
+
   const [copy, setCopy] = useState<boolean>(false);
-  const [file, setFile] = useState<Media>();
+  const { file, setFile } = useContext(globalContext);
+
   const [progress, setProgress] = useState(0);
 
   const handelTextToCopy = (textToCopy: any) => {
@@ -61,6 +72,10 @@ const ChatContextProvider = ({
       .catch(() => {});
   };
 
+  const handelSelectFile = (e: Media) => {
+    setFile(e);
+    onClose();
+  };
   const {
     setCurrentConversationId,
     messages,
@@ -103,8 +118,21 @@ const ChatContextProvider = ({
     setFile,
     progress,
     setProgress,
+    onOpenUploadFile,
+    onOpenChangeUloadFile,
   };
-  return <chatContext.Provider value={value}>{children}</chatContext.Provider>;
+  return (
+    <chatContext.Provider value={value}>
+      {isUploadFileOpen && (
+        <UploadExplorer
+          types={["image", "audio", "pdf"]}
+          handelSelectFile={handelSelectFile}
+        />
+      )}
+
+      {children}
+    </chatContext.Provider>
+  );
 };
 
 export default ChatContextProvider;

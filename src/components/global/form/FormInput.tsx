@@ -1,10 +1,22 @@
-import { Image, Input } from "@nextui-org/react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Image,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from "@nextui-org/react";
 import { useState } from "react";
 
 import { Controller, FieldErrors } from "react-hook-form";
 
 interface BaseInputProps {
   label?: string;
+  labelPlacement?: "outside" | "outside-left" | "inside";
   id: string;
   customErrors?: FieldErrors;
   type?: string;
@@ -14,6 +26,7 @@ interface BaseInputProps {
   className?: string;
   classNames?: any;
   placeholder?: string;
+  variant?: "bordered" | "flat" | "faded" | "underlined";
   size?: "sm" | "md" | "lg" | undefined;
 }
 
@@ -29,6 +42,10 @@ interface ControllerInputProps extends BaseInputProps {
 interface FormInputImageFile extends RegisterInputProps {
   src?: string;
 }
+
+interface ControllerSelectProps extends ControllerInputProps {
+  data: any[];
+}
 const FromInputRegister = ({
   label,
   id,
@@ -43,6 +60,7 @@ const FromInputRegister = ({
   classNames,
   placeholder,
   size = "sm",
+  variant = "bordered",
 }: RegisterInputProps) => {
   return (
     <Input
@@ -52,7 +70,7 @@ const FromInputRegister = ({
       {...register(id)}
       className={className}
       placeholder={placeholder}
-      variant="bordered"
+      variant={variant}
       label={label}
       type={type}
       defaultvalue={defaultValue}
@@ -74,9 +92,11 @@ const FromInputController = ({
   className,
   classNames,
   placeholder,
+  labelPlacement = "inside",
   size = "sm",
   control,
   customErrors,
+  variant = "bordered",
 }: ControllerInputProps) => {
   return (
     <Controller
@@ -96,8 +116,9 @@ const FromInputController = ({
             classNames={classNames}
             className={className}
             placeholder={placeholder}
+            labelPlacement={labelPlacement}
             onChange={onChange}
-            variant="bordered"
+            variant={variant}
             label={label}
             type={type}
             value={value}
@@ -144,10 +165,136 @@ const FormInputImageFile = ({
     </div>
   );
 };
+const FormTextarea = ({
+  label,
+  id,
+  type = "text",
+  required,
+  register,
+  customErrors,
+  disabled,
+  readOnly,
+  className,
+  classNames,
+  variant = "bordered",
+}: RegisterInputProps) => {
+  return (
+    <Textarea
+      classNames={classNames}
+      {...register(id)}
+      className={className}
+      placeholder=" "
+      variant={variant}
+      label={label}
+      type={type}
+      isDisabled={disabled}
+      isReadOnly={readOnly}
+      errorMessage={customErrors && (customErrors[id]?.message as string)}
+      isInvalid={customErrors && customErrors[id]?.message != undefined}
+    />
+  );
+};
+const FormTextareaController = ({
+  label,
+  id,
+  type = "text",
+  required,
+  control,
+  customErrors,
+  disabled,
+  readOnly,
+  className,
+  classNames,
+  variant = "bordered",
+  size = "sm",
+  placeholder,
+}: ControllerInputProps) => {
+  return (
+    <Controller
+      control={control}
+      name={id}
+      render={({
+        field: { onChange, onBlur, value, ref },
+        formState: { errors },
+        fieldState,
+      }) => {
+        errors = { ...errors, ...customErrors };
+        return (
+          <Textarea
+            required={required}
+            ref={ref}
+            size={size}
+            classNames={classNames}
+            className={className}
+            placeholder={placeholder}
+            onChange={onChange}
+            variant={variant}
+            label={label}
+            type={type}
+            value={value}
+            isDisabled={disabled}
+            isReadOnly={readOnly}
+            errorMessage={errors[id]?.message as string}
+            isInvalid={errors[id]?.message != undefined}
+          />
+        );
+      }}
+    />
+  );
+};
+
+const FormSelectController = ({
+  label,
+  id,
+  type = "text",
+  required,
+  control,
+  customErrors,
+  disabled,
+  readOnly,
+  className,
+  classNames,
+  variant = "bordered",
+  size = "sm",
+  placeholder,
+  data,
+}: ControllerSelectProps) => {
+  return (
+    <Controller
+      control={control}
+      name={id}
+      render={({
+        field: { onChange, onBlur, value, ref },
+        formState: { errors },
+        fieldState,
+      }) => {
+        errors = { ...errors, ...customErrors };
+
+        return (
+          <Select
+            label={label}
+            placeholder={placeholder}
+            selectionMode="single"
+            defaultSelectedKeys={[value]}
+            className={className}
+            onChange={onChange}
+          >
+            {data.map((d) => (
+              <SelectItem key={d}>{d}</SelectItem>
+            ))}
+          </Select>
+        );
+      }}
+    />
+  );
+};
 
 const FromInput = {
   FromInputRegister,
   FromInputController,
   FormInputImageFile,
+  FormTextarea,
+  FormTextareaController,
+  FormSelectController,
 };
 export default FromInput;
