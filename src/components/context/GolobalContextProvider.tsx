@@ -1,8 +1,7 @@
+"use client";
 import { useDisclosure } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import React, { createContext, useState } from "react";
-import { UploadExplorer, UploadMedia } from "@/components";
-import { boolean } from "zod";
 
 type GlobalContextProps = {
   isUploadFileOpen?: boolean;

@@ -22,7 +22,7 @@ interface BaseAiInput {
   userMessage: AppMessage;
   model?: string;
   headers?: any;
-  userId?: number;
+  userId?: string;
   oldMessages?: string;
 }
 

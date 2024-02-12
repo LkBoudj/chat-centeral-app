@@ -74,7 +74,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
                 where: {
                   name: data,
                   NOT: {
-                    id: isExist.id,
+                    id: isExist?.id,
                   },
                 },
               });
@@ -94,7 +94,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
                 where: {
                   refTech: data,
                   NOT: {
-                    id: isExist.id,
+                    id: isExist?.id,
                   },
                 },
               });

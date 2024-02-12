@@ -3,7 +3,7 @@
 type Props = {};
 
 const page = (props: Props) => {
-  return <div className="w-full h-full bg-red-100"></div>;
+  return <div className="w-full h-full "></div>;
 };
 
 export default page;

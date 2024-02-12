@@ -1,3 +1,4 @@
+"use client";
 import { Spinner, Image } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import { useState, useCallback, useEffect } from "react";

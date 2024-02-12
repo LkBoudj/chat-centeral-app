@@ -6,7 +6,7 @@ class MediaController {
     userId,
     type,
   }: {
-    userId?: number;
+    userId?: string;
     id?: number;
     type?: string;
   }) {
@@ -87,7 +87,7 @@ class MediaController {
 
     return media;
   }
-  async isExits({ id, userId }: { userId?: number; id: number }) {
+  async isExits({ id, userId }: { userId?: string; id: number }) {
     const isExits = await prismaConfig.media.findUnique({
       where: {
         id,

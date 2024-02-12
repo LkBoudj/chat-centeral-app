@@ -1,3 +1,4 @@
+"use client";
 import { schemaUser } from "@/lib/validation/user_validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
