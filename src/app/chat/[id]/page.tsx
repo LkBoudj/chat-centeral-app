@@ -124,7 +124,7 @@ const ConversationPage = ({ params }: Props) => {
 
   useEffect(() => {
     setCurrentConversationId(params.id);
-  }, [params.id]);
+  }, [params.id, setCurrentConversationId]);
 
   return (
     <>

@@ -17,7 +17,7 @@ const useMessageHoock = () => {
     if (data) {
       setMessages(data);
     }
-  }, [isSuccess, currentConversationId]);
+  }, [isSuccess, currentConversationId, data]);
 
   return {
     messages,

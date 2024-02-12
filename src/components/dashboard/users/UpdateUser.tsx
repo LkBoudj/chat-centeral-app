@@ -43,7 +43,7 @@ const UpdateUser = (props: Props) => {
     if (file?.src) {
       setValue("image", file?.src);
     }
-  }, [file]);
+  }, [file, setValue]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     updateItem(JSON.stringify(data), reset);
   };

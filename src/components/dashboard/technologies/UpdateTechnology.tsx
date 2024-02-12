@@ -57,6 +57,7 @@ const UpdateTechnology = () => {
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
       control, // control props comes from useForm (optional: if you are using FormContext)
+      //@ts-ignore
       name: "models", // unique name for your Field Array
     }
   );

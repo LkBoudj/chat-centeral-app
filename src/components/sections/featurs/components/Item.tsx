@@ -14,7 +14,7 @@ const Item = ({ title, description, src }: Props) => {
       shadow="none"
     >
       <CardHeader className="space-y-4 flex-col  pb-0 justify-center ">
-        <Image width={50} height={50} src={src} />
+        <Image width={50} height={50} src={src} alt="" />
         <h4 className=" capitalize font-semibold text-[#001131] text-xl">
           {title}
         </h4>

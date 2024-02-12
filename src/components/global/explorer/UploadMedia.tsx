@@ -53,7 +53,7 @@ const UploadMedia = ({
         console.error("Error uploading file:", error);
       }
     },
-    [setFile, setProgress, onOpenChangeUloadFile]
+    [setFile, setProgress, handelSelectFile, closeWhenUploadDone, onClose]
   );
   const onDrop = useCallback(
     (acceptedFiles: any) => {

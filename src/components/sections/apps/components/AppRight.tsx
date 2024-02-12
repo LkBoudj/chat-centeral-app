@@ -8,7 +8,7 @@ type Props = {
 const AppRight = ({ src }: Props) => {
   return (
     <div className="w-full flex justify-center lg:justify-start pt-10">
-      <Image src={src} width={512} />
+      <Image src={src} width={512} alt="" />
     </div>
   );
 };

@@ -27,10 +27,8 @@ const UsersPage = (props: Props) => {
   } = useContext(dashUserContext);
 
   useEffect(() => {
-    if (isLoading) {
-      getItems();
-    }
-  }, [isLoading]);
+    if (isLoading) getItems();
+  }, [isLoading, getItems]);
 
   if (isLoading) return <Loading />;
   return (

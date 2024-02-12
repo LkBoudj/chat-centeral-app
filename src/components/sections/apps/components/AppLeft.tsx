@@ -19,14 +19,14 @@ const AppLeft = ({ title, description }: Props) => {
         <Button
           color="primary"
           className="capitalize  py-8 px-8 text-[16px] font-bold bg-[#001131]"
-          startContent={<Image src="/images/google-play.png" />}
+          startContent={<Image src="/images/google-play.png" alt="" />}
         >
           Google play
         </Button>
         <Button
           color="primary"
           className="capitalize  py-8 px-8 text-[17px] font-bold bg-[#001131]"
-          startContent={<Image src="/images/app-store.png" />}
+          startContent={<Image src="/images/app-store.png" alt="" />}
         >
           App Store
         </Button>

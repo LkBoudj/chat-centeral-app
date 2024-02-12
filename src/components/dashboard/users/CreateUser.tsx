@@ -40,7 +40,7 @@ const CreateUser = (props: Props) => {
     if (file?.src) {
       setValue("image", file?.src);
     }
-  }, [file]);
+  }, [file, setValue]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     createItem(JSON.stringify(data));
     setFile(null);

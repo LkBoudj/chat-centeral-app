@@ -25,7 +25,7 @@ const TechnologyPage = (props: Props) => {
   } = useContext(techContext);
   useEffect(() => {
     if (isLoading) getItems();
-  }, [isLoading]);
+  }, [isLoading, getItems]);
 
   if (isLoading) return <Loading />;
   return (

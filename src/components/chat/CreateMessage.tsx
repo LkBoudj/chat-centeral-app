@@ -69,7 +69,7 @@ const CreateMessage = ({
     } else if (watch("content")?.length == 0) {
       setTextArabicDirection(false);
     }
-  }, [watch("content")]);
+  }, [watch]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const message = {
       ...data,
