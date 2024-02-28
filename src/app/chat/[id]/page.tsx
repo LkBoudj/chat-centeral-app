@@ -16,7 +16,6 @@ type Props = {
 
 const ConversationPage = ({ params }: Props) => {
   const [aiMessage, setAiMessage] = useState("");
-
   const {
     selectdTechnology,
     setCurrentConversationId,
@@ -47,12 +46,14 @@ const ConversationPage = ({ params }: Props) => {
         };
       }
       const contentType = res.headers.get("Content-Type");
-      if (contentType == "application/json")
+     
+      if (contentType == "application/json") 
         return {
           message,
           type: "json",
           data: await res.json(),
         };
+     
       return {
         message,
         type: "stream",
@@ -76,15 +77,17 @@ const ConversationPage = ({ params }: Props) => {
     },
     async onSuccess(obj) {
       const { data: aiResponse, message, type } = obj;
+     
       if (!aiResponse) {
         toast.error("There was a problem sending this message");
       }
-
       if (type == "json") {
+      
         setMessages((messages: any[]) => [...messages, aiResponse]);
       } else {
-        const id = crypto.randomUUID() + "_" + Date.now();
-
+      
+        const id = "ai_message_" + Date.now();
+           
         let aiMessage = {
           id,
           content: "",
@@ -102,7 +105,8 @@ const ConversationPage = ({ params }: Props) => {
           const { value, done } = await reader?.read();
           const chunkValue = decoder.decode(value);
           responseText += chunkValue;
-
+           console.log(responseText)
+          setAiMessage(responseText)
           const updatedMessages = newData.map((message: any) => {
             if (message.id == id) {
               message.content = responseText;
@@ -110,7 +114,7 @@ const ConversationPage = ({ params }: Props) => {
             return message;
           });
           setMessages(updatedMessages);
-          if (done) break;
+          if (done) {break};
         }
       }
     },
@@ -125,7 +129,7 @@ const ConversationPage = ({ params }: Props) => {
   useEffect(() => {
     setCurrentConversationId(params.id);
   }, [params.id, setCurrentConversationId]);
-
+ useEffect(()=>{},[aiMessage]);
   return (
     <>
       {isLoadingM ? (
@@ -134,7 +138,9 @@ const ConversationPage = ({ params }: Props) => {
         </div>
       ) : (
         <>
+          
           {isSuccessM && <ListOfMessages messages={messages} />}
+        
           <CreateMessage
             hanldeSendMessage={hanldeSendMessage}
             isAiThink={isPending}

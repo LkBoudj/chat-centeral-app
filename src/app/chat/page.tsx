@@ -63,7 +63,7 @@ const ChatPage = (props: Props) => {
           ...messgaes,
           {
             ...message,
-            id: crypto.randomUUID() + "_" + Date.now(),
+            id: "Timestamp" + "_" + Date.now(),
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -76,7 +76,7 @@ const ChatPage = (props: Props) => {
         toast.error("There was a problem sending this message");
       }
       if (type == "stream") {
-        const id = crypto.randomUUID() + "_" + Date.now();
+        const id = "ai_message_" + Date.now();
 
         let aiMessage = {
           id,
