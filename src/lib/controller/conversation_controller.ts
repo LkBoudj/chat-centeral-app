@@ -1,6 +1,6 @@
 import { limit_infinite_messagess } from "../configs/infinte_scrolle_config";
 import prismaConfig from "../configs/prismaConfig";
-import Controllers from "./Controler";
+import Controllers from "./controler";
 
 class ConversationController extends Controllers {
   async infintyLoad({
