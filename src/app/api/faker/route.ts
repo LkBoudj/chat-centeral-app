@@ -1,40 +1,24 @@
-import technologyController from "@/lib/controller/technology_controller";
-import axios from "axios";
-import fs from "fs";
-import { NextRequest, NextResponse } from "next/server";
-import path from "path";
+import prismaConfig from "@/lib/configs/prismaConfig";
 
+import { NextRequest, NextResponse } from "next/server";
+
+import { getAuthSession } from "@/lib/configs/nextAuthOption";
+import { faker } from "@faker-js/faker";
 export async function GET(req: NextRequest) {
   try {
-    await technologyController.create({
-      name: "Gpt 4",
-      logo: "/technologies/gpt4.jpg",
-      models: "gpt-4-0125-preview#gpt-4",
-    });
-    await technologyController.create({
-      name: "Gpt 3",
-      logo: "/technologies/gpt3.jpg",
-    });
-
-    await technologyController.create({
-      name: "Dall-e",
-      logo: "/technologies/dall.jpg",
-      models: "dall-e-1#dall-e-3",
-    });
-    await technologyController.create({
-      name: "Text To Speach",
-      refTech: "tts",
-      logo: "/technologies/tts.jpg",
-      models: "tts-1#tts-1-hd",
-    });
-
-    await technologyController.create({
-      name: "Speacg To Text",
-      refTech: "stt",
-      logo: "/technologies/tts.jpg",
-      models: "whisper-1",
-    });
-
+    const session = await getAuthSession();
+    const userId = session?.user.id;
+    for (let index = 0; index < 50; index++) {
+      await prismaConfig.prompt.create({
+        data: {
+          content: faker.lorem.paragraphs({ min: 2, max: 4 }),
+          excerpt: faker.lorem.lines({ min: 2, max: 3 }),
+          title: faker.lorem.word({ length: 60 }),
+          userId,
+          technologyId: faker.number.int({ min: 1, max: 5 }),
+        },
+      });
+    }
     return NextResponse.json("ok");
   } catch (e: any) {
     return NextResponse.json(e);

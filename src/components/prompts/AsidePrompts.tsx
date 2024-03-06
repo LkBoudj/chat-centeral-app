@@ -18,15 +18,21 @@ import { Technology } from "@prisma/client";
 type Props = {
   handelSelectTech: (key: any) => void;
   slectedTech: string;
+  className?: string;
+  techs: any[];
 };
 
-const AsidePrompts = ({ handelSelectTech, slectedTech }: Props) => {
-  const { isLoading, isSuccess, techs } = useTech();
-
+const AsidePrompts = ({
+  handelSelectTech,
+  slectedTech,
+  className,
+  techs,
+}: Props) => {
   return (
     <aside
       className={cn(
-        `fixed lef-0 top-0 pt-20 h-full transition-all duration-100  w-full  transform   z-40 max-w-[370px] bg-white p-4 `
+        `fixed lef-0 top-0 pt-20 h-full transition-all duration-100  w-full  transform   z-40 max-w-[370px] bg-white p-4 `,
+        className
       )}
     >
       <div className="flex w-full items-center justify-between">
