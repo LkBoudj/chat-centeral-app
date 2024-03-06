@@ -21,10 +21,10 @@ const PromptsContent = ({
   if (isLoading) return <Loading />;
   if (isSuccess)
     return (
-      <ContainerMaxWind className="max-w-full p-6">
+      <ContainerMaxWind className="max-w-full px-6 py-6">
         <ScrollShadow
           className={cn(
-            "w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5   gap-4",
+            "w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5   gap-6",
             className
           )}
         >
@@ -34,8 +34,11 @@ const PromptsContent = ({
                 key={item.id}
                 title={item.title}
                 excerpt={item.excerpt}
-                likedCount={0}
-                commnetCount={0}
+                user={item?.user}
+                license={item?.license}
+                likedCount={item?.UsersLikerPrompts?.length ?? 0}
+                commnetCount={item?.comments?.length ?? 0}
+                createdAt={item.updatedAt}
                 id={item.title}
               />
             );

@@ -26,7 +26,7 @@ const PromptPage = (props: Props) => {
           handelSelectTech={setSelected}
           slectedTech={slectedTech}
           techs={techs}
-          className="max-w-[340px] -translate-x-full lg:translate-x-0 "
+          className="max-w-[335px] -translate-x-full lg:translate-x-0 "
         />
 
         <PromptsContent
