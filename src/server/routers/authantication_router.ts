@@ -14,6 +14,7 @@ const authantication = router({
       name: fullName,
       email,
     });
+
     let data: any = {
       name: fullName,
       email,
