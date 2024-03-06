@@ -8,21 +8,26 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 
-import { Bot } from "lucide-react";
-import { usePathname } from "next/navigation";
 import AuthanticationButton from "./AuthanticationButton";
 import { LogoIcon } from "..";
 import { useState } from "react";
 
-type Props = {
-  children: React.ReactNode;
+export interface PropsNavContainer
+  extends React.ComponentPropsWithoutRef<"nav"> {
+  children?: React.ReactNode;
   endContent?: React.ReactNode;
-};
+}
 
-const NavContainer = ({ children, endContent }: Props) => {
+const NavContainer = (props: PropsNavContainer) => {
+  const { children, endContent, className, ...rest } = props;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <Navbar isBlurred={false} maxWidth="full" className=" z-40   ">
+    <Navbar
+      isBlurred={false}
+      maxWidth="full"
+      {...rest}
+      className={cn(" z-40   ", className)}
+    >
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         className="sm:hidden"

@@ -6,16 +6,16 @@ import { usePathname } from "next/navigation";
 
 import NavContainer from "./NavContainer";
 
-type Props = {
+export interface PropsLkNavbar extends React.ComponentPropsWithoutRef<"nav"> {
   navsData: NavItem[];
   endContent?: React.ReactNode;
-};
-
-const LkNavbar = ({ navsData, endContent }: Props) => {
+}
+const LkNavbar = (props: PropsLkNavbar) => {
+  const { navsData, endContent, className, ...rest } = props;
   const pathName = usePathname();
 
   return (
-    <NavContainer endContent={endContent}>
+    <NavContainer endContent={endContent} className={className}>
       <NavbarContent
         className="hidden space-x-2 sm:flex gap-4 w-full"
         justify="start"
