@@ -5,6 +5,7 @@ export const infintyLoadPrompts = inputInfinte.merge(
   z.object({
     search: z.string(),
     myPrompts: z.boolean().default(false),
+    tags: z.array(z.string()),
     techId: z
       .any()
       .default("0")

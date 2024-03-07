@@ -28,11 +28,15 @@ const PromptPage = (props: Props) => {
     setMyPrompts,
     setSelected,
     slectedTech,
+    valueTage,
+    setValueTage,
   } = useInPromptsInfintry();
 
   return (
     <div className="bg-[#EEEEEE] h-full ">
       <AsidePrompts
+        valueTage={valueTage}
+        setValueTage={setValueTage}
         myPrompts={myPrompts}
         setMyPrompts={setMyPrompts}
         handelSelectTech={setSelected}

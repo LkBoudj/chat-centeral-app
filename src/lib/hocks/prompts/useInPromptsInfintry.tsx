@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import usePaginationInfinteHock from "../usePaginationInfinteHock";
 
 const useInPromptsInfintry = () => {
+  const [valueTage, setValueTage] = useState<any>([]);
   const [slectedTech, setSelected] = useState<any>("0");
   const [search, setSearch] = useState<string>("");
   const [myPrompts, setMyPrompts] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const useInPromptsInfintry = () => {
         search,
         myPrompts,
         techId: slectedTech,
+        tags: valueTage,
       },
       {
         getNextPageParam: (next: any) => {
@@ -34,9 +36,9 @@ const useInPromptsInfintry = () => {
   };
   useEffect(() => {
     if (isSuccess && data?.pages?.length > 1) {
-      setItems([...items, ...(data?.pages[page].items ?? [])]);
+      setItems([...items, ...(data?.pages[page]?.items ?? [])]);
     } else {
-      setItems(data?.pages[page].items ?? []);
+      setItems(data?.pages[page]?.items ?? []);
     }
   }, [data, isSuccess, setItems, myPrompts, items, page]);
 
@@ -54,6 +56,8 @@ const useInPromptsInfintry = () => {
     setMyPrompts,
     slectedTech,
     setSelected,
+    valueTage,
+    setValueTage,
   };
 };
 

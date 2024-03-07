@@ -12,7 +12,10 @@ class PromptController extends Controllers {
     myPrompts,
     userId,
     techId,
+    tags,
   }: InputsInfintyLoadPrompts) {
+    console.log(tags);
+
     let where: any = {
       OR: [
         {
@@ -38,6 +41,12 @@ class PromptController extends Controllers {
 
     if (techId) {
       where.technologyId = techId;
+    }
+
+    if (tags?.length) {
+      where.tags = {
+        contains: tags.join(","),
+      };
     }
     const items = await prismaConfig.prompt.findMany({
       where,
