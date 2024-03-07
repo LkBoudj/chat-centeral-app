@@ -170,7 +170,7 @@ const CreateMessage = ({
           </Form>
         ) : (
           <p className="w-full bg-white/50 p-5 text-center">
-            Looks like you're out of message credits! 🌟 Don't miss out on the fun -
+            Looks like you&apos;re out of message credits! 🌟 Don&apos;t miss out on the fun -
             <Link href="/subscription"> top up your account </Link> and keep the conversation going!
           </p>
 

@@ -19,7 +19,7 @@ const Pricing = ({ id, plans }: Props) => {
         <p className="max-w-[650px] mx-auto text-[20px] text-[#000000] leading-[28px]">
           With rapid change and innovation, ChatCentral brings it all together. With no upfront costs and no credit card required.
           Discover the power of having all your AI tools in one place.
-          When you're ready to unlock even more features,
+          When you&apos;re ready to unlock even more features,
           our subscriptions are significantly more cost-effective than paying for each service separately. Begin your journey to smarter, more efficient work today.
           {" "}
         </p>

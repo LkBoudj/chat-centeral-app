@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
+
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { MessageController } from "./controller";
@@ -17,6 +19,7 @@ import { ChatOpenAI } from "@langchain/openai";
 
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { tree } from "next/dist/build/templates/app-page";
 
 interface BaseAiInput {
   userMessage: AppMessage;
@@ -27,6 +30,8 @@ interface BaseAiInput {
 }
 
 interface DallInput extends BaseAiInput { }
+interface ClaudeInput extends BaseAiInput { }
+
 interface GPT4Input extends BaseAiInput { }
 interface VisionInput extends BaseAiInput {
   path: string;
@@ -41,6 +46,8 @@ interface AiInput extends BaseAiInput {
 class TechnologiesContainer {
   private openai: OpenAI;
   private langChainOpenAi: ChatOpenAI;
+  private anthropic: Anthropic; // Add this line
+
   constructor() {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -51,7 +58,67 @@ class TechnologiesContainer {
       openAIApiKey: process.env.OPENAI_API_KEY,
       streaming: true,
     });
+
+    this.anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY, // Assuming your API key is stored in environment variables
+      stream: true,
+    });
   }
+
+
+  async generateTextCompletionClaude({ userMessage, model, headers, userId, oldMessages }: ClaudeInput) {
+    const content = `Use the following parts of previous conversations if the question is related to old messages,\n.
+    
+    PREVIOUS CONVERSATION:
+    ${oldMessages}
+
+    USER INPUT: ${userMessage.content || "Default content if undefined"}`;
+
+    try {
+      const stream = await this.anthropic.messages.stream({
+        model: model ?? "claude-3-opus-20240229",
+        max_tokens: 1000,
+        temperature: 0.7,
+        stream: true,
+
+        system: "You are a helpful assistant",
+        messages: [{
+          role: "user",
+          content: content,
+        }],
+      });
+
+      return new Promise<StreamingTextResponse>((resolve, reject) => {
+        let streamedResponse = ""; // Variable to accumulate streamed response
+
+        // Handle text events from the stream
+        stream.on('text', (text) => {
+          // Accumulate the streamed text
+          streamedResponse += text;
+        });
+
+        // Handle error event from the stream
+        stream.on('error', (error) => {
+          console.error("Error occurred while streaming:", error);
+          reject(new Error("Error occurred while streaming"));
+        });
+
+        // Handle stream end event
+        stream.on('end', () => {
+          // Resolve the promise with the accumulated response
+          resolve(new StreamingTextResponse(streamedResponse, { headers }));
+        });
+      });
+    } catch (error) {
+      console.error("Error occurred while streaming:", error);
+      throw new Error("Error occurred while streaming");
+    }
+  }
+
+
+
+
+
 
   async generateTextCompletion({
     oldMessages,
@@ -354,6 +421,14 @@ class TechnologiesContainer {
           userMessage,
           headers,
           userId,
+        });
+      case "claude":
+        return await this.generateTextCompletionClaude({
+          model,
+          userMessage,
+          headers,
+          userId,
+
         });
 
       default:

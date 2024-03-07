@@ -1,6 +1,6 @@
 import prismaConfig from "../configs/prismaConfig";
 import { InputsInfintyLoadPrompts } from "@/lib/validation/prompts_validation";
-import Controllers from "./controler";
+import Controllers from "./Controler";
 import { log } from "console";
 
 class PromptController extends Controllers {
