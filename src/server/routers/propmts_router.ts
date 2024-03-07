@@ -2,16 +2,16 @@ import { schemCreateTechBack } from "@/lib/validation/technology_validation";
 import { privateProcuder, router } from "../trpc";
 
 import PromptController from "@/lib/controller/propmt_controller";
-import { z } from "zod";
+
+import { infintyLoadPrompts } from "@/lib/validation/prompts_validation";
 
 const promptsAppRouter = router({
   showAll: privateProcuder
-    .input(z.object({ search: z.string() }))
-    .query(async (obj) => {
-      const { input } = obj;
-      console.log(input);
+    .input(infintyLoadPrompts)
+    .query(async ({ ctx, input }) => {
+      const { limit, skip, cursor, search } = input;
 
-      return await PromptController.showAll();
+      return await PromptController.showAll(input);
     }),
   create: privateProcuder
     .input(schemCreateTechBack)
