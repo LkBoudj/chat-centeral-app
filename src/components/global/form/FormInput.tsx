@@ -1,4 +1,6 @@
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Dropdown,
   DropdownItem,
@@ -289,6 +291,57 @@ const FormSelectController = ({
   );
 };
 
+const FormComboxDataController = ({
+  label,
+  id,
+  type = "text",
+  required,
+  control,
+  customErrors,
+  disabled,
+  readOnly,
+  className,
+  classNames,
+  variant = "bordered",
+  size = "sm",
+  placeholder,
+  data,
+}: ControllerSelectProps) => {
+  return (
+    <Controller
+      control={control}
+      name={id}
+      render={({
+        field: { onChange, onBlur, value, ref },
+        formState: { errors },
+        fieldState,
+      }) => {
+        errors = { ...errors, ...customErrors };
+
+        return (
+          <Autocomplete
+            errorMessage={errors[id]?.message as string}
+            isInvalid={errors[id]?.message != undefined}
+            label="Technology"
+            variant="bordered"
+            defaultItems={data}
+            allowsCustomValue={true}
+            onSelectionChange={onChange}
+          >
+            {(item) => (
+              <AutocompleteItem
+                key={item.id.toString()}
+                value={item.id.toString()}
+              >
+                {item.name}
+              </AutocompleteItem>
+            )}
+          </Autocomplete>
+        );
+      }}
+    />
+  );
+};
 const FromInput = {
   FromInputRegister,
   FromInputController,
@@ -296,5 +349,6 @@ const FromInput = {
   FormTextarea,
   FormTextareaController,
   FormSelectController,
+  FormComboxDataController,
 };
 export default FromInput;

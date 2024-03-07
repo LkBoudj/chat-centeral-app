@@ -53,6 +53,9 @@ class PromptController extends Controllers {
       take: limit + 1,
       skip,
       cursor: cursor ? { id: cursor } : undefined,
+      orderBy: {
+        id: "desc",
+      },
       include: {
         UsersLikerPrompts: true,
         user: {

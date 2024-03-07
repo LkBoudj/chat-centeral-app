@@ -62,15 +62,15 @@ const ItemPrompt = ({
   return (
     <div
       ref={ref}
-      className="mx-auto w-full  ring-1 ring-slate-50 max-w-[330px] "
+      className="mx-auto w-full  ring-1 ring-slate-50 max-w-[340px] "
     >
       <Card className="w-full pt-4 space-y-6 shadow-xl  mx-auto border-none ">
-        <CardHeader className="items-center justify-between py-0">
+        <CardHeader className="pl-6 items-center justify-between py-0">
           <Link className="flex gap-5" href={`/profile/${user?.id}`}>
             <Avatar
               isBordered
               radius="full"
-              className="w-12 h-12"
+              className="w-8 h-8"
               src={user?.image ?? ""}
             />
             <div className="flex flex-col gap-1 items-start justify-center">

@@ -25,6 +25,7 @@ type Props = {
   techs: any[];
   valueTage: any;
   setValueTage: (key: any) => void;
+  onOpen?: () => void;
 };
 
 const AsidePrompts = ({
@@ -36,6 +37,7 @@ const AsidePrompts = ({
   setMyPrompts,
   valueTage,
   setValueTage,
+  onOpen,
 }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [tags, seTtags] = useState<any>([]);

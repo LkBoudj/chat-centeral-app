@@ -16,6 +16,7 @@ type Props = {
   prompts: any[];
   hanldeNextPage: () => void;
   setSearch: (key: any) => void;
+  onOpen: () => void;
 };
 
 const PromptsContent = ({
@@ -27,6 +28,7 @@ const PromptsContent = ({
   isHaveNext,
   setSearch,
   search,
+  onOpen,
 }: Props) => {
   const [value, setValue] = useState("");
   if (isLoading) return <Loading />;
@@ -38,7 +40,7 @@ const PromptsContent = ({
           className
         )}
       >
-        <div className="flex items-center justify-between w-full px-8">
+        <div className={cn("flex items-center justify-between  w-full px-8")}>
           <Input
             onValueChange={setValue}
             onKeyDown={(e) => {
@@ -53,7 +55,7 @@ const PromptsContent = ({
             className="max-w-md"
             placeholder="search ..."
           />
-          <Button startContent={<SquarePen />} color="primary">
+          <Button onPress={onOpen} startContent={<SquarePen />} color="primary">
             wirte prompt
           </Button>
         </div>
@@ -69,7 +71,7 @@ const PromptsContent = ({
                   key={item.id}
                   title={item.title}
                   excerpt={item.excerpt}
-                  technology={item.technology.name}
+                  technology={item.technology?.name ?? null}
                   user={item?.user}
                   license={item?.license}
                   likedCount={item?.UsersLikerPrompts?.length ?? 0}
@@ -80,7 +82,7 @@ const PromptsContent = ({
               );
             })}
 
-          <div className="grid sm:col-span-2 md:col-span-3 lg:col-span-4   pb-12 justify-center">
+          <div className="grid sm:col-span-2 md:col-span-3 lg:col-span-4   pb-12 justify-center  ">
             <Button
               isLoading={isLoading}
               color="primary"
