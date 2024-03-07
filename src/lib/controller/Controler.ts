@@ -20,7 +20,7 @@ class Controllers {
     }
 
     return {
-      ietms: sortedData,
+      items: sortedData,
       nextCursor,
     };
   }

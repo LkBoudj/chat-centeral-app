@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const usePaginationInfinteHock = () => {
-  const [items, setItems] = useState<any>([]);
+  const [items, setItems] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [isHaveNext, setIsHaveNext] = useState(false);
 

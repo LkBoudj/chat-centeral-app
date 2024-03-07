@@ -9,18 +9,7 @@ const promptsAppRouter = router({
   showAll: privateProcuder
     .input(infintyLoadPrompts)
     .query(async ({ ctx, input }) => {
-      const { limit, skip, cursor, search } = input;
-
-      return await PromptController.showAll(input);
-    }),
-  create: privateProcuder
-    .input(schemCreateTechBack)
-    .mutation(async ({ ctx, input }) => {
-      const { logo, refTech, name, models } = input;
-
-      console.log(logo);
-
-      return true;
+      return await PromptController.showAll({ userId: ctx.auth.id, ...input });
     }),
 });
 

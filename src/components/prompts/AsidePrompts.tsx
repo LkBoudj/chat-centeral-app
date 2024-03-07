@@ -19,6 +19,8 @@ type Props = {
   handelSelectTech: (key: any) => void;
   slectedTech: string;
   className?: string;
+  myPrompts?: boolean;
+  setMyPrompts: (key: any) => void;
   techs: any[];
 };
 
@@ -27,6 +29,8 @@ const AsidePrompts = ({
   slectedTech,
   className,
   techs,
+  myPrompts,
+  setMyPrompts,
 }: Props) => {
   return (
     <aside
@@ -44,7 +48,11 @@ const AsidePrompts = ({
       <Divider className="my-6" />
       <div className="space-y-8">
         <ChatOptionsItem Icon={BrainCircuit} title={"My Prompts"}>
-          <Switch size="sm" />
+          <Switch
+            size="sm"
+            isSelected={myPrompts}
+            onValueChange={setMyPrompts}
+          />
         </ChatOptionsItem>
         <ChatOptionsItem Icon={BrainCircuit} title={"Technologies"}>
           {/* <Select
