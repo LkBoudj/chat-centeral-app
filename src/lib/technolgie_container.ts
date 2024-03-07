@@ -26,12 +26,12 @@ interface BaseAiInput {
   oldMessages?: string;
 }
 
-interface DallInput extends BaseAiInput {}
-interface GPT4Input extends BaseAiInput {}
+interface DallInput extends BaseAiInput { }
+interface GPT4Input extends BaseAiInput { }
 interface VisionInput extends BaseAiInput {
   path: string;
 }
-interface voiceInput extends BaseAiInput {}
+interface voiceInput extends BaseAiInput { }
 
 interface AiInput extends BaseAiInput {
   refTech?: string;
@@ -172,7 +172,7 @@ class TechnologiesContainer {
         {
           role: "system",
           content:
-            "Use the following parts of previous conversations if the question is related to markdown format.",
+            "You are a helpful chatbot answering any questions. Your name is chatcentral",
         },
 
         {
@@ -180,7 +180,7 @@ class TechnologiesContainer {
           content: [
             {
               type: "text",
-              text: `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n. 
+              text: `Use the following parts of previous conversations if the question is related to old messages,\n. 
           
             PREVIOUS CONVERSATION:
             ${oldMessages}
@@ -217,7 +217,7 @@ class TechnologiesContainer {
   async genrateVioce({ model, userMessage, headers, userId }: voiceInput) {
     const mp3 = await this.openai.audio.speech.create({
       model: model ?? "tts-1",
-      voice: "alloy",
+      voice: "onyx",
       input: userMessage.content ?? "",
     });
 

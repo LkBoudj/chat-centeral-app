@@ -116,7 +116,7 @@ const CreateMessage = ({
                 <Textarea
                   {...register("content")}
                   minRows={1}
-                  placeholder="Ask me any think"
+                  placeholder="Ask me any thing!"
                   variant="bordered"
                   color="default"
                   dir={textArabicDirection ? "rtl" : "ltr"}
