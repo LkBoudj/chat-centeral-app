@@ -62,23 +62,24 @@ const ItemPrompt = ({
   return (
     <div
       ref={ref}
-      className="mx-auto w-full  ring-1 ring-slate-50 max-w-[300px] "
+      className="mx-auto w-full  ring-1 ring-slate-50 max-w-[340px] "
     >
       <Card className="w-full pt-4 space-y-6 shadow-xl  mx-auto border-none ">
-        <CardHeader className="items-center justify-between py-0">
+        <CardHeader className="pl-6 items-center justify-between py-0">
           <Link className="flex gap-5" href={`/profile/${user?.id}`}>
             <Avatar
               isBordered
               radius="full"
-              className="w-12 h-12"
+              className="w-8 h-8"
               src={user?.image ?? ""}
             />
             <div className="flex flex-col gap-1 items-start justify-center">
               <h4 className="text-small font-semibold leading-none text-default-600">
                 {user?.name}
               </h4>
-              <h5 className="text-small tracking-tight text-default-400">
-                {license}
+              <h5 className="text-small tracking-tight text-default-400 space-x-2 ">
+                <span>{technology ?? "all technologies"}</span>
+                {/* <span>{license} </span> */}
               </h5>
             </div>
           </Link>

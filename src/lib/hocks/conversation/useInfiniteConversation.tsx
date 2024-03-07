@@ -37,12 +37,12 @@ const useInfiniteConversation = () => {
     if (pageC - 1 > 0) {
       let preP = pageC - 1;
       setPage(preP);
-      setChats(data?.pages[preP - 1].ietms);
+      setChats(data?.pages[preP - 1]?.items ?? []);
     }
   };
 
   useEffect(() => {
-    setChats(data?.pages[pageC - 1]?.ietms);
+    setChats(data?.pages[pageC - 1]?.items ?? []);
 
     setIsHaveNext(data?.pages[pageC - 1]?.nextCursor ? true : false);
   }, [data, pageC, setIsHaveNext, setChats]);
