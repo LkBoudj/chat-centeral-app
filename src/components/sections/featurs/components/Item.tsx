@@ -19,7 +19,7 @@ const Item = ({ title, description, src }: Props) => {
           {title}
         </h4>
       </CardHeader>
-      <CardBody className="  text-[#999595] text-[14px] py-2 text-center ">
+      <CardBody className="  text-[#000000] text-[18px] py-2 text-center ">
         <p className="max-w-[233px] mx-auto">{description}</p>
       </CardBody>
     </Card>

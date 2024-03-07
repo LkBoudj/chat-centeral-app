@@ -18,7 +18,7 @@ const TehcnologoySelect = (props: Props) => {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
-        <div className="w-full max-w-[70px] flex items-center space-x-1 text-sm">
+        <div className="w-full max-w-[80px] flex items-center space-x-1 text-sm">
           <div>
             <Avatar
               name={selectdTechnology?.name}
@@ -28,9 +28,11 @@ const TehcnologoySelect = (props: Props) => {
             />
           </div>
 
-          <span className=" text-ellipsis text-nowrap ">
-            {selectdTechnology?.name ?? ""}
-          </span>
+          <div className="flex-1 min-w-0">
+            <p className="truncate whitespace-normal">
+              {selectdTechnology?.name ?? ""}
+            </p>
+          </div>
         </div>
       </DropdownTrigger>
       <DropdownMenu variant="flat">

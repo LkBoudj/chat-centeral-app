@@ -57,7 +57,7 @@ const Footer = (props: Props) => {
         <div className="grid grid-cols-5 gap-8">
           <DescriptionCol
             medias={medias}
-            description="Nu Terra Labs is a Canadian based agri-tech and software development business. We aim to bridge any gaps you may have and work to build partnerships. Our team brings experience in Websites, Graphic Design, Applications, Content Writing, Ecommerce / Drop shipping, SEO, Marketing and many other business related activities."
+            description="Nu Terra Labs is a Canadian based business. We aim to bridge any gaps you may have and work to build partnerships. Our team brings experience in Websites, Graphic Design, Applications, Content Writing, Ecommerce / Drop shipping, SEO, Marketing and many other business related activities."
           />
 
           <div className="col-span-12 md:col-span-3 lg:col-span-1 space-y-5">
@@ -67,7 +67,7 @@ const Footer = (props: Props) => {
           </div>
 
           <div className="col-span-12 md:col-span-1  space-y-5">
-            <h6 className=" font-semibold capitalize">Conatct Us</h6>
+            <h6 className=" font-semibold capitalize">Contact Us</h6>
             {/* <MenuFooterContact data={dataContact} /> */}
           </div>
         </div>

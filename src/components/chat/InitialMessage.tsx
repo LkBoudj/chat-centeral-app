@@ -7,7 +7,7 @@ const InitailtMessage = () => {
     <ContainerMaxWind className="w-full max-w-7xl mx-auto  pt-4  lg:pr-[370px]">
       <Message
         fromMachin={true}
-        content={"Your first message will set the topic of our conversation."}
+        content={"Your first message will set the name of our conversation."}
       />
     </ContainerMaxWind>
   );

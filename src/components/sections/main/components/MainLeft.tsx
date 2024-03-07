@@ -14,7 +14,7 @@ const MainLeft = ({ title, description }: Props) => {
         <h1 className="text-[#001131] text-[57px] font-bold leading-[75px] capitalize">
           {title}
         </h1>
-        <p className="text-[#999595] text-[14px] font-medium leading-[28px]">
+        <p className="text-[#999595] text-[20px] font-large leading-[28px]">
           {description}
         </p>
         <EmailInput />

@@ -12,8 +12,8 @@ const Main = ({ id }: Props) => {
     <main ref={id} className="w-full bg-main">
       <ContainerMaxWind className="flex py-24 justify-between items-center ">
         <MainLeft
-          title="Answers & Chat artificial intelligence"
-          description="Quisque convallis dolor a risus luctus, et tempor massa finibus. In egestas massa et lorem tempor, vel consequat "
+          title="ChatCentral: Access the Best AI Models & Technologies in One Hub"
+          description="Transform your workflow with ChatCentral. Access the best AI technologies for faster, smarter work—from anywhere. Simplify processes and unlock new possibilities, all within a single, powerful platform."
         />
         <MainRight src="/images/main.png" />
       </ContainerMaxWind>

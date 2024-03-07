@@ -12,7 +12,7 @@ const DescriptionCol = ({
     <div className="col-span-12 md:col-span-3 space-y-8">
       <div className="flex items-center space-x-2">
         <LogoIcon className="  fill-white" />
-        <p className="font-bold text-inherit ">CENTREL</p>
+        <p className="font-bold text-inherit ">by Nu Terra Labs</p>
       </div>
       <p className="leading-[2.3em] text-sm max-w-2xl">{description}</p>
       <div className="transform -translate-x-3 pt-5">

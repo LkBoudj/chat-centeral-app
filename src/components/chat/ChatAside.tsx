@@ -37,7 +37,7 @@ const ChatAside = (props: Props) => {
               page={pageC}
             />
           </Tab>
-          <Tab key="Options" title="Options Technolgy">
+          <Tab key="Options" title="Technology Options">
             <ChatOptions />
           </Tab>
         </Tabs>

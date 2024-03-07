@@ -27,8 +27,8 @@ const ConfigProvider = ({ children }: Props) => {
 
   const dataOfNav: Array<any> = [
     { name: "Home", sectionId: main },
-    { name: "Testimonials", sectionId: testimonials },
-    { name: "Featurs", sectionId: featurs },
+    // { name: "Testimonials", sectionId: testimonials },
+    { name: "Features", sectionId: featurs },
     { name: "Pricing", sectionId: about },
     { name: "Apps", sectionId: apps },
     { name: "Contact", sectionId: contact },

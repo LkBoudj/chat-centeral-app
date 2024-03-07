@@ -66,11 +66,11 @@ class TechnologiesContainer {
         {
           role: "system",
           content:
-            "Use the following parts of previous conversations if the question is related to markdown format.",
+            "You are a helpful chatbot answering any questions. Your name is chatcentral. You are to answer any question the user has and be friendly, conscie, helppful, and provide accurate info",
         },
         {
           role: "user",
-          content: `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n. 
+          content: `Use the following parts of previous conversations if the question is related to old messages,\n. 
           
           PREVIOUS CONVERSATION:
           ${oldMessages}
@@ -172,7 +172,7 @@ class TechnologiesContainer {
         {
           role: "system",
           content:
-            "You are a helpful chatbot answering any questions. Your name is chatcentral",
+            "You are a helpful chatbot answering any questions. Your name is chatcentral. You are to answer any question the user has and be friendly, conscie, helppful, and provide accurate info",
         },
 
         {
@@ -264,7 +264,7 @@ class TechnologiesContainer {
     userMessage,
     headers,
   }: GPT4Input) {
-    const TEMPLATE = `Use the following parts of previous conversations if the question is related to old messages, markdown format.\n.
+    const TEMPLATE = `Use the following parts of previous conversations if the question is related to old messages,\n.
 
     PREVIOUS CONVERSATION:
     {chat_history}

@@ -1,5 +1,5 @@
 const metadata = {
-  name: "chat centeral",
+  name: "chatCentral",
   description: "",
 };
 

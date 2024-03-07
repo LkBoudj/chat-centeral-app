@@ -36,13 +36,15 @@ export default function Home() {
       <Main id={data[0].sectionId} />
       <div className=" bg-main space-y-16">
         <div>
-          <Testimonials id={data[1].sectionId} />
-          <Featurs id={data[2].sectionId} />
+          {/* <Testimonials id={data[1].sectionId} /> */}
+
+
+          <Featurs id={data[1].sectionId} />
         </div>
-        <Pricing id={data[3].sectionId} plans={plans} />
-        <Apps id={data[4].sectionId} />
-        <Contact id={data[5].sectionId} />
-        <Success id={data[6].sectionId} />
+        <Pricing id={data[2].sectionId} plans={plans} />
+        <Apps id={data[3].sectionId} />
+        <Contact id={data[4].sectionId} />
+        <Success id={data[5].sectionId} />
       </div>
       <Footer />
     </div>

@@ -50,11 +50,10 @@ export default function Contact({ id }: { id?: LegacyRef<HTMLElement> }) {
     >
       <div className="w-full space-y-10">
         <h4 className="max-w-[548px] capitalize text-[43px] font-bold text-[#001131]">
-          Choose the service that suits your need
+          Have a request? New Feature? Problem? Or anything at all, Reach out!
         </h4>
         <div className="space-y-4">
-          <Media Icon={MailCheck} text="(306)434 6562" />
-          <Media Icon={Phone} text="info@gmail.com" />
+          <Media Icon={Phone} text="info@chatcentral.com" />
         </div>
       </div>
       <div className="w-full">

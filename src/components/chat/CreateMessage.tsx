@@ -112,11 +112,23 @@ const CreateMessage = ({
             <div className="flex items-start">
               <div className="flex items-center w-full">
                 <TehcnologoySelect />
-
                 <Textarea
                   {...register("content")}
                   minRows={1}
-                  placeholder="Ask me any thing!"
+                  placeholder={
+                    [
+                      "What's on your mind?",
+                      "Got questions? Fire away!",
+                      "Curious about something? Ask away!",
+                      "How can I assist you today?",
+                      "Let's dive into your queries!",
+                      "Shoot your questions, I'm all ears!",
+                      "Feeling inquisitive? I'm here to help!",
+                      "Any burning questions today?",
+                      "What intriguing question do you have today?",
+                      "Ready to explore? Ask me something!"
+                    ][Math.floor(Math.random() * 10)]
+                  }
                   variant="bordered"
                   color="default"
                   dir={textArabicDirection ? "rtl" : "ltr"}
@@ -127,13 +139,14 @@ const CreateMessage = ({
                     }
                   }}
                   classNames={{
-                    inputWrapper: "border-none shadow-none ",
+                    inputWrapper: "border-none shadow-none",
                     input: textArabicDirection && `text-right`,
                   }}
                   className={cn(
-                    `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full `
+                    `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full`
                   )}
                 />
+
               </div>
 
               <IconButton size={22} Icon={Mic} />
@@ -157,9 +170,10 @@ const CreateMessage = ({
           </Form>
         ) : (
           <p className="w-full bg-white/50 p-5 text-center">
-            You must purchase credit to send this message{" "}
-            <Link href="/subscription"> manage your subscription </Link>
+            Looks like you're out of message credits! 🌟 Don't miss out on the fun -
+            <Link href="/subscription"> top up your account </Link> and keep the conversation going!
           </p>
+
         )}
       </ContainerMaxWind>
     </div>

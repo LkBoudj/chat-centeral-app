@@ -17,7 +17,7 @@ export const authNavigation: NavItem[] = [
     backgroundPositionY: -0.5,
   },
   {
-    name: "prompts",
+    name: "Prompt Library",
     path: prompts_page,
     color: "text-blue-600 ",
     Icon: BrainCircuit,

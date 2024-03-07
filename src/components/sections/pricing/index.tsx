@@ -14,11 +14,14 @@ const Pricing = ({ id, plans }: Props) => {
     <Section id={id} containerClass="py-16 space-y-16">
       <div className="text-center space-y-4">
         <h1 className="capitalize text-[48px] font-bold text-[#001131]">
-          pricing
+          Start Exploring for Free!
         </h1>
-        <p className="max-w-[461px] mx-auto text-[14px] text-[#999595] leading-[28px]">
-          Quisque convallis dolor a risus luctus, et tempor massa finibus. In
-          egestas massa et lorem tempor,{" "}
+        <p className="max-w-[650px] mx-auto text-[20px] text-[#000000] leading-[28px]">
+          With rapid change and innovation, ChatCentral brings it all together. With no upfront costs and no credit card required.
+          Discover the power of having all your AI tools in one place.
+          When you're ready to unlock even more features,
+          our subscriptions are significantly more cost-effective than paying for each service separately. Begin your journey to smarter, more efficient work today.
+          {" "}
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 ">
@@ -84,7 +87,7 @@ const Pricing = ({ id, plans }: Props) => {
           as={Link}
           href="/subscription"
         >
-          See More
+          Login Now
         </Button>
       </div>
     </Section>
