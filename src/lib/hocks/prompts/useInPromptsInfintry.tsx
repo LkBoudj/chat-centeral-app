@@ -54,7 +54,7 @@ const useInPromptsInfintry = () => {
       );
       setItems(newItems);
     }
-  }, [data, isSuccess]); // Dependencies are limited to what directly influences the effect
+  }, [data, isSuccess,setItems]); // Dependencies are limited to what directly influences the effect
   return {
     data,
     items,

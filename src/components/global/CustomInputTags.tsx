@@ -81,7 +81,7 @@ const CustomInputTags = ({
         </li>
       );
     });
-  }, [filterValue, value]);
+  }, [filterValue, value,addToTgas,data,value]);
 
   return (
     <div
