@@ -31,6 +31,8 @@ import CustomAvatarUser from "./global/CustomAvatar";
 import Explorer from "./global/explorer";
 import UploadMedia from "./global/explorer/UploadMedia";
 import UploadExplorer from "./global/explorer/UploadExplorer";
+//prompts
+import PromptHeader from "./prompts/PromptHeader";
 export {
   ContainerMaxWind,
   IconButton,
@@ -48,6 +50,8 @@ export {
   TehcnologoySelect,
   CustmMediaMediaComponent,
   SelecteModel,
+  // prompts
+  PromptHeader,
   //user
   UserInformation,
   //dashboard

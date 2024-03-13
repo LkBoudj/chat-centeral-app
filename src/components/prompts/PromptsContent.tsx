@@ -1,11 +1,11 @@
 "use client";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, {  useState } from "react";
 import Loading from "../global/Loading";
 import ItemPrompt from "./ItemPrompt";
-import { Button, Input, Pagination, ScrollShadow, cn } from "@nextui-org/react";
+import { Button, ScrollShadow, cn } from "@nextui-org/react";
 import ContainerMaxWind from "../global/ContainerMaxWind";
-import { useIntersection } from "@mantine/hooks";
-import { Search, SquarePen } from "lucide-react";
+
+import { PromptHeader } from "..";
 
 type Props = {
   className?: string;
@@ -40,25 +40,7 @@ const PromptsContent = ({
           className
         )}
       >
-        <div className={cn("flex items-center justify-between  w-full px-8")}>
-          <Input
-            onValueChange={setValue}
-            onKeyDown={(e) => {
-              e.key == "Enter" && setSearch(value);
-            }}
-            onClear={() => {
-              setValue("");
-              setSearch("");
-            }}
-            value={value}
-            startContent={<Search />}
-            className="max-w-md"
-            placeholder="search ..."
-          />
-          <Button onPress={onOpen} startContent={<SquarePen />} color="primary">
-            wirte prompt
-          </Button>
-        </div>
+        <PromptHeader setValue={setValue} setSearch={setValue} value={value} onOpen={onOpen} />
         <ScrollShadow
           className={cn(
             "h-full w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 pb-12 px-6"
@@ -99,3 +81,7 @@ const PromptsContent = ({
 };
 
 export default PromptsContent;
+
+
+
+
