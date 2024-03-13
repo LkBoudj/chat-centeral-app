@@ -1,10 +1,11 @@
 import {
   Autocomplete,
   AutocompleteItem,
+  Avatar,
   Input,
   Textarea,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +17,7 @@ import FormModal from "../global/form/FormModal";
 import { FormInput } from "../global/form";
 import { createPromptValidation } from "@/lib/validation/prompts_validation";
 import { trpc } from "@/trpc/client";
+import { pronptContext } from "../context/PromptContextProvider";
 
 type Props = {
   isOpen: boolean;
@@ -28,8 +30,8 @@ type Props = {
 type Inputs = z.infer<typeof createPromptValidation>;
 
 const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
+  const { onOpenUploadFile, file, setFile } = useContext(pronptContext);
   const [customErrors, setCustomErros] = useState({});
-
   const [isLoading, setIsLoading] = useState(true);
   const [tagsData, seTtags] = useState<any>([]);
 
@@ -75,7 +77,7 @@ const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
-    mutate({ ...data });
+    mutate({ ...data, image: file?.src || null });
     reset();
     onClose();
   };
@@ -90,14 +92,9 @@ const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
       handleSubmit={handleSubmit(onSubmit)}
       onOpenChange={onOpenChange}
     >
-      {/* <FileUploadImage
-        className="flex justify-center w-full "
-        imageSrc={imageSrc}
-        register={register}
-        name="image"
-        isErroro={errors.image?.message != undefined || isHasBackError("image")}
-        handelFile={(e) => handalImage(e, setImageSrc)}
-      /> */}
+      <div className="flex items-center justify-center mb-4">
+        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+      </div>
       <div className="space-y-4 mt-4 ">
         <FormInput.FromInputController
           control={control}

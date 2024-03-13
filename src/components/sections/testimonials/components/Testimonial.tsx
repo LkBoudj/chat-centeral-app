@@ -39,7 +39,7 @@ export default function App({
         </CardHeader>
 
         <CardBody className="p-0">
-          <p className="text-[#7E7E7E] text-[13px] leading-relaxed">
+          <p className="text-[#7E7E7E] text-[13px] leading-relaxed overflow-hidden">
             {comment}
           </p>
         </CardBody>

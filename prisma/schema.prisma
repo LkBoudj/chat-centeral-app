@@ -172,7 +172,7 @@ model Prompt {
   license           License             @default(free)
   technologyId      Int?                @db.UnsignedInt
   content           String              @db.LongText
-  image             String?
+  mediaId           String?
   comments          Comment[]
   tags              String?             @db.Text
   createdAt         DateTime            @default(now())

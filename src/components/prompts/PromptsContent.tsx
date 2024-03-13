@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Loading from "../global/Loading";
 import ItemPrompt from "./ItemPrompt";
 import { Button, ScrollShadow, cn } from "@nextui-org/react";
@@ -40,7 +40,12 @@ const PromptsContent = ({
           className
         )}
       >
-        <PromptHeader setValue={setValue} setSearch={setValue} value={value} onOpen={onOpen} />
+        <PromptHeader
+          setValue={setValue}
+          setSearch={setValue}
+          value={value}
+          onOpen={onOpen}
+        />
         <ScrollShadow
           className={cn(
             "h-full w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 pb-12 px-6"
@@ -53,6 +58,7 @@ const PromptsContent = ({
                   key={item.id}
                   title={item.title}
                   excerpt={item.excerpt}
+                  image={item.image}
                   technology={item.technology?.name ?? null}
                   user={item?.user}
                   license={item?.license}
@@ -81,7 +87,3 @@ const PromptsContent = ({
 };
 
 export default PromptsContent;
-
-
-
-

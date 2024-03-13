@@ -110,7 +110,7 @@ const Testimonials = ({ id }: { id?: LegacyRef<HTMLElement> }) => {
           {/* <h2 className="max-w-[489px]  font-bold text-[30px] leading-[43px]">
             
           </h2> */}
-          <h4 className="max-w-[548px] capitalize text-[43px] font-bold text-[#001131]">
+          <h4 className="max-w-[548px] capitalize md:text-[43px] font-bold text-[#001131]">
             How Users like you are achieving their goals
           </h4>
           <div className="space-y-3 md:space-y-0 md:space-x-8">

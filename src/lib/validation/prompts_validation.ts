@@ -18,6 +18,7 @@ export const infintyLoadPrompts = inputInfinte.merge(
 );
 
 export const createPromptValidation = z.object({
+  image: z.string().nullable().nullish(),
   title: z
     .string()
     .trim()
@@ -51,12 +52,6 @@ export const createPromptValidation = z.object({
     .toLowerCase(),
   tags: z.array(z.string()),
   technology: z.string().trim().nullable(),
-  // image: z.any().refine((files) => {
-  //   const myfile = files[0];
-  //   return (
-  //     !myfile || (myfile && ACCEPTED_IMAGE_MIME_TYPES.includes(myfile.type))
-  //   );
-  // }, "Your file type is not accepted"),
 });
 
 const inputValidation = infintyLoadPrompts.merge(

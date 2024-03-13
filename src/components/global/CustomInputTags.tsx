@@ -1,6 +1,6 @@
 import { cn } from "@nextui-org/react";
 import { X } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 type Props = {
   onChange: (k: any) => void;
@@ -81,7 +81,7 @@ const CustomInputTags = ({
         </li>
       );
     });
-  }, [filterValue, value,addToTgas,data,value]);
+  }, [filterValue, addToTgas, data]);
 
   return (
     <div

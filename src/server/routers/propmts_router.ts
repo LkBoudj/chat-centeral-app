@@ -1,4 +1,3 @@
-import { schemCreateTechBack } from "@/lib/validation/technology_validation";
 import { privateProcuder, router } from "../trpc";
 
 import PromptController from "@/lib/controller/propmt_controller";
@@ -19,7 +18,9 @@ const promptsAppRouter = router({
   create: privateProcuder
     .input(createPromptValidation)
     .mutation(async ({ ctx, input }) => {
-      const { title, excerpt, content, tags, technology } = input;
+      console.log(input);
+
+      const { title, excerpt, content, tags, technology, image } = input;
       const createPrompt = await prismaConfig.prompt.create({
         data: {
           userId: ctx.auth.id,
@@ -30,7 +31,8 @@ const promptsAppRouter = router({
             technology == "all" || technology == null
               ? null
               : parseInt(technology),
-          tags: input.tags.join(","),
+          tags: tags.join(","),
+          image,
         },
       });
 
