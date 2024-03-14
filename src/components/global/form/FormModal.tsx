@@ -10,6 +10,7 @@ import Form from "./Form";
 
 type Props = {
   isOpen: boolean;
+
   title: string;
   typeForm: string;
   children?: React.ReactNode;
@@ -32,7 +33,13 @@ const FormModal = ({
   classForm,
 }: Props) => {
   return (
-    <Modal size="5xl" isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      scrollBehavior="inside"
+      placement="center"
+      size="5xl"
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <ModalContent className={classContent}>
         {(onClose) => (
           <>

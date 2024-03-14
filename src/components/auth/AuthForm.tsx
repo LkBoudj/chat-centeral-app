@@ -25,7 +25,7 @@ const AuthForm = ({
   return (
     <div className="flex w-full h-screen bg-slate-50/10">
       {startComponent}
-      <div className="text-center w-full  h-full flex  items-center ">
+      <div className="text-center w-full  h-full flex  items-center px-8 md:px-4 ">
         <div className="flex flex-col items-center  w-full space-y-8">
           <h3 className="localization  font-semibold text-3xl ">{title}</h3>
 

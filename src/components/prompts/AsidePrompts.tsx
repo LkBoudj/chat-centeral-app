@@ -3,8 +3,6 @@ import {
   Autocomplete,
   AutocompleteItem,
   Divider,
-  Select,
-  SelectItem,
   Switch,
   cn,
 } from "@nextui-org/react";
@@ -12,31 +10,30 @@ import React, { useEffect, useState } from "react";
 import ChatOptionsItem from "../chat/ChatOptionsItem";
 import { BrainCircuit, SlidersHorizontal } from "lucide-react";
 import IconButton from "../global/IconButton";
-import useTech from "@/lib/hocks/technology/useTech";
 import { Technology } from "@prisma/client";
 import CustomInputTags from "../global/CustomInputTags";
 
 type Props = {
   handelSelectTech: (key: any) => void;
-  slectedTech: string;
+  selectedTechTech: string;
   className?: string;
   myPrompts?: boolean;
   setMyPrompts: (key: any) => void;
   techs: any[];
-  valueTage: any;
-  setValueTage: (key: any) => void;
+  valueTags: any;
+  setValueTags: (key: any) => void;
   onOpen?: () => void;
 };
 
 const AsidePrompts = ({
   handelSelectTech,
-  slectedTech,
+  selectedTechTech,
   className,
   techs,
   myPrompts,
   setMyPrompts,
-  valueTage,
-  setValueTage,
+  valueTags,
+  setValueTags,
   onOpen,
 }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -103,10 +100,8 @@ const AsidePrompts = ({
         <ChatOptionsItem Icon={BrainCircuit} title={"Technologies"}>
           <CustomInputTags
             data={tags}
-            onChange={(e) => {
-              setValueTage(e);
-            }}
-            value={valueTage}
+            onChange={setValueTags}
+            value={valueTags}
           />
         </ChatOptionsItem>
       </div>

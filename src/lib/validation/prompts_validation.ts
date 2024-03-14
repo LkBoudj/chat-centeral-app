@@ -2,11 +2,11 @@ import { z } from "zod";
 import { inputInfinte } from "./gloab";
 import { ACCEPTED_IMAGE_MIME_TYPES } from "../configs/validition_config";
 
-export const infintyLoadPrompts = inputInfinte.merge(
+export const infinityLoadPrompts = inputInfinte.merge(
   z.object({
     search: z.string(),
     myPrompts: z.boolean().default(false),
-    tags: z.array(z.string()),
+    tags: z.string().nullable().nullish(),
     techId: z
       .any()
       .default("0")
@@ -50,11 +50,11 @@ export const createPromptValidation = z.object({
     })
     .trim()
     .toLowerCase(),
-  tags: z.array(z.string()),
+  tags: z.array(z.string()).nullable().nullish(),
   technology: z.string().trim().nullable(),
 });
 
-const inputValidation = infintyLoadPrompts.merge(
+const inputValidation = infinityLoadPrompts.merge(
   z.object({ userId: z.string() })
 );
 export type InputsInfintyLoadPrompts = z.infer<typeof inputValidation>;

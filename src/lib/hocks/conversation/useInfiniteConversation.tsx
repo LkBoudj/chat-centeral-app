@@ -2,7 +2,7 @@
 import { trpc } from "@/trpc/client";
 
 import { useEffect } from "react";
-import usePaginationInfinteHock from "../usePaginationInfinteHock";
+import usePaginationInfanteHock from "../usePaginationInfanteHock";
 
 const useInfiniteConversation = () => {
   const {
@@ -26,7 +26,7 @@ const useInfiniteConversation = () => {
     setPage,
     setIsHaveNext,
     isHaveNext: isHaveNextC,
-  } = usePaginationInfinteHock();
+  } = usePaginationInfanteHock();
 
   const handelNextPageC = () => {
     fetchNextPage && fetchNextPage();

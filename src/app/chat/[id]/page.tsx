@@ -1,14 +1,13 @@
 "use client";
-import { ChatAside, CreateMessage, LkNavbar, Message } from "@/components";
-import { authNavigation } from "@/lib/data/authNavigation";
+import { CreateMessage } from "@/components";
+
 import { Spinner } from "@nextui-org/react";
 import ListOfMessages from "@/components/chat/ListOfMessages";
 import { useContext, useEffect, useState } from "react";
 import { chatContext } from "@/components/context/ChatContextProvider";
-import { trpc } from "@/trpc/client";
+
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { limit_infinite_messagess } from "@/lib/configs/infinte_scrolle_config";
 
 type Props = {
   params: { id: string };
@@ -17,7 +16,7 @@ type Props = {
 const ConversationPage = ({ params }: Props) => {
   const [aiMessage, setAiMessage] = useState("");
   const {
-    selectdTechnology,
+    selectTechnology,
     setCurrentConversationId,
     isSuccessM,
     isLoadingM,
@@ -46,14 +45,14 @@ const ConversationPage = ({ params }: Props) => {
         };
       }
       const contentType = res.headers.get("Content-Type");
-     
-      if (contentType == "application/json") 
+
+      if (contentType == "application/json")
         return {
           message,
           type: "json",
           data: await res.json(),
         };
-     
+
       return {
         message,
         type: "stream",
@@ -63,7 +62,7 @@ const ConversationPage = ({ params }: Props) => {
     async onMutate(opts: any) {
       const message = JSON.parse(opts);
 
-      if (selectdTechnology) {
+      if (selectTechnology) {
         setMessages((messages: any[]) => [
           ...messages,
           {
@@ -77,17 +76,15 @@ const ConversationPage = ({ params }: Props) => {
     },
     async onSuccess(obj) {
       const { data: aiResponse, message, type } = obj;
-     
+
       if (!aiResponse) {
         toast.error("There was a problem sending this message");
       }
       if (type == "json") {
-      
         setMessages((messages: any[]) => [...messages, aiResponse]);
       } else {
-      
         const id = "ai_message_" + Date.now();
-           
+
         let aiMessage = {
           id,
           content: "",
@@ -105,8 +102,8 @@ const ConversationPage = ({ params }: Props) => {
           const { value, done } = await reader?.read();
           const chunkValue = decoder.decode(value);
           responseText += chunkValue;
-           console.log(responseText)
-          setAiMessage(responseText)
+          console.log(responseText);
+          setAiMessage(responseText);
           const updatedMessages = newData.map((message: any) => {
             if (message.id == id) {
               message.content = responseText;
@@ -114,7 +111,9 @@ const ConversationPage = ({ params }: Props) => {
             return message;
           });
           setMessages(updatedMessages);
-          if (done) {break};
+          if (done) {
+            break;
+          }
         }
       }
     },
@@ -129,7 +128,7 @@ const ConversationPage = ({ params }: Props) => {
   useEffect(() => {
     setCurrentConversationId(params.id);
   }, [params.id, setCurrentConversationId]);
- useEffect(()=>{},[aiMessage]);
+  useEffect(() => {}, [aiMessage]);
   return (
     <>
       {isLoadingM ? (
@@ -138,9 +137,8 @@ const ConversationPage = ({ params }: Props) => {
         </div>
       ) : (
         <>
-          
           {isSuccessM && <ListOfMessages messages={messages} />}
-        
+
           <CreateMessage
             hanldeSendMessage={hanldeSendMessage}
             isAiThink={isPending}

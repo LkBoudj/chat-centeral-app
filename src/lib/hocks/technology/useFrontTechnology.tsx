@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const useFrontTechnology = () => {
   const { data: technologies, isSuccess: loadTechsSuccess } =
     trpc.technology.showAll.useQuery();
-  const [selectdTechnology, setSelectedTechnology] = useState<any>(null);
+  const [selectTechnology, setSelectedTechnology] = useState<any>(null);
   const [modelsSelectedTech, setModelSelectedTech] = useState<any[]>([]);
   const [selectdModel, setSelectedModel] = useState<any>("");
 
@@ -35,7 +35,7 @@ const useFrontTechnology = () => {
   return {
     hanldeSlectModel,
 
-    selectdTechnology,
+    selectTechnology,
     handelSelecteTechnology,
     selectdModel,
     modelsSelectedTech,

@@ -1,4 +1,4 @@
-import usePaginationInfinteHock from "./usePaginationInfinteHock";
+import usePaginationInfanteHock from "./usePaginationInfanteHock";
 import useInfiniteConversation from "./conversation/useInfiniteConversation";
 
 import useConversationHock from "./conversation/useConversationHock";
@@ -7,7 +7,7 @@ import useTechnologyHoeck from "./technology/useTechnologyHoock";
 import useDashUserHoock from "./users/useDashUserHoock";
 
 export {
-  usePaginationInfinteHock,
+  usePaginationInfanteHock,
   useInfiniteConversation,
   useConversationHock,
   useTechnologyHoeck,

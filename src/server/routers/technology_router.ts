@@ -1,13 +1,13 @@
 import { schemCreateTechBack } from "@/lib/validation/technology_validation";
-import { privateProcuder, router } from "../trpc";
+import { privateProuder, router } from "../trpc";
 
 import TechnologyController from "@/lib/controller/technology_controller";
 
 const technologyAppRouter = router({
-  showAll: privateProcuder.query(async () => {
+  showAll: privateProuder.query(async () => {
     return await TechnologyController.showAll();
   }),
-  create: privateProcuder
+  create: privateProuder
     .input(schemCreateTechBack)
     .mutation(async ({ ctx, input }) => {
       const { logo, refTech, name, models } = input;

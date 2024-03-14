@@ -7,11 +7,9 @@ import React from "react";
 const PageTemplate = ({ children }: React.PropsWithChildren) => {
   return (
     <PronptContextProvider>
-      <div className="h-screen overflow-hidden">
-        <LkNavbar navsData={authNavigation} className={"z-50"} />
+      <LkNavbar navsData={authNavigation} className={"z-50"} />
 
-        {children}
-      </div>
+      {children}
     </PronptContextProvider>
   );
 };

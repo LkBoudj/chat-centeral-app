@@ -12,25 +12,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import CustomInputTags from "../global/CustomInputTags";
 import { Technology } from "@prisma/client";
-import { ACCEPTED_IMAGE_MIME_TYPES } from "@/lib/configs/validition_config";
+
 import FormModal from "../global/form/FormModal";
 import { FormInput } from "../global/form";
 import { createPromptValidation } from "@/lib/validation/prompts_validation";
 import { trpc } from "@/trpc/client";
-import { pronptContext } from "../context/PromptContextProvider";
+import { promptContext as promptContext } from "../context/PromptContextProvider";
+import CustomButtonUploadFiles from "../global/Avatar";
 
 type Props = {
   isOpen: boolean;
   techs: Technology[];
-  tags?: string[];
   onOpenChange: (kay: any) => void;
   onClose: () => void;
+  setItems: (key?: any) => void;
 };
 
 type Inputs = z.infer<typeof createPromptValidation>;
 
-const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
-  const { onOpenUploadFile, file, setFile } = useContext(pronptContext);
+const CreatePrompts: React.FC<Props> = ({
+  isOpen,
+  onOpenChange,
+  techs,
+  onClose,
+  setItems,
+}) => {
+  const { onOpenUploadFile, file, setFile, sessionUser } =
+    useContext(promptContext);
   const [customErrors, setCustomErros] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [tagsData, seTtags] = useState<any>([]);
@@ -56,29 +64,37 @@ const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
     }
   }, [isLoading]);
   const [imageSrc, setImageSrc] = useState<any>("");
+  const utils = trpc.useUtils();
 
-  const {
-    data: d,
-    mutate,
-    isPending,
-    isSuccess,
-    isError,
-  } = trpc.promptsAppRouter.create.useMutation();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<Inputs>({
+  const { data: d, mutate } = trpc.promptsAppRouter.create.useMutation({
+    async onMutate(opts: any) {
+      opts.user = sessionUser;
+      setItems((items: any[]) => [...items, opts]);
+    },
+    async onSuccess(data: any) {
+      console.log("success", data);
+    },
+
+    onError(error) {
+      console.log("error", error);
+    },
+  });
+
+  const { handleSubmit, control, reset, setValue } = useForm<Inputs>({
     resolver: zodResolver(createPromptValidation),
     defaultValues: { tags: [], technology: "all" },
   });
 
+  const onSelectionChange = (val: string) => setValue("technology", val);
   const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
-    mutate({ ...data, image: file?.src || null });
+    const { tags, ...restDta } = data;
+    if (tags?.length) {
+      restDta.tags = tags.join(",");
+    }
+
+    mutate({ ...restDta, image: file?.src || null });
     reset();
+    setFile(null);
     onClose();
   };
 
@@ -93,7 +109,10 @@ const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
       onOpenChange={onOpenChange}
     >
       <div className="flex items-center justify-center mb-4">
-        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+        <CustomButtonUploadFiles
+          fileSrc={file?.src}
+          onOpenUploadFile={onOpenUploadFile}
+        />
       </div>
       <div className="space-y-4 mt-4 ">
         <FormInput.FromInputController
@@ -120,8 +139,9 @@ const CreatePrompts = ({ isOpen, onOpenChange, techs, onClose }: Props) => {
           control={control}
           data={techs}
           customErrors={customErrors}
-          id="content"
-          label="content"
+          id="technologyId"
+          label="Technology"
+          onSelectionChange={onSelectionChange}
         />
 
         <Controller

@@ -1,10 +1,9 @@
 "use client";
-import { ChatAside, CreateMessage, LkNavbar } from "@/components";
-import { authNavigation } from "@/lib/data/authNavigation";
-import { ScrollShadow } from "@nextui-org/react";
+import { CreateMessage } from "@/components";
+
 import ListOfMessages from "@/components/chat/ListOfMessages";
 import { useMutation } from "@tanstack/react-query";
-import { trpc } from "@/trpc/client";
+
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import InitailtMessage from "@/components/chat/InitialMessage";
@@ -19,7 +18,7 @@ const ChatPage = (props: Props) => {
   const router = useRouter();
 
   const [messages, setMessages] = useState<any>([]);
-  const { setChats, chats, selectdTechnology } = useContext(chatContext);
+  const { setChats, chats, selectTechnology } = useContext(chatContext);
 
   const { mutate, isPending, isSuccess } = useMutation({
     async mutationFn(body: any) {
@@ -58,7 +57,7 @@ const ChatPage = (props: Props) => {
     async onMutate(opts: any) {
       const message = JSON.parse(opts);
 
-      if (selectdTechnology) {
+      if (selectTechnology) {
         setMessages((messgaes: any) => [
           ...messgaes,
           {

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --full-minus-header: calc(100% - 64px);
+  --scrollAreaPrmp: calc(100% - 129px);
+}
 .chat-area {
   max-height: calc(100% - 192px) !important;
   height: 100%;

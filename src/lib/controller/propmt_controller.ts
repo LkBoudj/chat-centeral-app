@@ -1,7 +1,6 @@
 import prismaConfig from "../configs/prismaConfig";
-import { InputsInfintyLoadPrompts } from "@/lib/validation/prompts_validation";
+import { InputsInfintyLoadPrompts as InputsInfinityLoadPrompts } from "@/lib/validation/prompts_validation";
 import Controllers from "./Controler";
-import { log } from "console";
 
 class PromptController extends Controllers {
   async showAll({
@@ -13,7 +12,7 @@ class PromptController extends Controllers {
     userId,
     techId,
     tags,
-  }: InputsInfintyLoadPrompts) {
+  }: InputsInfinityLoadPrompts) {
     console.log(tags);
 
     let where: any = {
@@ -45,9 +44,10 @@ class PromptController extends Controllers {
 
     if (tags?.length) {
       where.tags = {
-        contains: tags.join(","),
+        contains: tags,
       };
     }
+
     const items = await prismaConfig.prompt.findMany({
       where,
       take: limit + 1,
@@ -91,4 +91,5 @@ class PromptController extends Controllers {
 }
 
 const promptController = new PromptController();
+
 export default promptController;

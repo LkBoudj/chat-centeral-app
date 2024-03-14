@@ -47,6 +47,7 @@ interface FormInputImageFile extends RegisterInputProps {
 
 interface ControllerSelectProps extends ControllerInputProps {
   data: any[];
+  onSelectionChange?: (key: any) => any;
 }
 const FromInputRegister = ({
   label,
@@ -306,6 +307,7 @@ const FormComboxDataController = ({
   size = "sm",
   placeholder,
   data,
+  onSelectionChange,
 }: ControllerSelectProps) => {
   return (
     <Controller
@@ -320,13 +322,15 @@ const FormComboxDataController = ({
 
         return (
           <Autocomplete
+            ref={ref}
             errorMessage={errors[id]?.message as string}
             isInvalid={errors[id]?.message != undefined}
-            label="Technology"
+            label={label}
             variant="bordered"
+            selectedKey={value}
             defaultItems={data}
             allowsCustomValue={true}
-            onSelectionChange={onChange}
+            onSelectionChange={onSelectionChange}
           >
             {(item) => (
               <AutocompleteItem

@@ -14,7 +14,7 @@ type Props = {};
 const SelecteModel = (props: Props) => {
   const {
     modelsSelectedTech,
-    selectdTechnology,
+    selectTechnology,
     selectdModel,
     hanldeSlectModel,
   } = useContext(chatContext);
@@ -26,7 +26,7 @@ const SelecteModel = (props: Props) => {
             name={selectdModel}
             className="w-6 h-6"
             size="sm"
-            src={selectdTechnology?.logo ?? ""}
+            src={selectTechnology?.logo ?? ""}
           />
 
           <span>{selectdModel ?? ""}</span>
@@ -45,7 +45,7 @@ const SelecteModel = (props: Props) => {
                   name={model}
                   className="w-6 h-6"
                   size="sm"
-                  src={selectdTechnology?.logo ?? ""}
+                  src={selectTechnology?.logo ?? ""}
                 />
 
                 <span>{model ?? ""}</span>

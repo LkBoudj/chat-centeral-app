@@ -2,24 +2,24 @@
 import { trpc } from "@/trpc/client";
 
 import { useEffect, useState } from "react";
-import usePaginationInfinteHock from "../usePaginationInfinteHock";
+import usePaginationInfanteHock from "../usePaginationInfanteHock";
 
-const useInPromptsInfintry = () => {
-  const [valueTage, setValueTage] = useState<any>([]);
-  const [slectedTech, setSelected] = useState<any>("0");
+const useInPromptsInfantry = () => {
+  const [valueTags, setValueTags] = useState<any[]>([]);
+  const [selectedTech, setSelected] = useState<any>("0");
   const [search, setSearch] = useState<string>("");
   const [myPrompts, setMyPrompts] = useState<boolean>(false);
   const { items, setItems, page, setPage, isHaveNext, setIsHaveNext } =
-    usePaginationInfinteHock();
+    usePaginationInfanteHock();
 
-  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage } =
+  const { data, refetch, isLoading, isSuccess, fetchNextPage, hasNextPage } =
     trpc.promptsAppRouter.showAll.useInfiniteQuery(
       {
         limit: 9,
         search,
         myPrompts,
-        techId: slectedTech,
-        tags: valueTage,
+        techId: selectedTech,
+        tags: valueTags.join(","),
       },
       {
         getNextPageParam: (next: any) => {
@@ -28,7 +28,7 @@ const useInPromptsInfintry = () => {
       }
     );
 
-  const hanldeNextPage = () => {
+  const handleNextPage = () => {
     if (hasNextPage) {
       fetchNextPage();
       setPage((page) => page + 1);
@@ -54,24 +54,26 @@ const useInPromptsInfintry = () => {
       );
       setItems(newItems);
     }
-  }, [data, isSuccess,setItems]); // Dependencies are limited to what directly influences the effect
+  }, [data, isSuccess, setItems]); // Dependencies are limited to what directly influences the effect
   return {
     data,
+    setItems,
     items,
     isLoading,
     isSuccess,
     fetchNextPage,
-    hanldeNextPage,
+    handleNextPage: handleNextPage,
+    refetch,
     isHaveNext,
     setSearch,
     search,
     myPrompts,
     setMyPrompts,
-    slectedTech,
+    selectedTech,
     setSelected,
-    valueTage,
-    setValueTage,
+    valueTags: valueTags,
+    setValueTags,
   };
 };
 
-export default useInPromptsInfintry;
+export default useInPromptsInfantry;

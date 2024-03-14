@@ -13,7 +13,7 @@ import { Technology } from "@prisma/client";
 type Props = {};
 
 const TehcnologoySelect = (props: Props) => {
-  const { technologies, selectdTechnology, handelSelecteTechnology } =
+  const { technologies, selectTechnology, handelSelecteTechnology } =
     useContext(chatContext);
   return (
     <Dropdown placement="bottom-start">
@@ -21,16 +21,16 @@ const TehcnologoySelect = (props: Props) => {
         <div className="w-full max-w-[80px] flex items-center space-x-1 text-sm">
           <div>
             <Avatar
-              name={selectdTechnology?.name}
+              name={selectTechnology?.name}
               className="w-6 h-6"
               size="sm"
-              src={selectdTechnology?.logo ?? ""}
+              src={selectTechnology?.logo ?? ""}
             />
           </div>
 
           <div className="flex-1 min-w-0">
             <p className="truncate whitespace-normal">
-              {selectdTechnology?.name ?? ""}
+              {selectTechnology?.name ?? ""}
             </p>
           </div>
         </div>

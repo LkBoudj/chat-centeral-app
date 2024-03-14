@@ -12,14 +12,14 @@ type Props = {
 
 const Tag = ({
   value,
-  removeTage,
+  removeTags,
 }: {
-  removeTage?: (key: any) => void;
+  removeTags?: (key: any) => void;
   value: string;
 }) => {
   return (
     <div
-      onClick={removeTage}
+      onClick={removeTags}
       className="bg-[#ebebeb] cursor-pointer flex items-center px-3 py-1 rounded-xl space-x-2 text-sm"
     >
       <span>{value}</span>
@@ -37,7 +37,7 @@ const CustomInputTags = ({
   const [filterValue, setValue] = useState("");
   const [isListShow, setIsListShow] = useState(false);
 
-  const handelRemoveTage = (tag: string) => {
+  const handelRemoveTags = (tag: string) => {
     onChange(value.filter((t: any) => t != tag));
   };
 
@@ -103,7 +103,7 @@ const CustomInputTags = ({
             <Tag
               key={tag}
               value={tag}
-              removeTage={() => handelRemoveTage(tag)}
+              removeTags={() => handelRemoveTags(tag)}
             />
           ))}
 

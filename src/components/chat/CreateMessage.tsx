@@ -40,7 +40,7 @@ const CreateMessage = ({
     selectdModel,
     setFile,
     onOpenUploadFile,
-    selectdTechnology,
+    selectTechnology,
     file,
     sessionUser,
   } = useContext(chatContext);
@@ -74,7 +74,7 @@ const CreateMessage = ({
     const message = {
       ...data,
       media: file,
-      technologyId: selectdTechnology?.id,
+      technologyId: selectTechnology?.id,
       model: selectdModel,
     };
 
@@ -84,7 +84,7 @@ const CreateMessage = ({
   };
 
   return (
-    <div className="absolute bottom-[12px] z-50 w-full left-0 px-4 lg:pr-[370px]">
+    <div className="absolute bottom-[0px] z-50 w-full left-0 px-4 lg:pr-[370px]">
       <ContainerMaxWind className=" max-w-7xl mx-auto space-y-8">
         {file && (
           <div className="w-full flex space-x-2 ">
@@ -126,7 +126,7 @@ const CreateMessage = ({
                       "Feeling inquisitive? I'm here to help!",
                       "Any burning questions today?",
                       "What intriguing question do you have today?",
-                      "Ready to explore? Ask me something!"
+                      "Ready to explore? Ask me something!",
                     ][Math.floor(Math.random() * 10)]
                   }
                   variant="bordered"
@@ -146,7 +146,6 @@ const CreateMessage = ({
                     `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full`
                   )}
                 />
-
               </div>
 
               <IconButton size={22} Icon={Mic} />
@@ -170,10 +169,11 @@ const CreateMessage = ({
           </Form>
         ) : (
           <p className="w-full bg-white/50 p-5 text-center">
-            Looks like you&apos;re out of message credits! 🌟 Don&apos;t miss out on the fun -
-            <Link href="/subscription"> top up your account </Link> and keep the conversation going!
+            Looks like you&apos;re out of message credits! 🌟 Don&apos;t miss
+            out on the fun -
+            <Link href="/subscription"> top up your account </Link> and keep the
+            conversation going!
           </p>
-
         )}
       </ContainerMaxWind>
     </div>

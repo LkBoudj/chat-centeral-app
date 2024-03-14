@@ -7,7 +7,7 @@ export const router = t.router;
 
 export const publicProducer = t.procedure;
 
-export const privateProcuder = publicProducer.use((opts) => {
+export const privateProuder = publicProducer.use((opts) => {
   const { ctx } = opts;
   if (!ctx?.auth) {
     throw new TRPCError({

@@ -27,12 +27,13 @@ import MediaFiles from "./global/explorer/MediaFiles";
 import Loading from "./global/Loading";
 import Error from "./global/Error";
 import UserInformation from "./user/UserInformation";
-import CustomAvatarUser from "./global/CustomAvatar";
+import CustomAvatarUser from "./global/CustomButtonUploadFiles";
 import Explorer from "./global/explorer";
 import UploadMedia from "./global/explorer/UploadMedia";
 import UploadExplorer from "./global/explorer/UploadExplorer";
 //prompts
 import PromptHeader from "./prompts/PromptHeader";
+import CustomButtonUploadFiles from "./global/Avatar";
 export {
   ContainerMaxWind,
   IconButton,
@@ -67,4 +68,5 @@ export {
   Loading,
   Error,
   CustomAvatarUser,
+  CustomButtonUploadFiles,
 };

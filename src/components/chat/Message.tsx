@@ -61,8 +61,9 @@ const BodyMessage = ({
         `markdown 
             
               prose 
+              prose-p:text-[12px]
               prose-p:font-meduim  
-              lg:prose-md 
+              prose-[12px] 
               break-words
            
             transition-all
@@ -95,7 +96,7 @@ const Message = forwardRef<HTMLDivElement, MessageType>(
       <div
         ref={ref}
         className={cn(
-          "text-[14px] w-full  flex",
+          " w-full  flex",
           fromMachin ? " justify-start" : "justify-end"
         )}
       >

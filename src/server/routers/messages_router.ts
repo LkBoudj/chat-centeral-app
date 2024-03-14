@@ -3,7 +3,7 @@ import {
   createNewMessageBackV,
   inputInfinte,
 } from "@/lib/validation";
-import { privateProcuder, router } from "../trpc";
+import { privateProuder, router } from "../trpc";
 
 import { TRPCError } from "@trpc/server";
 import { CONVARSATION_NOT_FOUND } from "@/lib/configs/custom_errors_code";
@@ -11,7 +11,7 @@ import { ConversationController, MessageController } from "@/lib/controller";
 import TechnologiesContainer from "@/lib/technolgie_container";
 import { z } from "zod";
 const appMessagesRouter = router({
-  infiniteConversationMessages: privateProcuder
+  infiniteConversationMessages: privateProuder
     .input(inputInfinte)
     .input(conversationMessagesV)
     .query(async ({ input, ctx }) => {
@@ -21,7 +21,7 @@ const appMessagesRouter = router({
         userId: ctx.auth.id,
       });
     }),
-  all: privateProcuder
+  all: privateProuder
     .input(
       z.object({
         id: z.string(),
@@ -34,7 +34,7 @@ const appMessagesRouter = router({
         userId: ctx.auth.id,
       });
     }),
-  create: privateProcuder
+  create: privateProuder
     .input(createNewMessageBackV)
     .use(async ({ next, ctx, input }) => {
       const { conversationId, content } = input;

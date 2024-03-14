@@ -29,7 +29,7 @@ const ChatContextProvider = ({
   const sessionUser = session?.user;
   const {
     hanldeSlectModel,
-    selectdTechnology,
+    selectTechnology,
     handelSelecteTechnology,
     selectdModel,
     modelsSelectedTech,
@@ -107,7 +107,7 @@ const ChatContextProvider = ({
     setChats,
     //--------- technology ----------
     hanldeSlectModel,
-    selectdTechnology,
+    selectTechnology,
     handelSelecteTechnology,
     selectdModel,
     modelsSelectedTech,

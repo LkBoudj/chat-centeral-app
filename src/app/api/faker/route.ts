@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
         data: {
           content: faker.lorem.paragraphs({ min: 2, max: 4 }),
           excerpt: faker.lorem.lines({ min: 2, max: 3 }),
+          slug: faker.lorem.slug(),
           title: faker.lorem.word({ length: 60 }),
           userId,
           technologyId: faker.number.int({ min: 1, max: 5 }),

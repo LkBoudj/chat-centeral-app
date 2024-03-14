@@ -14,7 +14,7 @@ const ChatTemplate = ({ children }: PropsWithChildren) => {
     <ChatContextProvider>
       <ChatAside />
 
-      <div className="bg-[#EEEEEE] h-screen">
+      <div className="bg-[#EEEEEE] h-screen overflow-hidden">
         <LkNavbar
           navsData={authNavigation}
           endContent={

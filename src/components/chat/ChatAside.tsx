@@ -21,10 +21,10 @@ const ChatAside = (props: Props) => {
     <>
       <aside
         className={cn(
-          `absolute right-0 top-0  pt-20  bg-[#eee] h-full transition-all duration-100  w-full transform   z-40 max-w-[370px] pr-5`,
+          `absolute right-0 top-0  pt-20  bg-[#eee] h-full transition-all  duration-100  w-full transform   z-40 max-w-[370px] pr-5`,
           isShowAsideChat
             ? "block  translate-x-0"
-            : "translate-x-full lg:translate-x-0"
+            : "hidden translate-x-full lg:block lg:translate-x-0"
         )}
       >
         <Tabs className="mt-3 font-bold" variant="underlined" color="primary">

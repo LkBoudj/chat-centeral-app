@@ -1,4 +1,4 @@
-import { router, privateProcuder } from "../trpc";
+import { router, privateProuder } from "../trpc";
 import prismaConfig from "@/lib/configs/prismaConfig";
 import { ConversationController } from "@/lib/controller";
 
@@ -6,7 +6,7 @@ import { inputInfinte } from "@/lib/validation/";
 import { deleteV } from "@/lib/validation/conversation_validation";
 
 const conversationsAppRouter = router({
-  infiniteChats: privateProcuder
+  infiniteChats: privateProuder
     .input(inputInfinte)
     .query(async ({ ctx, input }) => {
       const { limit, skip, cursor } = input;
@@ -18,7 +18,7 @@ const conversationsAppRouter = router({
         skip,
       });
     }),
-  delete: privateProcuder.input(deleteV).mutation(async ({ ctx, input }) => {
+  delete: privateProuder.input(deleteV).mutation(async ({ ctx, input }) => {
     const { id } = input;
     console.log("the route is working .... :)");
 

@@ -1,6 +1,6 @@
 import { trpc } from "@/trpc/client";
 import { useEffect, useState } from "react";
-import useInPromptsInfintry from "./useInPromptsInfintry";
+import useInPromptsInfantry from "./useInPromptsInfintry";
 
 const usePrompt = () => {
   //const [prompts, setPromps] = useState<any>([]);
@@ -11,7 +11,7 @@ const usePrompt = () => {
   //   }
   // );
 
-  const { items: prompts, isSuccess, isLoading } = useInPromptsInfintry();
+  const { items: prompts, isSuccess, isLoading } = useInPromptsInfantry();
 
   // useEffect(() => {
   //   if (isSuccess) {

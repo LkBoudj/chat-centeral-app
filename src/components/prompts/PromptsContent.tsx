@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Loading from "../global/Loading";
 import ItemPrompt from "./ItemPrompt";
 import { Button, ScrollShadow, cn } from "@nextui-org/react";
 import ContainerMaxWind from "../global/ContainerMaxWind";
-
+import Error from "../global/Error";
 import { PromptHeader } from "..";
+import { promptContext } from "../context/PromptContextProvider";
 
 type Props = {
   className?: string;
@@ -14,7 +15,7 @@ type Props = {
   isHaveNext?: boolean;
   search: string;
   prompts: any[];
-  hanldeNextPage: () => void;
+  handleNextPage: () => void;
   setSearch: (key: any) => void;
   onOpen: () => void;
 };
@@ -24,21 +25,20 @@ const PromptsContent = ({
   isLoading,
   isSuccess,
   prompts,
-  hanldeNextPage,
+  handleNextPage,
   isHaveNext,
   setSearch,
   search,
   onOpen,
 }: Props) => {
   const [value, setValue] = useState("");
+  const { hanldeDeletePrompt, hanldeEditPrompt } = useContext(promptContext);
+
   if (isLoading) return <Loading />;
   if (isSuccess)
     return (
       <ContainerMaxWind
-        className={cn(
-          "max-w-full h-full pr-0  space-y-4 pt-4 pb-16",
-          className
-        )}
+        className={cn("max-w-full h-full pr-0  space-y-4 py-4 ", className)}
       >
         <PromptHeader
           setValue={setValue}
@@ -48,7 +48,7 @@ const PromptsContent = ({
         />
         <ScrollShadow
           className={cn(
-            "h-full w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 pb-12 px-6"
+            "  max-h-[var(--scrollAreaPrmp)] w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-4 pl-8  pr-6"
           )}
         >
           {Array.isArray(prompts) &&
@@ -59,6 +59,9 @@ const PromptsContent = ({
                   title={item.title}
                   excerpt={item.excerpt}
                   image={item.image}
+                  tags={item.tags}
+                  onDelete={() => hanldeDeletePrompt(item.id)}
+                  onEdit={() => hanldeEditPrompt(item)}
                   technology={item.technology?.name ?? null}
                   user={item?.user}
                   license={item?.license}
@@ -69,21 +72,20 @@ const PromptsContent = ({
                 />
               );
             })}
-
-          <div className="grid sm:col-span-2 md:col-span-3 lg:col-span-4   pb-12 justify-center  ">
-            <Button
-              isLoading={isLoading}
-              color="primary"
-              className="max-w-md"
-              onClick={hanldeNextPage}
-            >
-              Load more
-            </Button>
-          </div>
         </ScrollShadow>
+        <div className="flex w-full justify-center  ">
+          <Button
+            isLoading={isLoading}
+            color="primary"
+            className="max-w-md"
+            onClick={handleNextPage}
+          >
+            Load more
+          </Button>
+        </div>
       </ContainerMaxWind>
     );
-  return <></>;
+  return <Error />;
 };
 
 export default PromptsContent;
