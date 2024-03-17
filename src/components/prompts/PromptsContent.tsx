@@ -56,6 +56,7 @@ const PromptsContent = ({
               return (
                 <ItemPrompt
                   key={item.id}
+                  slug={item.slug}
                   title={item.title}
                   excerpt={item.excerpt}
                   image={item.image}

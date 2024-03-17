@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SCRET_KEY_TEST, {
   apiVersion: "2023-10-16", // Use the latest API version
 });
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (option?: any) => {
   const products = await stripe.products.list();
   return products;
 };

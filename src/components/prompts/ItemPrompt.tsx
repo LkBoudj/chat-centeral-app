@@ -20,10 +20,10 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import IconButton from "../global/IconButton";
-import { useEffect } from "react";
 
 type Props = {
   image?: string;
+  slug: string;
   license?: string;
   title: string;
   excerpt: string;
@@ -55,6 +55,7 @@ const ItemPrompt: React.FC<Props> = ({
   title,
   excerpt,
   license,
+  slug,
   image,
   tags,
   user,
@@ -111,7 +112,7 @@ const ItemPrompt: React.FC<Props> = ({
         </CardHeader>
         <Link
           className="text-black flex flex-col items-start space-y-3"
-          href={`/prompts/${id}`}
+          href={`/prompts/${slug}`}
         >
           <CardBody className="py-0 space-y-4  px-6  ">
             <Image

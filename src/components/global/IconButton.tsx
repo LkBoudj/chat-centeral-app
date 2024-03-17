@@ -12,6 +12,7 @@ type Props = {
   type?: "button" | "submit" | "reset" | undefined;
   onPress?: (key?: any) => void;
   endContent?: React.ReactNode;
+  content?: string;
 };
 
 const IconButton = ({
@@ -24,6 +25,7 @@ const IconButton = ({
   isLoading,
   className,
   onPress,
+  content,
 }: Props) => {
   return (
     <Button
@@ -38,7 +40,10 @@ const IconButton = ({
       className={className}
       onPress={onPress}
     >
-      <Icon size={size} />
+      <span>
+        <Icon size={size} />
+        {content}
+      </span>
     </Button>
   );
 };
