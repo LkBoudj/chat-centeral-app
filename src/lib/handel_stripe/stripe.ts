@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SCRET_KEY_TEST, {
 });
 
 export const getAllProducts = async (option?: any) => {
-  const products = await stripe.products.list();
+  const products = await stripe.products.list(option);
   return products;
 };
 

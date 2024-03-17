@@ -22,6 +22,7 @@ const authantication = router({
       roles: "user",
       SubscriptionExpirydate: moment().add(30, "days").format(),
     };
+
     if (customer) data.stripeCustomerId = customer.id;
 
     const createNewUser = await prismaConfig.user.create({

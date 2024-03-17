@@ -1,9 +1,11 @@
 "use client";
 
+import { cn } from "@nextui-org/react";
 import PricingCard, { List } from "./components/PricingCard";
 
 type Props = {
   data?: any[];
+  component?: React.ReactNode;
 } & React.ComponentPropsWithRef<"div">;
 
 type PriceData = {
@@ -17,15 +19,12 @@ type PriceData = {
 };
 
 const Pricing = (props: Props) => {
-  const { data, ...resetProps } = props;
+  const { data, component, className, ...resetProps } = props;
 
   return (
-    <section
-      {...resetProps}
-      className="relative z-10 overflow-hidden   pb-12 pt-20 dark:bg-dark lg:pb-[90px] lg:pt-[120px]"
-    >
-      <div className="container mx-auto">
-        <div className="-mx-4 flex flex-wrap">
+    <section {...resetProps} className="relative z-10 overflow-hidden ">
+      <div className={cn("container mx-auto space-y-4", className)}>
+        <div className=" flex flex-wrap">
           <div className="w-full px-4">
             <div className="mx-auto mb-[60px] max-w-[510px] text-center">
               <span className="mb-2 block text-lg font-semibold text-primary">
@@ -41,7 +40,7 @@ const Pricing = (props: Props) => {
             </div>
           </div>
         </div>
-
+        {component}
         <div className="-mx-4 flex flex-wrap justify-center">
           <div className="-mx-4 flex flex-wrap">
             {Array.isArray(data) &&
