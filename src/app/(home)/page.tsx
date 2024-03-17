@@ -12,24 +12,13 @@ import {
   Testimonials,
 } from "@/components/sections";
 import Pricing2 from "@/components/sections/pricing-2";
+import useSubscription from "@/lib/hocks/subscriptions/useSubscription";
 import { useContext, useEffect, useState } from "react";
 
 export default function Home() {
-  const [plans, setPalns] = useState([]);
+  const { data: plans } = useSubscription();
   const { dataOfNav: data }: any = useContext(ConfigContext);
-  const getPricsData = async () => {
-    const res = await fetch("/api/subscription");
 
-    if (res.ok) {
-      const json = await res.json();
-      if (json.statsusCode == 201) {
-        setPalns(json.data);
-      }
-    }
-  };
-  useEffect(() => {
-    getPricsData();
-  }, [plans]);
   return (
     <div className="bg-blue-100/50">
       <GuestNav />
@@ -40,8 +29,8 @@ export default function Home() {
 
           <Featurs id={data[1].sectionId} />
         </div>
-        <Pricing id={data[2].sectionId} plans={plans} />
-        <Pricing2 />
+
+        <Pricing2 data={plans} id={data[2].sectionId} />
         <Apps id={data[3].sectionId} />
         <Contact id={data[4].sectionId} />
         <Success id={data[5].sectionId} />

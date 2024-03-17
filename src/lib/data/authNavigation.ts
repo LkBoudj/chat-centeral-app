@@ -4,6 +4,7 @@ import {
   dash_techs_page,
   dash_users_page,
   prompts_page,
+  subscription_page,
 } from "../configs/routes_name";
 
 const size = 42.16;
@@ -25,8 +26,8 @@ export const authNavigation: NavItem[] = [
     backgroundPositionY: -0.5,
   },
   {
-    name: "PDF reader",
-    path: "/pdf",
+    name: "Subscription",
+    path: subscription_page,
     color: "text-blue-600",
     Icon: FileText,
     backgroundPositionX: size * 3,

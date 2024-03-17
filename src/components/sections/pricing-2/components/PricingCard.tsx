@@ -1,7 +1,9 @@
-import Link from "next/link";
+"use client";
+import { useRouter } from "next/navigation";
 import IconPricing from "../../pricing/IconPricing";
 
 const PricingCard = ({
+  id,
   children,
   description,
   price,
@@ -9,7 +11,24 @@ const PricingCard = ({
   subscription,
   buttonText,
   active,
+  priceId,
+  messagesMax,
 }: any) => {
+  const route = useRouter();
+  const getSubscription = async () => {
+    const res = await fetch("/api/subscription", {
+      method: "post",
+      body: JSON.stringify({
+        priceId,
+        messagesMax: parseInt(messagesMax) ?? 30,
+      }),
+    });
+    const { url, success } = await res.json();
+
+    if (success) {
+      route.push(url);
+    }
+  };
   return (
     <>
       <div className="w-full px-4  max-w-[350px]">
@@ -27,8 +46,8 @@ const PricingCard = ({
             {description}
           </p>
           <div className="mb-9 flex flex-col gap-[14px]">{children}</div>
-          <Link
-            href="/#"
+          <button
+            onClick={() => getSubscription()}
             className={` ${
               active
                 ? "block w-full rounded-md border border-primary bg-primary p-3 text-center text-base font-medium text-white transition hover:bg-opacity-90"
@@ -36,7 +55,7 @@ const PricingCard = ({
             } `}
           >
             {buttonText}
-          </Link>
+          </button>
           <div>
             <span className="absolute right-0 top-7 z-[-1]">
               <svg

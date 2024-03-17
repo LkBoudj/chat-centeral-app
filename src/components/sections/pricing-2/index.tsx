@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import PricingCard, { List } from "./components/PricingCard";
 
 type Props = {
-  plans?: any[];
+  data?: any[];
 } & React.ComponentPropsWithRef<"div">;
 
 type PriceData = {
@@ -17,70 +16,9 @@ type PriceData = {
   active: boolean;
 };
 
-const pricingData = [
-  {
-    type: "Basic",
-    price: "$29",
-    subscription: "month",
-    description: "Ideal for individuals and small businesses with basic needs.",
-    buttonText: "Choose Basic",
-    options: [
-      "Limited access to DALL·E API",
-      "50 requests per month",
-      "Standard support",
-    ],
-    active: true,
-  },
-  {
-    type: "Pro",
-    price: "$99",
-    subscription: "month",
-    description:
-      "Perfect for professionals and small teams requiring moderate usage.",
-    buttonText: "Choose Pro",
-    options: [
-      "Moderate access to DALL·E API",
-      "250 requests per month",
-      "Priority support",
-    ],
-    active: false,
-  },
-  {
-    type: "Enterprise",
-    price: "$499",
-    subscription: "month",
-    description:
-      "Tailored solutions for enterprises and organizations with high usage.",
-    buttonText: "Contact Us",
-    options: [
-      "Full access to DALL·E API",
-      "Unlimited requests",
-      "Dedicated support",
-    ],
-    active: false,
-  },
-];
-
 const Pricing = (props: Props) => {
-  const { plans, ...resetProps } = props;
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, ...resetProps } = props;
 
-  const getData = async () => {
-    setIsLoading(true);
-    const res = await fetch("/api/subscription");
-    const { success, items } = await res.json();
-    if (res.ok && success) {
-      setData(items);
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isLoading) {
-      getData();
-    }
-  }, [data, setData]);
   return (
     <section
       {...resetProps}
@@ -117,6 +55,9 @@ const Pricing = (props: Props) => {
                     buttonText,
                     options,
                     active,
+                    id,
+                    priceId,
+                    messagesMax,
                   }: any,
                   index
                 ) => (
@@ -128,6 +69,9 @@ const Pricing = (props: Props) => {
                     description={description}
                     buttonText={buttonText}
                     active={active}
+                    id={id}
+                    priceId={priceId}
+                    messagesMax={parseInt(messagesMax) ?? 30}
                   >
                     {Array.isArray(options) &&
                       options?.map((option, index) => (

@@ -1,5 +1,6 @@
 export const conversations_page = "/chat";
 export const prompts_page = "/prompts";
+export const subscription_page = "/subscription";
 
 // dashboard
 
