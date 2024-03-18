@@ -5,7 +5,7 @@ import PricingCard, { List } from "./components/PricingCard";
 
 type Props = {
   data?: any[];
-  component?: React.ReactNode;
+  component?: any;
 } & React.ComponentPropsWithRef<"div">;
 
 type PriceData = {

@@ -72,3 +72,55 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(e, { status: 400 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getAuthSession();
+    const auth = await session?.user;
+    if (!auth)
+      return NextResponse.json(
+        {
+          success: true,
+          error: "authantication errors",
+          items: [],
+        },
+        { status: 400 }
+      );
+    const { priceId, messagesMax, subscriptionId } = await req.json();
+
+    if (subscriptionId) {
+      return NextResponse.json(
+        {
+          success: true,
+          subscriptionId: subscriptionId,
+        },
+        { status: 200 }
+      );
+    } else {
+      const subscription = await createStripeSession({
+        succesPage: process.env.HOST_URL + "/subscription",
+        userId: auth.id,
+        priceId,
+        messagesMax,
+        customer: auth.stripeCustomerId,
+      });
+      return NextResponse.json(
+        {
+          success: true,
+          url: subscription.url,
+        },
+        { status: 200 }
+      );
+    }
+  } catch (e: any) {
+    return NextResponse.json(
+      {
+        success: false,
+        url: "",
+        error: e.message,
+      },
+
+      { status: 400 }
+    );
+  }
+}

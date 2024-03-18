@@ -1,7 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
 import IconPricing from "../../pricing/IconPricing";
+import { Link } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
+type PricingProps = {
+  id: string;
+  children?: React.ReactNode;
+  description: string;
+  price: string;
+  type: string;
+  subscription: string;
+  buttonText: string;
+  active: boolean;
+  priceId: string;
+  messagesMax: number;
+  link?: string;
+};
 const PricingCard = ({
   id,
   children,
@@ -13,20 +28,23 @@ const PricingCard = ({
   active,
   priceId,
   messagesMax,
-}: any) => {
+  link,
+}: PricingProps) => {
   const route = useRouter();
   const getSubscription = async () => {
     const res = await fetch("/api/subscription", {
       method: "post",
       body: JSON.stringify({
         priceId,
-        messagesMax: parseInt(messagesMax) ?? 30,
+        messagesMax: messagesMax ?? 30,
       }),
     });
     const { url, success } = await res.json();
 
     if (success) {
       route.push(url);
+    } else {
+      toast.error("something wrong");
     }
   };
   return (
@@ -46,16 +64,30 @@ const PricingCard = ({
             {description}
           </p>
           <div className="mb-9 flex flex-col gap-[14px]">{children}</div>
-          <button
-            onClick={() => getSubscription()}
-            className={` ${
-              active
-                ? "block w-full rounded-md border border-primary bg-primary p-3 text-center text-base font-medium text-white transition hover:bg-opacity-90"
-                : "block w-full rounded-md border border-stroke bg-transparent p-3 text-center text-base font-medium text-primary transition hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3"
-            } `}
-          >
-            {buttonText}
-          </button>
+          {link ? (
+            <Link
+              className={` ${
+                active
+                  ? "block w-full rounded-md border border-primary bg-primary p-3 text-center text-base font-medium text-white transition hover:bg-opacity-90"
+                  : "block w-full rounded-md border border-stroke bg-transparent p-3 text-center text-base font-medium text-primary transition hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3"
+              } `}
+              href={link}
+            >
+              {buttonText}
+            </Link>
+          ) : (
+            <button
+              onClick={() => getSubscription()}
+              className={` ${
+                active
+                  ? "block w-full rounded-md border border-primary bg-primary p-3 text-center text-base font-medium text-white transition hover:bg-opacity-90"
+                  : "block w-full rounded-md border border-stroke bg-transparent p-3 text-center text-base font-medium text-primary transition hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3"
+              } `}
+            >
+              {buttonText}
+            </button>
+          )}
+
           <div>
             <span className="absolute right-0 top-7 z-[-1]">
               <svg

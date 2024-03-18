@@ -166,4 +166,14 @@ export const createStripeSession = async ({
 
   return subscriptin;
 };
+
+export const cancelSubscription = async ({
+  subscriptionId,
+}: {
+  subscriptionId: string;
+}) => {
+  const subscription = await stripe.subscriptions.cancel(subscriptionId);
+
+  console.log(subscription);
+};
 export default stripe;
