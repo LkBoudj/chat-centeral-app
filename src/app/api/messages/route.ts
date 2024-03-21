@@ -17,11 +17,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const session = await getAuthSession();
     const userId = session?.user.id;
+
     const user = await prismaConfig.user.findUnique({
       where: {
         id: userId,
       },
     });
+
     if (user && user?.msgCounter < user?.messagesMax) {
       await prismaConfig.user.update({
         data: {
@@ -37,6 +39,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 400 }
       );
     }
+
     const validation: any = await createNewMessageBackV.safeParseAsync({
       content,
       conversationId,
@@ -64,7 +67,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     };
 
     const isFileExits: any = validation.data.fileId
-      ? await mediaController.isExits({
+      ? await mediaController.checkMediaExists({
           userId,
           id: media?.id,
         })
@@ -73,7 +76,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const newMessage = await MessageController.create(userMessage);
 
     if (isFileExits) {
-      await mediaController.blongToMessage({
+      await mediaController.linkToMessage({
         mediaId: isFileExits.id,
         messageId: newMessage.id,
       });
@@ -82,7 +85,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const isTechExits = await technologyController.isExits({
       id: technologyId,
     });
+
     if (isTechExits) {
+      console.log(isTechExits);
+
       return technologiesContainer.handelAiTechNologies({
         userMessage,
         model,
@@ -96,7 +102,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // await TechnologiesContainer.generateTextCompletion({ userMessage });
     // return NextResponse.json({ conversationId: newConversation.id });
   } catch (e: any) {
-    console.log(e);
+    console.log("errors=>>>>>>>", e);
 
     return NextResponse.json(e, { status: 400 });
   }

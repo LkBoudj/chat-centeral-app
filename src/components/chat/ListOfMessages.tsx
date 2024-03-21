@@ -1,11 +1,11 @@
 "use client";
 import { ContainerMaxWind, Message } from "..";
 
-import { Image, ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@nextui-org/react";
 import InitailtMessage from "./InitialMessage";
-import { createRef, useContext, useEffect, useRef } from "react";
+import { createRef, useRef } from "react";
 import { useIntersection } from "@mantine/hooks";
-import { chatContext } from "../context/ChatContextProvider";
+
 const ListOfMessages = ({
   messages,
   handelNextPageM,
@@ -16,9 +16,7 @@ const ListOfMessages = ({
   isHaveNextM?: boolean;
 }) => {
   const firstMessageRef: any = createRef();
-  const lastMessageRef: any = createRef();
   const scrollListMessages: any = createRef();
-  const messagesEndRef: any = useRef(null);
   const { ref, entry } = useIntersection({
     root: firstMessageRef.current,
     threshold: 1,

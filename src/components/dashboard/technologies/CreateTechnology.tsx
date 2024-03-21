@@ -22,7 +22,7 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { schemCreateTechFront } from "@/lib/validation/technology_validation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 
 type Inputs = z.infer<typeof schemCreateTechFront>;
 const CreateTechnology = () => {

@@ -1,7 +1,7 @@
 import UploadExplorer from "@/components/global/explorer/UploadExplorer";
 import React, { useContext } from "react";
 import { createContext } from "react";
-import { globalContext } from "../GolobalContextProvider";
+import { globalContext } from "../GlobalContextProvider";
 
 type Props = {
   children: React.ReactNode;

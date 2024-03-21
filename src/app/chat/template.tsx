@@ -1,6 +1,7 @@
 "use client";
 import { ChatAside, IconButton, LkNavbar, UploadExplorer } from "@/components";
 import ChatContextProvider from "@/components/context/ChatContextProvider";
+import FileManager from "@/components/global/explorer/FileManager";
 import { authNavigation } from "@/lib/data/authNavigation";
 
 import { Settings } from "lucide-react";
@@ -14,7 +15,7 @@ const ChatTemplate = ({ children }: PropsWithChildren) => {
     <ChatContextProvider>
       <ChatAside />
 
-      <div className="bg-[#EEEEEE] h-screen overflow-hidden">
+      <div className="bg-[#EEEEEE] h-screen overflow-hidden  ">
         <LkNavbar
           navsData={authNavigation}
           endContent={
@@ -25,7 +26,9 @@ const ChatTemplate = ({ children }: PropsWithChildren) => {
             />
           }
         />
-        {children}
+        <div className="h-full w-full  max-h-[var(--full-minus-header)] p-4  flex flex-col justify-between">
+          {children}
+        </div>
       </div>
     </ChatContextProvider>
   );

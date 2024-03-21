@@ -16,10 +16,13 @@ const useConversationHock = () => {
     setChats,
   } = useInfiniteConversation();
   const { mutate } = trpc.conversations.delete.useMutation({
-    onMutate(item: any) {
+    async onMutate(item: any) {
       const deleteChats = chats.filter((chat: any) => chat.id != item.id);
       setChats(deleteChats);
       route.push(conversations_page);
+    },
+    async onSuccess(opt) {
+      //  console.log(opt);
     },
   });
   const handelDeleteConversation = (key: any) => {

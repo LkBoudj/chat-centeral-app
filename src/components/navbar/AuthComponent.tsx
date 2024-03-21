@@ -15,13 +15,12 @@ const AuthComponent = (props: Props) => {
   const { data: session } = useSession();
   return (
     <div>
-      <Dropdown>
+      <Dropdown className="">
         <DropdownTrigger>
-          <Button className="bg-transparent" variant="light">
-            <Avatar
-              src={(session && session.user.image) ?? "/images/default.jpeg"}
-            />
-          </Button>
+          <Avatar
+            className=" cursor-pointer"
+            src={(session && session.user.image) ?? "/images/default.jpeg"}
+          />
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
           <DropdownItem key="profile" href="/profile">

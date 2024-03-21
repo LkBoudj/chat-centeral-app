@@ -5,13 +5,16 @@
 :root {
   --full-minus-header: calc(100% - 64px);
   --scrollAreaPrmp: calc(100% - 129px);
-}
-.chat-area {
-  max-height: calc(100% - 192px) !important;
-  height: 100%;
+  --mediaScrollMaxHeight: calc(100% - 210px);
 }
 
 @layer base {
+  #vjs_video_3 {
+    /* @apply w-full h-auto; */
+  }
+  .media_inner_actions {
+    @apply transform opacity-0 scale-75 group-hover:scale-100 group-hover:opacity-100  transition-all group-hover:translate-y-0 bg-slate-950   bg-opacity-70 absolute w-full h-full flex items-center justify-center gap-1;
+  }
   .aside-item-chat {
     @apply bg-gradient-to-r from-transparent to-[#f7f7f7] relative border-b  hover:border-b-0 border-gray-100 hover:border-l-3 hover:border-blue-600;
   }

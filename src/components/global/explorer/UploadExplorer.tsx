@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalFooter, Tab } from "@nextui-org/react";
 
 import React, { useContext } from "react";
 import Explorer from ".";
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 import UploadMedia from "./UploadMedia";
 import { Media } from "@prisma/client";
 
@@ -14,10 +14,11 @@ const UploadExplorer = ({
   handelSelectFile?: (e: Media) => void;
   types?: string[];
 }) => {
-  const { onOpenChangeUloadFile } = useContext(globalContext);
+  const { onOpenChangeUploadFile: onOpenChangeUploadFile } =
+    useContext(globalContext);
 
   return (
-    <Modal size="full" isOpen={true} onOpenChange={onOpenChangeUloadFile}>
+    <Modal size="full" isOpen={true} onOpenChange={onOpenChangeUploadFile}>
       <ModalContent>
         <div className="w-full h-full ">
           <Explorer

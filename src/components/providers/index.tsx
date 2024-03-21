@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import TrpcProvider from "./TrpcProvider";
 import { useRouter } from "next/navigation";
-import { GolobalContextProvider } from "../context";
+import { GlobalContextProvider } from "../context";
 const Provider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
@@ -13,10 +13,10 @@ const Provider = ({ children }: PropsWithChildren) => {
     <SessionProvider>
       <TrpcProvider>
         <NextUIProvider navigate={router.push}>
-          <GolobalContextProvider defaultVal={undefined}>
+          <GlobalContextProvider>
             <Toaster />
             {children}
-          </GolobalContextProvider>
+          </GlobalContextProvider>
         </NextUIProvider>
       </TrpcProvider>
     </SessionProvider>

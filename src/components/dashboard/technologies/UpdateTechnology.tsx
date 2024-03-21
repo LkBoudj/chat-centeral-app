@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { schemEditTechBack } from "@/lib/validation/technology_validation";
 import { date, z } from "zod";
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 
 type Inputs = z.infer<typeof schemEditTechBack>;
 const UpdateTechnology = () => {

@@ -1,7 +1,7 @@
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { globalContext } from "./GolobalContextProvider";
+import { globalContext } from "./GlobalContextProvider";
 import { Media } from "@prisma/client";
 import UploadExplorer from "../global/explorer/UploadExplorer";
 import toast from "react-hot-toast";

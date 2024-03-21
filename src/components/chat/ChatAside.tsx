@@ -17,6 +17,7 @@ const ChatAside = (props: Props) => {
     isShowAsideChat,
     setShowAsideChat,
   } = useContext(chatContext);
+
   return (
     <>
       <aside

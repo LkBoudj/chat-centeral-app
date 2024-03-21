@@ -1,5 +1,4 @@
 import prismaConfig from "@/lib/configs/prismaConfig";
-import { isFileExists, removeFileIfEexits, uploadFiles } from "@/lib/helper";
 import { schemCreateTechBack } from "@/lib/validation/technology_validation";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

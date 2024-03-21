@@ -20,7 +20,6 @@ const conversationsAppRouter = router({
     }),
   delete: privateProuder.input(deleteV).mutation(async ({ ctx, input }) => {
     const { id } = input;
-    console.log("the route is working .... :)");
 
     await ConversationController.delete({ id, userId: ctx.auth.id });
   }),

@@ -37,7 +37,7 @@ const ConversationItemOption = ({
 }) => {
   const isActive: boolean = item.id == id;
   return (
-    <div className="flex items-center justify-between pr-14">
+    <div className="w-full flex relative items-center justify-between ">
       <Link
         className={cn(
           ` h-full  w-full `,
@@ -47,14 +47,8 @@ const ConversationItemOption = ({
       >
         <p className="text-sm font-semibold truncate py-3  ">{item.title}</p>
       </Link>
-      <div className="absolute   w-24 justify-end h-full flex items-center right-0">
-        {isActive ? (
-          <ChatItemAction id={item.id} />
-        ) : (
-          <span className="text-[11px]  px-2">
-            {moment(item.updatedAt).startOf("hour").fromNow()}
-          </span>
-        )}
+      <div className="z-50   justify-end h-full flex items-center right-0">
+        <ChatItemAction id={item.id} />
       </div>
     </div>
   );

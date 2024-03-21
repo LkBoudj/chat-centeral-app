@@ -39,11 +39,11 @@ const NavContainer = (props: PropsNavContainer) => {
       </div>
       {children}
 
-      <NavbarContent justify="end">
-        <NavbarItem className="flex">
+      <NavbarContent justify="end" className="gap-0">
+        <NavbarItem className=" items-center flex justify-center ">
           <AuthanticationButton />
+          {endContent && endContent}
         </NavbarItem>
-        {endContent && <NavbarItem className="flex">{endContent}</NavbarItem>}
       </NavbarContent>
     </Navbar>
   );

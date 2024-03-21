@@ -7,7 +7,7 @@ import {
   CustomAvatarUser,
   Explorer,
 } from "@/components";
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 import { userContext } from "@/components/context/UserContextProvider";
 
 import { Tab } from "@nextui-org/react";

@@ -59,6 +59,7 @@ class ConversationController extends Controllers {
       }
     } catch (e: any) {
       console.log("have problem in delete", e);
+      return e;
     }
   }
 }

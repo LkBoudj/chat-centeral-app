@@ -12,8 +12,8 @@ import { Technology } from "@prisma/client";
 
 type Props = {};
 
-const TehcnologoySelect = (props: Props) => {
-  const { technologies, selectTechnology, handelSelecteTechnology } =
+const TechnologySelect = (props: Props) => {
+  const { technologies, selectTechnology, handelSelectedTechnology } =
     useContext(chatContext);
   return (
     <Dropdown placement="bottom-start">
@@ -40,7 +40,7 @@ const TehcnologoySelect = (props: Props) => {
           return (
             <DropdownItem
               key={`${index}_${tech?.name}`}
-              onClick={() => handelSelecteTechnology(tech)}
+              onClick={() => handelSelectedTechnology(tech)}
               className="h-14 gap-2"
             >
               <div className="w-full flex items-center space-x-1 text-sm">
@@ -61,4 +61,4 @@ const TehcnologoySelect = (props: Props) => {
   );
 };
 
-export default TehcnologoySelect;
+export default TechnologySelect;

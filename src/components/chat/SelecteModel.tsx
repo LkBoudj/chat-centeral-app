@@ -15,7 +15,7 @@ const SelecteModel = (props: Props) => {
   const {
     modelsSelectedTech,
     selectTechnology,
-    selectdModel,
+    selectedModel,
     hanldeSlectModel,
   } = useContext(chatContext);
   return (
@@ -23,13 +23,13 @@ const SelecteModel = (props: Props) => {
       <DropdownTrigger>
         <div className="flex items-center space-x-1 text-sm">
           <Avatar
-            name={selectdModel}
+            name={selectedModel}
             className="w-6 h-6"
             size="sm"
             src={selectTechnology?.logo ?? ""}
           />
 
-          <span>{selectdModel ?? ""}</span>
+          <span>{selectedModel ?? ""}</span>
         </div>
       </DropdownTrigger>
       <DropdownMenu variant="flat">

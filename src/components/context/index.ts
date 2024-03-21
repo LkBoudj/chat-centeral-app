@@ -1,3 +1,3 @@
-import GolobalContextProvider from "./GolobalContextProvider";
+import GlobalContextProvider from "./GlobalContextProvider";
 
-export { GolobalContextProvider };
+export { GlobalContextProvider };

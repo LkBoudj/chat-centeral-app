@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { globalContext } from "../GolobalContextProvider";
+import { globalContext } from "../GlobalContextProvider";
 
 type Props = {};
 

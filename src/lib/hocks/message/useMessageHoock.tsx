@@ -13,6 +13,7 @@ const useMessageHoock = () => {
   const { data, isLoading, isSuccess } = trpc.messages.all.useQuery({
     id: currentConversationId,
   });
+
   useEffect(() => {
     if (data) {
       setMessages(data);

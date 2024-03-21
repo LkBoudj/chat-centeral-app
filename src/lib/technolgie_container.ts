@@ -81,7 +81,7 @@ class TechnologiesContainer {
 
     try {
       const stream = await this.anthropic.messages.stream({
-        model: model ?? "claude-3-opus-20240229",
+        model: "claude-3-opus-20240229",
         max_tokens: 1000,
         temperature: 0.7,
         //@ts-ignore
@@ -177,7 +177,7 @@ class TechnologiesContainer {
       conversationId: userMessage.conversationId,
       technologyId: userMessage.technologyId,
     });
-    const mediaData = response.data.map((m) => ({
+    const mediaData: any = response.data.map((m) => ({
       src: m.url,
       type: "image",
       prompt: m.revised_prompt,
@@ -187,15 +187,14 @@ class TechnologiesContainer {
       updadedAt: new Date(),
     }));
 
-    saveImageFromURL(mediaData, async (data) => {
+    saveImageFromURL(mediaData, async (data: any) => {
       const createdMedia = await mediaController.create({
         userId: userMessage.userId,
         src: data.src,
         type: data.type,
-        messageId: message.id,
       });
 
-      await mediaController.blongToMessage({
+      await mediaController.linkToMessage({
         mediaId: createdMedia.id,
         messageId: message.id,
       });
@@ -215,14 +214,17 @@ class TechnologiesContainer {
       },
     });
 
-    const media = mediaData.map((d) => ({
+    const media = mediaData.map((d: any) => ({
       medias: d,
     }));
     const aiMessageCreated = {
       ...aiMessage,
       media,
     };
-    return NextResponse.json(aiMessageCreated, { status: 200, headers });
+    return NextResponse.json(
+      { success: true, data: aiMessageCreated, errors: "" },
+      { status: 200, headers }
+    );
   }
 
   async generateTextCompletionVison({
@@ -293,7 +295,7 @@ class TechnologiesContainer {
 
     const buffer = Buffer.from(await mp3.arrayBuffer());
 
-    const name = `/media/audio/speech_${Date.now()}.mp3`;
+    const name = `speech_${Date.now()}`;
     const pathFile = await createAudioFile(name, buffer);
 
     const message = await MessageController.create({
@@ -304,10 +306,10 @@ class TechnologiesContainer {
     });
     const media = await mediaController.create({
       userId: userMessage.userId,
-      src: pathFile,
-      type: "audio",
+      src: pathFile.src,
+      type: pathFile.type,
     });
-    await mediaController.blongToMessage({
+    await mediaController.linkToMessage({
       mediaId: media.id,
       messageId: message.id,
     });
@@ -325,7 +327,10 @@ class TechnologiesContainer {
       },
     });
 
-    return NextResponse.json(aiMessage, { status: 200, headers });
+    return NextResponse.json(
+      { success: true, data: aiMessage, errors: "" },
+      { status: 200, headers }
+    );
   }
 
   async handelLangChainOpenAi({
@@ -394,6 +399,7 @@ class TechnologiesContainer {
         userId,
       });
     }
+    console.log(refTech?.trim().toLowerCase());
     switch (refTech?.trim().toLowerCase()) {
       case "gpt4":
         return await this.generateTextCompletion({

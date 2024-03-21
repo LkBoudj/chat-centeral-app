@@ -1,4 +1,4 @@
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 import { Card, CardBody, Progress } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import axios from "axios";
@@ -14,8 +14,13 @@ const UploadMedia = ({
   closeWhenUploadDone?: boolean;
   handelSelectFile?: (e: Media) => void;
 }) => {
-  const { setProgress, onClose, onOpenChangeUloadFile, setFile, progress } =
-    useContext(globalContext);
+  const {
+    setProgress,
+    onClose,
+    onOpenChangeUploadFile: onOpenChangeUploadFile,
+    setFile,
+    progress,
+  } = useContext(globalContext);
 
   const upload_file = useCallback(
     async (formData: FormData) => {
@@ -26,8 +31,8 @@ const UploadMedia = ({
         const res = await axios.post("/api/upload", formData, {
           onUploadProgress: (progressEvent) => {
             const { loaded, total }: any = progressEvent;
-            let precentage = Math.floor((loaded * 100) / total);
-            setProgress(precentage);
+            let percentage = Math.floor((loaded * 100) / total);
+            setProgress(percentage);
           },
           headers: {
             "Content-Type": "multipart/form-data",

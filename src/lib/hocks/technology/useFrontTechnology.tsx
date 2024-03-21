@@ -6,9 +6,9 @@ const useFrontTechnology = () => {
     trpc.technology.showAll.useQuery();
   const [selectTechnology, setSelectedTechnology] = useState<any>(null);
   const [modelsSelectedTech, setModelSelectedTech] = useState<any[]>([]);
-  const [selectdModel, setSelectedModel] = useState<any>("");
+  const [selectedModel, setSelectedModel] = useState<any>("");
 
-  const handelSelecteTechnology = (key: any) => {
+  const handelSelectedTechnology = (key: any) => {
     setSelectedTechnology(key);
 
     const mySlectedModel =
@@ -36,8 +36,8 @@ const useFrontTechnology = () => {
     hanldeSlectModel,
 
     selectTechnology,
-    handelSelecteTechnology,
-    selectdModel,
+    handelSelectedTechnology,
+    selectedModel,
     modelsSelectedTech,
     loadTechsSuccess,
     technologies,

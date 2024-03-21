@@ -23,6 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         id: userId,
       },
     });
+
     const validation: any = await createNewMessageBackV.safeParseAsync({
       content,
       conversationId,
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 400 }
       );
     }
+
     if (!validation.success) {
       return NextResponse.json(validation.error, { status: 400 });
     }
@@ -71,7 +73,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     };
 
     const isFileExits: any = validation.data.fileId
-      ? await mediaController.isExits({
+      ? await mediaController.checkMediaExists({
           userId,
           id: media?.id,
         })
@@ -80,7 +82,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const newMessage = await MessageController.create(userMessage);
 
     if (isFileExits) {
-      await mediaController.blongToMessage({
+      await mediaController.linkToMessage({
         mediaId: isFileExits.id,
         messageId: newMessage.id,
       });
@@ -111,8 +113,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
     }
   } catch (e: any) {
-    const errros =
+    const errors =
       process.env.NODE_ENV == "development" ? e : "your message not send";
-    return NextResponse.json(errros, { status: 400 });
+    return NextResponse.json(
+      { success: false, data: null, errors },
+      { status: 400 }
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 import { dashUserContext } from "@/components/context/dashboard/DashUserContextProvider";
 
 import {

@@ -2,18 +2,19 @@
 import { useDisclosure } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import React, { createContext, useState } from "react";
+import FileManager from "../global/explorer/FileManager";
 
 type GlobalContextProps = {
   isUploadFileOpen?: boolean;
   onOpenUploadFile?: () => void;
-  onOpenChangeUloadFile?: (key?: any) => void;
+  onOpenChangeUploadFile?: (key?: any) => void;
   onClose: () => void;
   file: Media | null;
   setFile: (file?: Media | null) => void;
   progress: number;
   setProgress: (key: number) => void;
 };
-export const globalContext = createContext<GlobalContextProps>({
+export const globalContext = createContext<any>({
   progress: 0,
   file: null,
   isUploadFileOpen: false,
@@ -22,37 +23,41 @@ export const globalContext = createContext<GlobalContextProps>({
   setFile: function (key?: Media | null) {},
 });
 
-const GolobalContextProvider = ({
+const GlobalContextProvider = ({
   children,
-  defaultVal,
 }: {
   children: React.ReactNode;
-  defaultVal: any;
+  defaultVal?: any;
 }) => {
   const [copy, setCopy] = useState<boolean>(false);
   const [file, setFile] = useState<Media>();
+  const [files, setFiles] = useState<Media[]>([]);
   const [progress, setProgress] = useState(0);
   const {
     isOpen: isUploadFileOpen,
     onOpen: onOpenUploadFile,
-    onOpenChange: onOpenChangeUloadFile,
+    onOpenChange: onOpenChangeUploadFile,
     onClose,
   } = useDisclosure();
 
   const value = {
-    ...defaultVal,
     isUploadFileOpen,
     onOpenUploadFile,
-    onOpenChangeUloadFile,
+    onOpenChangeUploadFile,
     file,
     setFile,
     progress,
     setProgress,
     onClose,
+    files,
+    setFiles,
   };
   return (
-    <globalContext.Provider value={value}>{children}</globalContext.Provider>
+    <globalContext.Provider value={value}>
+      <FileManager />
+      {children}
+    </globalContext.Provider>
   );
 };
 
-export default GolobalContextProvider;
+export default GlobalContextProvider;

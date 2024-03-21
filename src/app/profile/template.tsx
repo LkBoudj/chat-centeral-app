@@ -1,6 +1,6 @@
 "use client";
 import { LkNavbar, UploadExplorer } from "@/components";
-import { globalContext } from "@/components/context/GolobalContextProvider";
+import { globalContext } from "@/components/context/GlobalContextProvider";
 import UserContextProvider from "@/components/context/UserContextProvider";
 import { authNavigation } from "@/lib/data/authNavigation";
 

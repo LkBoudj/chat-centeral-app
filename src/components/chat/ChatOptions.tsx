@@ -3,7 +3,7 @@ import ChatOptionsItem from "./ChatOptionsItem";
 import { Card, CardBody, ScrollShadow } from "@nextui-org/react";
 import { BrainCircuit, Cpu } from "lucide-react";
 import { chatContext } from "../context/ChatContextProvider";
-import { SelecteModel, TehcnologoySelect } from "..";
+import { SelecteModel, TechnologySelect } from "..";
 
 type Props = {};
 
@@ -18,7 +18,7 @@ const ChatOptions = (props: Props) => {
       <CardBody>
         <ScrollShadow className="max-h-[750px] space-y-8 pb-2">
           <ChatOptionsItem Icon={BrainCircuit} title={"Technologies"}>
-            <TehcnologoySelect />
+            <TechnologySelect />
           </ChatOptionsItem>
           <ChatOptionsItem Icon={BrainCircuit} title={"Models"}>
             {modelsSelectedTech?.length ? <SelecteModel /> : "No Models"}

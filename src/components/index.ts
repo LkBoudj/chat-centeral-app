@@ -15,7 +15,7 @@ import Message from "./chat/Message";
 import CreateMessage from "./chat/CreateMessage";
 import ChatOptions from "./chat/ChatOptions";
 import ChatOptionsItem from "./chat/ChatOptionsItem";
-import TehcnologoySelect from "./chat/TehcnologoySelect";
+import TechnologySelect from "./chat/TechnologySelect";
 // dashboard
 import DashboardAside from "./dashboard/DashboardAside";
 import CustomTooltip from "./global/CustomTooltip";
@@ -48,7 +48,7 @@ export {
   ListOfChats,
   Message,
   CreateMessage,
-  TehcnologoySelect,
+  TechnologySelect as TechnologySelect,
   CustmMediaMediaComponent,
   SelecteModel,
   // prompts

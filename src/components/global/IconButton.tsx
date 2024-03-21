@@ -13,6 +13,13 @@ type Props = {
   onPress?: (key?: any) => void;
   endContent?: React.ReactNode;
   content?: string;
+  color?:
+    | "default"
+    | "warning"
+    | "success"
+    | "danger"
+    | "primary"
+    | "secondary";
 };
 
 const IconButton = ({
@@ -26,10 +33,12 @@ const IconButton = ({
   className,
   onPress,
   content,
+  color,
 }: Props) => {
   return (
     <Button
       type={type}
+      color={color}
       isLoading={isLoading}
       isDisabled={isDisabled}
       onClick={onClick}

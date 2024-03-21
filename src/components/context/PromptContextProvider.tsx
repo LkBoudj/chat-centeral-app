@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import UploadExplorer from "../global/explorer/UploadExplorer";
-import { globalContext } from "./GolobalContextProvider";
+import { globalContext } from "./GlobalContextProvider";
 import { trpc } from "@/trpc/client";
 import useInPromptsInfantry from "@/lib/hocks/prompts/useInPromptsInfintry";
 import CreatePrompts from "../prompts/CreatePrompts";
@@ -55,7 +55,7 @@ const PronptContextProvider: React.FC<{
   const {
     isOpen: isUploadFileOpen,
     onOpen: onOpenUploadFile,
-    onOpenChange: onOpenChangeUloadFile,
+    onOpenChange: onOpenChangeUploadFile,
     onClose,
   } = useDisclosure();
   const {
@@ -139,7 +139,7 @@ const PronptContextProvider: React.FC<{
     progress,
     setProgress,
     onOpenUploadFile,
-    onOpenChangeUloadFile,
+    onOpenChangeUploadFile,
   };
   return (
     <promptContext.Provider value={value}>

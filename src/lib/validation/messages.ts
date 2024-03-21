@@ -15,3 +15,7 @@ export const createNewMessageBackV = z.object({
   technologyId: z.number().min(1, "the content is required"),
   content: z.string().min(1, "the content is required"),
 });
+
+export type createNewMessageFrontVInputs = z.infer<
+  typeof createNewMessageFrontV
+>;
