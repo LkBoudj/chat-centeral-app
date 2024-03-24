@@ -11,7 +11,7 @@ const useConversationHock = () => {
     handlePreviousPageC,
     pageC,
     isSuccessC,
-    isHaveNextC,
+    hasNextPage,
     chats,
     setChats,
   } = useInfiniteConversation();
@@ -33,7 +33,7 @@ const useConversationHock = () => {
     handlePreviousPageC,
     pageC,
     isSuccessC,
-    isHaveNextC,
+    hasNextPage,
     chats,
     setChats,
     handelDeleteConversation,

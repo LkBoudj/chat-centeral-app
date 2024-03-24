@@ -27,7 +27,7 @@ class MessageController {
     };
   }
 
-  async infintyLoad({
+  async infinityLoad({
     limit,
     skip,
     cursor,

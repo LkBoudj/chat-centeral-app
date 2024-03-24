@@ -3,6 +3,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { Media } from "@prisma/client";
 import React, { createContext, useState } from "react";
 import FileManager from "../global/explorer/FileManager";
+import { useSession } from "next-auth/react";
 
 type GlobalContextProps = {
   isUploadFileOpen?: boolean;
@@ -33,6 +34,8 @@ const GlobalContextProvider = ({
   const [file, setFile] = useState<Media>();
   const [files, setFiles] = useState<Media[]>([]);
   const [progress, setProgress] = useState(0);
+  const { data: session, status } = useSession();
+  const sessionUser = session?.user;
   const {
     isOpen: isUploadFileOpen,
     onOpen: onOpenUploadFile,
@@ -51,6 +54,7 @@ const GlobalContextProvider = ({
     onClose,
     files,
     setFiles,
+    sessionUser,
   };
   return (
     <globalContext.Provider value={value}>

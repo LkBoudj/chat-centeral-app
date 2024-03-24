@@ -1,6 +1,7 @@
 import { cn } from "@nextui-org/react";
-import { X } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { Plus, X } from "lucide-react";
+import React, { useCallback, useMemo, useState } from "react";
+import IconButton from "./IconButton";
 
 type Props = {
   onChange: (k: any) => void;
@@ -27,6 +28,7 @@ const Tag = ({
     </div>
   );
 };
+
 const CustomInputTags = ({
   data = [],
   onChange,
@@ -42,25 +44,26 @@ const CustomInputTags = ({
   };
 
   const handelKeyDown = (e: any) => {
-    if (e.keyCode == 32 && filterValue.trim() != "") {
-      value.push(filterValue.trim());
-      const setData: any = new Set(value);
-      onChange([...setData]);
-      setValue("");
+    if ((e.keyCode == 13 || e.key == "Enter") && filterValue.trim() != "") {
+      addTag(filterValue.trim());
     }
+  };
+
+  const addToTgas = (myTag: string) => () => {
+    if (myTag != "") {
+      addTag(myTag);
+    }
+  };
+
+  const addTag = (tag: string) => {
+    setValue("");
+    value.push(tag);
+    const setData: any = new Set(value); // This ensures all tags are unique
+    onChange([...setData]);
   };
 
   const handelChange = (e: any) => {
     setValue(e.target.value);
-  };
-
-  const addToTgas = (myTag: string) => {
-    if (myTag != "") {
-      setValue("");
-      value.push(myTag);
-      const setData: any = new Set(value);
-      onChange([...setData]);
-    }
   };
 
   const rendureList = useMemo(() => {
@@ -87,7 +90,7 @@ const CustomInputTags = ({
     <div
       onBlur={() => setTimeout(() => setIsListShow(false), 200)}
       className={cn(
-        `border-2  min-h-[200px] z-50 border-${
+        `border-2 min-h-[200px] z-50 border-${
           error?.message ? "red" : "gray"
         }-500 p-3 space-y-2 rounded`
       )}
@@ -95,17 +98,19 @@ const CustomInputTags = ({
       <h3
         className={cn(`text-xs text-${error?.message ? "red" : "slate"}-600`)}
       >
-        Tags{" "}
+        Tags
       </h3>
       <div className="relative w-full">
-        <div className="flex flex-wrap items-center gap-2 overflow-hidden">
-          {[...value].map((tag: any) => (
-            <Tag
-              key={tag}
-              value={tag}
-              removeTags={() => handelRemoveTags(tag)}
-            />
-          ))}
+        <div className="flex flex-wrap items-center gap-1 overflow-hidden">
+          <div className="flex items-center flex-wrap">
+            {[...value].map((tag: any) => (
+              <Tag
+                key={tag}
+                value={tag}
+                removeTags={() => handelRemoveTags(tag)}
+              />
+            ))}
+          </div>
 
           <input
             name={name}
@@ -113,12 +118,17 @@ const CustomInputTags = ({
             onKeyDown={handelKeyDown}
             value={filterValue}
             onChange={handelChange}
-            placeholder="Choos your Tags"
-            className="  outline-none"
+            placeholder="Choose your Tags"
+            className="outline-none"
+          />
+          <IconButton
+            onClick={() => addTag(filterValue.trim())}
+            className="inline-block lg:hidden "
+            Icon={Plus}
           />
         </div>
         {isListShow && data && (
-          <ul className=" absolute left-0 max-h-[200px] overflow-y-auto  mt-5 z-[999999999] bg-white w-full shadow-lg border border-slate-700">
+          <ul className="absolute left-0 max-h-[200px] overflow-y-auto mt-5 z-[999999999] bg-white w-full shadow-lg border border-slate-700">
             {rendureList}
           </ul>
         )}

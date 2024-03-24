@@ -1,10 +1,10 @@
 import { limit_infinite_messagess } from "../configs/infinte_scrolle_config";
 import prismaConfig from "../configs/prismaConfig";
-import Controllers from "./Controler";
+import Controllers from "./controller";
 
 class ConversationController extends Controllers {
-  async infintyLoad({
-    limit = limit_infinite_messagess,
+  async infinityLoad({
+    limit,
     skip,
     cursor,
     userId,
@@ -16,7 +16,6 @@ class ConversationController extends Controllers {
   }) {
     const conversation = await prismaConfig.conversation.findMany({
       take: limit + 1,
-      skip,
       cursor: cursor ? { id: cursor } : undefined,
       where: {
         userId,
@@ -25,6 +24,7 @@ class ConversationController extends Controllers {
         id: "desc",
       },
     });
+
     return this.paginationData({ limit, items: conversation, cursor });
   }
   async isExits({ userId, id }: { userId: string; id: string }) {

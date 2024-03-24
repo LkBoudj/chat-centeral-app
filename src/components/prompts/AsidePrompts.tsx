@@ -6,71 +6,42 @@ import {
   Switch,
   cn,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import ChatOptionsItem from "../chat/ChatOptionsItem";
 import { BrainCircuit, SlidersHorizontal } from "lucide-react";
 import IconButton from "../global/IconButton";
 import { Technology } from "@prisma/client";
 import CustomInputTags from "../global/CustomInputTags";
+import useTags from "@/lib/hocks/prompts/useTags";
+import { promptContext } from "../context/PromptContextProvider";
 
-type Props = {
-  handelSelectTech: (key: any) => void;
-  selectedTechTech: string;
-  className?: string;
-  myPrompts?: boolean;
-  setMyPrompts: (key: any) => void;
-  techs: any[];
-  valueTags: any;
-  setValueTags: (key: any) => void;
-  onOpen?: () => void;
-};
+interface Props extends React.ComponentPropsWithRef<"aside"> {}
+const AsidePrompts = ({ className }: Props) => {
+  const { tags } = useTags();
 
-const AsidePrompts = ({
-  handelSelectTech,
-  selectedTechTech,
-  className,
-  techs,
-  myPrompts,
-  setMyPrompts,
-  valueTags,
-  setValueTags,
-  onOpen,
-}: Props) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [tags, seTtags] = useState<any>([]);
-
-  const getAllTags = async () => {
-    setIsLoading(true);
-    const res = await fetch(`/api/tags`, {
-      method: "GET",
-    });
-
-    if (res.ok) {
-      const json = await res.json();
-      console.log(json);
-      const myTags = json.data.map((tag: any) => tag.name);
-      seTtags(myTags);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    if (isLoading) {
-      getAllTags();
-    }
-  }, [isLoading]);
+  const {
+    myPrompts,
+    setMyPrompts,
+    setSelected,
+    valueTags,
+    setValueTags,
+    techs,
+    isOpenAside,
+    toggleAside,
+  } = useContext(promptContext);
   return (
     <aside
       className={cn(
-        `fixed lef-0 top-0 pt-20 h-full transition-all duration-100  w-full  transform   z-40 max-w-[370px] bg-white p-4 `,
-        className
+        `fixed lef-0 top-0 pt-20 h-full  duration-100  w-full  transform   z-40 max-w-[370px] bg-white p-4 `,
+        className,
+        !isOpenAside ? "translate-x-0" : "-translate-x-full "
       )}
     >
       <div className="flex w-full items-center justify-between">
         <p className="flex items-center space-x-1 font-bold text-[13px]">
           <BrainCircuit size={17} /> <span> Filter </span>
         </p>
-        <IconButton Icon={SlidersHorizontal} size={17} />
+        <IconButton onClick={toggleAside} Icon={SlidersHorizontal} size={17} />
       </div>
       <Divider className="my-6" />
       <div className="space-y-8">
@@ -87,7 +58,7 @@ const AsidePrompts = ({
             variant="bordered"
             label="Technologies"
             className="max-w-xs"
-            onSelectionChange={handelSelectTech}
+            onSelectionChange={setSelected}
           >
             {techs?.map((item: Technology) => (
               <AutocompleteItem key={item?.id} value={item?.name}>

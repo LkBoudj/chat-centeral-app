@@ -1,21 +1,21 @@
-"use client";
-import { trpc } from "@/trpc/client";
-
 import { useEffect, useState } from "react";
-import usePaginationInfanteHock from "../usePaginationInfanteHock";
+import { trpc } from "@/trpc/client";
+import { Prompt } from "@prisma/client";
 
 const useInPromptsInfantry = () => {
+  // State variables
   const [valueTags, setValueTags] = useState<any[]>([]);
   const [selectedTech, setSelected] = useState<any>("0");
   const [search, setSearch] = useState<string>("");
   const [myPrompts, setMyPrompts] = useState<boolean>(false);
-  const { items, setItems, page, setPage, isHaveNext, setIsHaveNext } =
-    usePaginationInfanteHock();
-
+  const [items, setItems] = useState<Prompt[]>([]);
+  const [page, setPage] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  // Fetching prompts
   const { data, refetch, isLoading, isSuccess, fetchNextPage, hasNextPage } =
     trpc.promptsAppRouter.showAll.useInfiniteQuery(
       {
-        limit: 9,
+        limit: 4,
         search,
         myPrompts,
         techId: selectedTech,
@@ -23,38 +23,33 @@ const useInPromptsInfantry = () => {
       },
       {
         getNextPageParam: (next: any) => {
-          return next?.nextCursor + 9;
+          return next?.nextCursor;
         },
       }
     );
 
+  // Handle next page
   const handleNextPage = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-      setPage((page) => page + 1);
-    }
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      if (hasNextPage) {
+        fetchNextPage();
+        setPage((page) => page + 1);
+      }
+      setIsLoadingMore(false);
+    }, 1000);
   };
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setItems([...items, ...(data?.pages[page]?.items ?? [])]);
-  //     setItems(data?.pages[page]?.items ?? []);
-  //     if (data?.pages?.length > 1) {
-  //       setItems([...items, ...(data?.pages[page]?.items ?? [])]);
-  //     } else {
-  //       setItems(data?.pages[page]?.items ?? []);
-  //     }
-  //   }
-  // }, [data, isSuccess, setItems, myPrompts, items, page]);
+
   useEffect(() => {
-    if (isSuccess && data?.pages) {
-      // Build the new items array based on fetched data
-      const newItems = data.pages.reduce(
-        (acc, pageData): any => [...acc, ...(pageData.items ?? [])],
-        []
-      );
-      setItems(newItems);
+    if (isSuccess && data.pages && Array.isArray(data.pages)) {
+      if (search != "" || valueTags.length > 0 || selectedTech != "0") {
+        setItems([...data.pages[page].items]);
+      } else {
+        setItems((items) => [...items, ...data.pages[page].items]);
+      }
     }
-  }, [data, isSuccess, setItems]); // Dependencies are limited to what directly influences the effect
+  }, [isSuccess, setItems, data, search, valueTags, selectedTech, page]);
+
   return {
     data,
     setItems,
@@ -62,17 +57,18 @@ const useInPromptsInfantry = () => {
     isLoading,
     isSuccess,
     fetchNextPage,
-    handleNextPage: handleNextPage,
+    handleNextPage,
     refetch,
-    isHaveNext,
+    hasNextPage,
     setSearch,
     search,
     myPrompts,
     setMyPrompts,
     selectedTech,
     setSelected,
-    valueTags: valueTags,
+    valueTags,
     setValueTags,
+    isLoadingMore,
   };
 };
 

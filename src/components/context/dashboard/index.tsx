@@ -10,19 +10,8 @@ type Props = {
 
 export const dashboardContext = createContext<any>(null);
 const DashboardContextProvider = ({ children, defaultVal }: Props) => {
-  const { isUploadFileOpen, setFile, onClose } = useContext(globalContext);
-  const handelSelectFile = (e: any) => {
-    setFile(e);
-    onClose();
-  };
   return (
-    <dashboardContext.Provider value={{}}>
-      {isUploadFileOpen && (
-        <UploadExplorer types={["image"]} handelSelectFile={handelSelectFile} />
-      )}
-
-      {children}
-    </dashboardContext.Provider>
+    <dashboardContext.Provider value={{}}>{children}</dashboardContext.Provider>
   );
 };
 

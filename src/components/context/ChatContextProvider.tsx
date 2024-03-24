@@ -1,6 +1,7 @@
 "use client";
 
 import { useConversationHock } from "@/lib/hocks";
+import useAside from "@/lib/hocks/conversation/useAside";
 
 import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
 
@@ -18,8 +19,7 @@ const ChatContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [allMessages, setAllMessages] = useState<any[]>([]);
-  const { data: session, status } = useSession();
-  const sessionUser = session?.user;
+
   const [currentConversationId, setCurrentConversationId] =
     useState<string>("");
 
@@ -38,7 +38,7 @@ const ChatContextProvider = ({
     handlePreviousPageC,
     pageC,
     isSuccessC,
-    isHaveNextC,
+    hasNextPage,
     chats,
     handelDeleteConversation,
     setChats,
@@ -58,8 +58,7 @@ const ChatContextProvider = ({
     ...outValue,
     allMessages,
     setAllMessages,
-    //--- session
-    sessionUser,
+
     //---
     handelTextToCopy,
     //----------messages -------------
@@ -70,7 +69,7 @@ const ChatContextProvider = ({
     handlePreviousPageC,
     pageC,
     isSuccessC,
-    isHaveNextC,
+    hasNextPage,
     chats,
     setChats,
     //--------- technology ----------

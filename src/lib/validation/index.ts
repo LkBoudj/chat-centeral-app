@@ -1,4 +1,4 @@
-import { inputInfinte } from "./gloab";
+import { inputInfante } from "./gloab";
 import {
   registerSchema,
   loginSchema,
@@ -6,7 +6,7 @@ import {
 } from "./authantication";
 import { conversationMessagesV, createNewMessageBackV } from "./messages";
 export {
-  inputInfinte,
+  inputInfante,
   registerSchema,
   loginSchema,
   backRegisterSchema,

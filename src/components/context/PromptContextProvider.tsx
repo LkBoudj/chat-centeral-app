@@ -5,7 +5,7 @@ import { useConversationHock } from "@/lib/hocks";
 import useMessageHoock from "@/lib/hocks/message/useMessageHoock";
 import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
 import { useDisclosure } from "@nextui-org/react";
-import { Media, Prompt } from "@prisma/client";
+import { Comment, Media, Prompt } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -16,6 +16,8 @@ import useInPromptsInfantry from "@/lib/hocks/prompts/useInPromptsInfintry";
 import CreatePrompts from "../prompts/CreatePrompts";
 import useTech from "@/lib/hocks/technology/useTech";
 import EditPrompts from "../prompts/EditPrompts";
+import usePrompt from "@/lib/hocks/prompts/usePrompt";
+import useAside from "@/lib/hocks/prompts/useAside";
 
 type promptContextResponce = {
   currentConversationId: number | null;
@@ -23,24 +25,19 @@ type promptContextResponce = {
 };
 export const promptContext = createContext<any>(null);
 
-const PronptContextProvider: React.FC<{
+const PromptContextProvider: React.FC<{
   outValue?: any;
   children: React.ReactNode;
 }> = ({ children, outValue }) => {
-  const [selectedPrompt, setSlectedPromp] = useState<Prompt | null>(null);
+  const { techs } = useTech();
+  const { isOpenAside, toggleAside } = useAside();
   const {
-    isLoading: techIsLoading,
-    isSuccess: techIsSuccess,
-    techs,
-  } = useTech();
-
-  const {
+    handleDeletePrompt,
     refetch,
     items,
     isLoading,
     isSuccess,
     handleNextPage,
-    isHaveNext,
     setSearch,
     search,
     myPrompts,
@@ -49,15 +46,17 @@ const PronptContextProvider: React.FC<{
     selectedTech,
     valueTags,
     setValueTags,
+    isLoadingMore,
     setItems,
-  } = useInPromptsInfantry();
+    hasNextPage,
+    selectedPrompt,
+    setSelectedPrompt,
+    prompt,
+    setPrompt,
+    comments,
+    setComments,
+  } = usePrompt();
 
-  const {
-    isOpen: isUploadFileOpen,
-    onOpen: onOpenUploadFile,
-    onOpenChange: onOpenChangeUploadFile,
-    onClose,
-  } = useDisclosure();
   const {
     isOpen: isOpenCreate,
     onOpen: onOpenCreate,
@@ -72,48 +71,22 @@ const PronptContextProvider: React.FC<{
     onClose: onCloseEdit,
   } = useDisclosure();
 
-  const {
-    mutate: deleteApi,
-
-    status: statusOfDelete,
-  } = trpc.promptsAppRouter.delete.useMutation({
-    async onSuccess(opt) {
-      if (opt.success && opt.id) {
-        const filter = items.filter((p) => p.id != opt.id);
-        setItems(filter);
-      }
-    },
-  });
-  const { data: session, status } = useSession();
-  const sessionUser = session?.user;
-
-  const { file, setFile } = useContext(globalContext);
-
-  const [progress, setProgress] = useState(0);
-
-  const handelSelectFile = (e: Media) => {
-    setFile(e);
-    onClose();
-  };
-
-  const hanldeDeletePrompt = (id: number) => {
-    deleteApi({ id });
-  };
-
-  const hanldeEditPrompt = (prompt: Prompt) => {
-    setSlectedPromp(prompt);
+  const handleEditPrompt = (prompt: Prompt) => {
+    setSelectedPrompt(prompt);
     onOpenEdit();
   };
 
   const value = {
     ...outValue,
     //--- session
-    sessionUser,
-
+    hasNextPage,
+    isLoadingMore,
+    prompt,
+    setPrompt,
     //-- create & edit prompt methods
     onOpenCreate,
-    hanldeDeletePrompt,
-    hanldeEditPrompt,
+    handleDeletePrompt,
+    handleEditPrompt,
     //--- technology
     techs,
     //---prompt
@@ -122,7 +95,6 @@ const PronptContextProvider: React.FC<{
     isLoading,
     isSuccess,
     handleNextPage,
-    isHaveNext,
     setSearch,
     search,
     myPrompts,
@@ -134,18 +106,17 @@ const PronptContextProvider: React.FC<{
     setItems,
     selectedPrompt,
     // media
-    file,
-    setFile,
-    progress,
-    setProgress,
-    onOpenUploadFile,
-    onOpenChangeUploadFile,
+
+    comments,
+    setComments,
+    isOpenAside,
+    toggleAside,
   };
   return (
     <promptContext.Provider value={value}>
-      {isUploadFileOpen && (
+      {/* {isUploadFileOpen && (
         <UploadExplorer types={["image"]} handelSelectFile={handelSelectFile} />
-      )}
+      )} */}
 
       {isOpenCreate && (
         <CreatePrompts
@@ -172,4 +143,4 @@ const PronptContextProvider: React.FC<{
   );
 };
 
-export default PronptContextProvider;
+export default PromptContextProvider;

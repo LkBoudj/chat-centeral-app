@@ -19,6 +19,8 @@ import { Conversation } from "@prisma/client";
 import { useParams } from "next/navigation";
 
 import { conversations_page } from "@/lib/configs/routes_name";
+import { chatContext } from "../context/ChatContextProvider";
+import { useContext } from "react";
 
 type Props = {
   items: Conversation[];
@@ -37,7 +39,7 @@ const ConversationItemOption = ({
 }) => {
   const isActive: boolean = item.id == id;
   return (
-    <div className="w-full flex relative items-center justify-between ">
+    <div className="w-full overflow-hidden flex relative items-center justify-between ">
       <Link
         className={cn(
           ` h-full  w-full `,
@@ -45,9 +47,17 @@ const ConversationItemOption = ({
         )}
         href={`${conversations_page}/${item.id}`}
       >
-        <p className="text-sm font-semibold truncate py-3  ">{item.title}</p>
+        <p className="text-sm max-w-[247px]  font-semibold truncate py-3  ">
+          {item.title}
+        </p>
       </Link>
-      <div className="z-50   justify-end h-full flex items-center right-0">
+
+      <div
+        className={cn(
+          "z-50  max-w-[244px]  justify-end h-full flex items-center right-0",
+          isActive ? "translate-x-0" : "translate-x-full"
+        )}
+      >
         <ChatItemAction id={item.id} />
       </div>
     </div>
@@ -61,6 +71,17 @@ const ListOfChats = ({
   page,
 }: Props) => {
   const { id } = useParams();
+  const {
+    chats,
+    isHaveNextC,
+    pageC,
+    handlePreviousPageC,
+    handelNextPageC,
+    isOpenAside,
+
+    isSuccessC,
+    hasNextPage,
+  } = useContext(chatContext);
 
   return (
     <Card
@@ -89,19 +110,20 @@ const ListOfChats = ({
             className=""
             selectedKeys={id}
           >
-            {items?.map((item, i) => {
-              return (
-                <ListboxItem
-                  className={cn(
-                    "aside-item-chat rounded-none ",
-                    item.id == id && "border-l-3 border-blue-600 border-b-0"
-                  )}
-                  key={item.id.toString()}
-                >
-                  <ConversationItemOption item={item} id={id as string} />
-                </ListboxItem>
-              );
-            })}
+            {isSuccessC &&
+              chats?.map((item: any, i: number) => {
+                return (
+                  <ListboxItem
+                    className={cn(
+                      "aside-item-chat rounded-none ",
+                      item.id == id && "border-l-3 border-blue-600 border-b-0"
+                    )}
+                    key={item.id.toString()}
+                  >
+                    <ConversationItemOption item={item} id={id as string} />
+                  </ListboxItem>
+                );
+              })}
           </Listbox>
         </ScrollShadow>
       </CardBody>
@@ -111,9 +133,9 @@ const ListOfChats = ({
           isDisabled={page - 1 <= 0}
           Icon={ChevronLeft}
         />
-        <span className="mr-1">{page}</span>
+        <span className="mr-1">{page + 1}</span>
         <IconButton
-          isDisabled={!isHaveNext}
+          isDisabled={!hasNextPage}
           onClick={handelNextPage}
           Icon={ChevronRight}
         />

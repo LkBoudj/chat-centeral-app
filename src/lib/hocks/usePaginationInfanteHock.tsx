@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-const usePaginationInfanteHock = () => {
-  const [items, setItems] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
+function usePaginationInfanteHock<T>() {
+  const [items, setItems] = useState<T[]>([]);
+  const [page, setPage] = useState(0);
   const [isHaveNext, setIsHaveNext] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   return {
     items,
@@ -12,7 +13,9 @@ const usePaginationInfanteHock = () => {
     setPage,
     isHaveNext,
     setIsHaveNext,
+    isLoadingMore,
+    setIsLoadingMore,
   };
-};
+}
 
 export default usePaginationInfanteHock;

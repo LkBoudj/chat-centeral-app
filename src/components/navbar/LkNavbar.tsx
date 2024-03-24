@@ -1,6 +1,12 @@
 "use client";
 import { cn } from "@/lib/utlis";
-import { NavbarContent, NavbarItem, Link } from "@nextui-org/react";
+import {
+  NavbarContent,
+  NavbarItem,
+  Link,
+  NavbarMenu,
+  NavbarMenuItem,
+} from "@nextui-org/react";
 
 import { usePathname } from "next/navigation";
 
@@ -43,6 +49,31 @@ const LkNavbar = (props: PropsLkNavbar) => {
           )
         )}
       </NavbarContent>
+
+      <NavbarMenu className="z-50">
+        {navsData?.map(
+          ({
+            Icon,
+            path,
+            name,
+            color,
+            backgroundPositionX,
+            backgroundPositionY,
+          }: NavItem) => (
+            <NavbarMenuItem key={name}>
+              <Link
+                className={cn(
+                  " capitalize px-2 space-x-1 font-medium py-2 items-center text-sm text-slate-800",
+                  pathName == path && "border-b-2 border-blue-500 font-semibold"
+                )}
+                href={path}
+              >
+                {name}
+              </Link>
+            </NavbarMenuItem>
+          )
+        )}
+      </NavbarMenu>
     </NavContainer>
   );
 };

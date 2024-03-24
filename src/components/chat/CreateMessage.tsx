@@ -131,7 +131,15 @@ const CreateMessage = () => {
       <ContainerMaxWind className=" max-w-7xl mx-auto space-y-8">
         {files.length ? <DisplayFiles /> : ""}
 
-        {true ? <SendMessageForm /> : <SubscriptionAlert />}
+        {sessionUser ? (
+          sessionUser.remaining > 0 ? (
+            <SendMessageForm />
+          ) : (
+            <SubscriptionAlert />
+          )
+        ) : (
+          ""
+        )}
       </ContainerMaxWind>
     </div>
   );

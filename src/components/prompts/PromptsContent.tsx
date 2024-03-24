@@ -10,49 +10,38 @@ import { promptContext } from "../context/PromptContextProvider";
 
 type Props = {
   className?: string;
-  isLoading?: boolean;
-  isSuccess?: boolean;
-  isHaveNext?: boolean;
-  search: string;
-  prompts: any[];
-  handleNextPage: () => void;
-  setSearch: (key: any) => void;
-  onOpen: () => void;
 };
 
-const PromptsContent = ({
-  className,
-  isLoading,
-  isSuccess,
-  prompts,
-  handleNextPage,
-  isHaveNext,
-  setSearch,
-  search,
-  onOpen,
-}: Props) => {
+const PromptsContent = ({ className }: any) => {
   const [value, setValue] = useState("");
-  const { hanldeDeletePrompt, hanldeEditPrompt } = useContext(promptContext);
 
-  if (isLoading) return <Loading />;
+  const {
+    handleEditPrompt,
+    handleDeletePrompt,
+    items,
+    isLoading,
+    isSuccess,
+    handleNextPage,
+    isLoadingMore,
+    hasNextPage,
+    setSearch,
+    onOpenCreate,
+    toggleAside,
+  } = useContext(promptContext);
+  if (isLoading) return <Loading className={className} />;
   if (isSuccess)
     return (
       <ContainerMaxWind
         className={cn("max-w-full h-full pr-0  space-y-4 py-4 ", className)}
       >
-        <PromptHeader
-          setValue={setValue}
-          setSearch={setValue}
-          value={value}
-          onOpen={onOpen}
-        />
+        <PromptHeader value={value} setValue={setValue} />
         <ScrollShadow
           className={cn(
-            "  max-h-[var(--scrollAreaPrmp)] w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-4 pl-8  pr-6"
+            "  max-h-[var(--scrollAreaPrmp)] w-full grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-7 pl-8  pr-6"
           )}
         >
-          {Array.isArray(prompts) &&
-            prompts?.map((item: any) => {
+          {Array.isArray(items) &&
+            items?.map((item: any) => {
               return (
                 <ItemPrompt
                   key={item.id}
@@ -61,8 +50,8 @@ const PromptsContent = ({
                   excerpt={item.excerpt}
                   image={item.image}
                   tags={item.tags}
-                  onDelete={() => hanldeDeletePrompt(item.id)}
-                  onEdit={() => hanldeEditPrompt(item)}
+                  onDelete={() => handleDeletePrompt(item.id)}
+                  onEdit={() => handleEditPrompt(item)}
                   technology={item.technology?.name ?? null}
                   user={item?.user}
                   license={item?.license}
@@ -76,7 +65,8 @@ const PromptsContent = ({
         </ScrollShadow>
         <div className="flex w-full justify-center  ">
           <Button
-            isLoading={isLoading}
+            isLoading={isLoadingMore}
+            isDisabled={!hasNextPage}
             color="primary"
             className="max-w-md"
             onClick={handleNextPage}

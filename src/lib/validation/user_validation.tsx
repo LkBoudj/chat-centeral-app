@@ -61,3 +61,5 @@ export const schemaCreateUserBack = schemaCreateUser.merge(
     messagesMax: z.number().nullable().nullish().nullish(),
   })
 );
+
+export type schemaCreateUserInputs = z.infer<typeof schemaCreateUser>;

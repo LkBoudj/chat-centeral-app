@@ -6,6 +6,7 @@ import {
   FormModel,
   FormSwitchInput,
 } from "@/components/global/form";
+import useCreateUpdate from "@/lib/hocks/users/useCreateUpdate";
 import { schemaCreateUser } from "@/lib/validation/user_validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@nextui-org/react";
@@ -15,48 +16,31 @@ import { z } from "zod";
 
 type Props = {};
 
-type Inputs = z.infer<typeof schemaCreateUser>;
-
 const CreateUser = (props: Props) => {
-  const { onOpenChange, isOpen, setCustomErros, customErrors, createItem } =
-    useContext(dashUserContext);
-  const { onOpenUploadFile, file, setFile } = useContext(globalContext);
   const {
+    files,
+    onOpenUploadFile,
+    isOpen,
+    onOpenChange,
+    handleOnSubmitUser,
     control,
-    handleSubmit,
-    register,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schemaCreateUser),
-    defaultValues: {
-      status: true,
-      roles: "admin",
-    },
-  });
-
-  useEffect(() => {
-    if (file?.src) {
-      setValue("image", file?.src);
-    }
-  }, [file, setValue]);
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    createItem(JSON.stringify(data));
-    setFile(null);
-    reset();
-  };
+    customErrors,
+  } = useCreateUpdate();
   return (
     <FormModel
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title={"Create User"}
       typeForm={"create"}
-      handleSubmit={handleSubmit(onSubmit)}
+      handleSubmit={handleOnSubmitUser}
       edit={true}
     >
       <div className="flex items-center justify-center mb-4">
-        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+        <Avatar
+          size="lg"
+          src={(Array.isArray(files) && files.length && files[0]?.src) ?? ""}
+          onClick={onOpenUploadFile}
+        />
       </div>
       <div className="grid grid-cols-3 gap-4">
         <FormInput.FromInputController

@@ -9,6 +9,12 @@ import {
 import prismaConfig from "@/lib/configs/prismaConfig";
 import { z } from "zod";
 
+import {
+  allCommentPromptSchema,
+  createCommentSchema,
+} from "@/lib/validation/comments_validation";
+import commentController from "@/lib/controller/comment_controller";
+
 const promptsAppRouter = router({
   showAll: privateProuder
     .input(infinityLoadPrompts)
@@ -103,6 +109,50 @@ const promptsAppRouter = router({
       if (prompt?.id) return { success: true, id: prompt.id };
 
       return { success: false, id: null };
+    }),
+  single: privateProuder
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = ctx.auth;
+      const { slug } = input;
+      const prompt = await prismaConfig.prompt.findUnique({
+        where: { slug, userId: id },
+        include: {
+          user: true,
+        },
+      });
+
+      return prompt;
+    }),
+  allCommentsByPrompts: privateProuder
+    .input(allCommentPromptSchema)
+    .query(async ({ ctx, input }) => {
+      const { promptId, limit, cursor, skip } = input;
+      const { id: userId } = ctx.auth;
+
+      return commentController.showAll({
+        userId,
+        promptId,
+        limit,
+        skip,
+        cursor,
+      });
+    }),
+  CreateComment: privateProuder
+    .input(createCommentSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { promptId, content } = input;
+      const { id: userId } = ctx.auth;
+
+      const comment = await prismaConfig.comment.create({
+        data: {
+          promptId,
+          userId,
+          content,
+        },
+      });
+
+      console.log(comment);
     }),
 });
 

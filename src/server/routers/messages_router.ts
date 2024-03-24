@@ -1,7 +1,7 @@
 import {
   conversationMessagesV,
   createNewMessageBackV,
-  inputInfinte,
+  inputInfante,
 } from "@/lib/validation";
 import { privateProuder, router } from "../trpc";
 
@@ -12,7 +12,7 @@ import TechnologiesContainer from "@/lib/technolgie_container";
 import { z } from "zod";
 const appMessagesRouter = router({
   infiniteConversationMessages: privateProuder
-    .input(inputInfinte)
+    .input(inputInfante)
     .input(conversationMessagesV)
     .query(async ({ input, ctx }) => {
       const { limit, skip, cursor, id } = input;

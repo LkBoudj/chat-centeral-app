@@ -87,8 +87,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
 
     if (isTechExits) {
-      console.log(isTechExits);
-
       return technologiesContainer.handelAiTechNologies({
         userMessage,
         model,
@@ -102,8 +100,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // await TechnologiesContainer.generateTextCompletion({ userMessage });
     // return NextResponse.json({ conversationId: newConversation.id });
   } catch (e: any) {
-    console.log("errors=>>>>>>>", e);
-
     return NextResponse.json(e, { status: 400 });
   }
 }

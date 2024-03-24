@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { inputInfinte } from "./gloab";
+import { inputInfante } from "./gloab";
 import { ACCEPTED_IMAGE_MIME_TYPES } from "../configs/validition_config";
 
-export const infinityLoadPrompts = inputInfinte.merge(
+export const infinityLoadPrompts = inputInfante.merge(
   z.object({
     search: z.string(),
     myPrompts: z.boolean().default(false),

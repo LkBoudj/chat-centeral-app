@@ -73,3 +73,7 @@ export const schemEditTechBack = schemCreateTechFront.merge(
     id: z.number(),
   })
 );
+
+export type schemCreateTechFrontInputs = z.infer<typeof schemCreateTechFront>;
+
+export type schemEditTechBackInputs = z.infer<typeof schemEditTechBack>;

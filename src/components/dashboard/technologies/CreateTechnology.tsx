@@ -15,64 +15,33 @@ import {
 
 import { IconButton } from "@/components";
 import { Minus, PlusIcon } from "lucide-react";
+import useCreateTech from "@/lib/hocks/technology/useCreateUpdateTech";
 
-import { useContext, useEffect } from "react";
-import { techContext } from "@/components/context/dashboard/TechnologyContextProvider";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { schemCreateTechFront } from "@/lib/validation/technology_validation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { globalContext } from "@/components/context/GlobalContextProvider";
-
-type Inputs = z.infer<typeof schemCreateTechFront>;
 const CreateTechnology = () => {
-  const { onOpenChange, isOpen, setCustomErros, customErrors, createItem } =
-    useContext(techContext);
-  const { onOpenUploadFile, file, setFile } = useContext(globalContext);
   const {
-    control,
-    handleSubmit,
+    handleSubmitTech,
     register,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schemCreateTechFront),
-    defaultValues: {
-      status: true,
-    },
-  });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control, // control props comes from useForm (optional: if you are using FormContext)
-      //@ts-ignore
-      name: "models", // unique name for your Field Array
-    }
-  );
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const result = await createItem(JSON.stringify(data));
-    result && reset();
-  };
-  useEffect(() => {
-    if (file?.src) {
-      setValue("logo", file?.src);
-    }
-  }, [file, setValue]);
-  useEffect(() => {
-    if (Object.keys(errors).length) {
-      setCustomErros(errors);
-    }
-  }, [errors, setCustomErros]);
+    isOpen,
+    onOpenChange,
+    files,
+    onOpenUploadFile,
+    control,
+    customErrors,
+    fields,
+    remove,
+    append,
+  } = useCreateTech();
+
   return (
     <FormModel
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title={"Create New Technology"}
       typeForm={"create"}
-      handleSubmit={handleSubmit(onSubmit)}
+      handleSubmit={handleSubmitTech}
     >
       <div className="flex items-center justify-center mb-4">
-        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+        <Avatar size="lg" src={files[0]?.src} onClick={onOpenUploadFile} />
       </div>
 
       <FormInput.FromInputController

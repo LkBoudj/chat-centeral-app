@@ -12,6 +12,7 @@ import { createPromptValidation } from "@/lib/validation/prompts_validation";
 import { trpc } from "@/trpc/client";
 import { promptContext } from "../context/PromptContextProvider";
 import CustomButtonUploadFiles from "../global/Avatar";
+import { globalContext } from "../context/GlobalContextProvider";
 
 type Props = {
   isOpen: boolean;
@@ -31,14 +32,11 @@ const EditPrompts: React.FC<Props> = ({
   onClose,
   setItems,
 }) => {
-  const { onOpenUploadFile, file, setFile, sessionUser, selectedPrompt } =
-    useContext(promptContext);
+  const { sessionUser, selectedPrompt } = useContext(promptContext);
+  const { onOpenUploadFile, files, setFiles } = useContext(globalContext);
   const [isLoading, setIsLoading] = useState(true);
   const [tagsData, setTagsData] = useState<string[]>([]);
 
-  useEffect(() => {
-    console.log(selectedPrompt);
-  }, []);
   useEffect(() => {
     if (isLoading) {
       getAllTags();
@@ -95,9 +93,12 @@ const EditPrompts: React.FC<Props> = ({
   });
 
   const onSelectionChange = (val: string) => setValue("technology", val);
+  useEffect(() => {
+    setFiles([]);
+  }, [setFiles]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    data.image = file?.src || null;
+    data.image = files[0]?.src || null;
 
     const { tags, ...restDta }: any = data;
     if (tags && tags?.length) {
@@ -106,7 +107,7 @@ const EditPrompts: React.FC<Props> = ({
 
     mutate({ id: selectedPrompt.id, ...restDta });
     reset();
-    setFile(null);
+    setFiles([]);
     onClose();
   };
 
@@ -121,7 +122,7 @@ const EditPrompts: React.FC<Props> = ({
       onOpenChange={onOpenChange}
     >
       <CustomButtonUploadFiles
-        fileSrc={file?.src}
+        fileSrc={files.length ? files[0].src : selectedPrompt?.image ?? ""}
         onOpenUploadFile={onOpenUploadFile}
       />
       <div className="space-y-4 mt-4">

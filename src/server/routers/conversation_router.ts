@@ -2,16 +2,16 @@ import { router, privateProuder } from "../trpc";
 import prismaConfig from "@/lib/configs/prismaConfig";
 import { ConversationController } from "@/lib/controller";
 
-import { inputInfinte } from "@/lib/validation/";
+import { inputInfante } from "@/lib/validation/";
 import { deleteV } from "@/lib/validation/conversation_validation";
 
 const conversationsAppRouter = router({
   infiniteChats: privateProuder
-    .input(inputInfinte)
+    .input(inputInfante)
     .query(async ({ ctx, input }) => {
       const { limit, skip, cursor } = input;
 
-      return ConversationController.infintyLoad({
+      return ConversationController.infinityLoad({
         limit: limit,
         cursor,
         userId: ctx.auth.id,

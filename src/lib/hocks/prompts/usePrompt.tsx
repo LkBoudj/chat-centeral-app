@@ -1,25 +1,71 @@
 import { trpc } from "@/trpc/client";
-import { useEffect, useState } from "react";
+
 import useInPromptsInfantry from "./useInPromptsInfintry";
-
+import { useState } from "react";
+import { Prompt } from "@prisma/client";
+export type SinglePrompt = any;
 const usePrompt = () => {
-  //const [prompts, setPromps] = useState<any>([]);
-  const [search, setSearch] = useState<string>("");
-  // const { data, isSuccess, isLoading } = trpc.promptsAppRouter.showAll.useQuery(
-  //   {
-  //     search,
-  //   }
-  // );
+  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [prompt, setPrompt] = useState<SinglePrompt>(null);
+  const [comments, setComments] = useState<Comment[] | null>([]);
+  const {
+    refetch,
+    items,
+    isLoading,
+    isSuccess,
+    handleNextPage,
+    setSearch,
+    search,
+    myPrompts,
+    setMyPrompts,
+    setSelected,
+    selectedTech,
+    valueTags,
+    setValueTags,
+    isLoadingMore,
+    setItems,
+    hasNextPage,
+  } = useInPromptsInfantry();
 
-  const { items: prompts, isSuccess, isLoading } = useInPromptsInfantry();
+  const { mutate, status: statusOfDelete } =
+    trpc.promptsAppRouter.delete.useMutation({
+      async onSuccess(opt) {
+        if (opt.success && opt.id) {
+          const filter = items.filter((p) => p.id != opt.id);
+          setItems(filter);
+        }
+      },
+    });
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setPromps(data);
-  //     console.log(data);
-  //   }
-  // }, [data, setPromps, isSuccess]);
-  return { prompts, isSuccess, isLoading, setSearch, search };
+  const handleDeletePrompt = (id: number) => {
+    mutate({ id });
+  };
+
+  return {
+    handleDeletePrompt,
+    refetch,
+    items,
+    isLoading,
+    isSuccess,
+    handleNextPage,
+    setSearch,
+    search,
+    myPrompts,
+    setMyPrompts,
+    setSelected,
+    selectedTech,
+    valueTags,
+    setValueTags,
+    isLoadingMore,
+    setItems,
+    hasNextPage,
+    selectedPrompt,
+    setSelectedPrompt,
+    prompt,
+    setPrompt,
+    comments,
+    setComments,
+  };
 };
 
 export default usePrompt;

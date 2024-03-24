@@ -1,18 +1,22 @@
 "use client";
 import { ChatAside, IconButton, LkNavbar, UploadExplorer } from "@/components";
-import ChatContextProvider from "@/components/context/ChatContextProvider";
+import ChatContextProvider, {
+  chatContext,
+} from "@/components/context/ChatContextProvider";
 import FileManager from "@/components/global/explorer/FileManager";
 import { authNavigation } from "@/lib/data/authNavigation";
+import useAside from "@/lib/hocks/conversation/useAside";
 
 import { Settings } from "lucide-react";
 
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 
 const ChatTemplate = ({ children }: PropsWithChildren) => {
-  const [isShowAsideChat, setShowAsideChat] = useState<boolean>(false);
-
+  const { toggleAside, isOpenAside, setIsOpenAside } = useAside();
   return (
-    <ChatContextProvider>
+    <ChatContextProvider
+      outValue={{ toggleAside, isOpenAside, setIsOpenAside }}
+    >
       <ChatAside />
 
       <div className="bg-[#EEEEEE] h-screen overflow-hidden  ">
@@ -21,7 +25,7 @@ const ChatTemplate = ({ children }: PropsWithChildren) => {
           endContent={
             <IconButton
               Icon={Settings}
-              onClick={() => setShowAsideChat(!isShowAsideChat)}
+              onClick={toggleAside}
               className=" lg:hidden "
             />
           }

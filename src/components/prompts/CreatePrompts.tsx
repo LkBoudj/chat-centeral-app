@@ -19,6 +19,7 @@ import { createPromptValidation } from "@/lib/validation/prompts_validation";
 import { trpc } from "@/trpc/client";
 import { promptContext as promptContext } from "../context/PromptContextProvider";
 import CustomButtonUploadFiles from "../global/Avatar";
+import { globalContext } from "../context/GlobalContextProvider";
 
 type Props = {
   isOpen: boolean;
@@ -37,8 +38,8 @@ const CreatePrompts: React.FC<Props> = ({
   onClose,
   setItems,
 }) => {
-  const { onOpenUploadFile, file, setFile, sessionUser } =
-    useContext(promptContext);
+  const { onOpenUploadFile, files, setFiles, sessionUser } =
+    useContext(globalContext);
   const [customErrors, setCustomErros] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [tagsData, seTtags] = useState<any>([]);
@@ -63,8 +64,10 @@ const CreatePrompts: React.FC<Props> = ({
       getAllTags();
     }
   }, [isLoading]);
-  const [imageSrc, setImageSrc] = useState<any>("");
-  const utils = trpc.useUtils();
+
+  useEffect(() => {
+    setFiles([]);
+  }, [setFiles]);
 
   const { data: d, mutate } = trpc.promptsAppRouter.create.useMutation({
     async onMutate(opts: any) {
@@ -92,9 +95,9 @@ const CreatePrompts: React.FC<Props> = ({
       restDta.tags = tags.join(",");
     }
 
-    mutate({ ...restDta, image: file?.src || null });
+    mutate({ ...restDta, image: files[0]?.src || null });
     reset();
-    setFile(null);
+    setFiles([]);
     onClose();
   };
 
@@ -110,7 +113,7 @@ const CreatePrompts: React.FC<Props> = ({
     >
       <div className="flex items-center justify-center mb-4">
         <CustomButtonUploadFiles
-          fileSrc={file?.src}
+          fileSrc={files[0]?.src ?? ""}
           onOpenUploadFile={onOpenUploadFile}
         />
       </div>

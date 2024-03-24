@@ -19,7 +19,7 @@ const AuthComponent = (props: Props) => {
         <DropdownTrigger>
           <Avatar
             className=" cursor-pointer"
-            src={(session && session.user.image) ?? "/images/default.jpeg"}
+            src={(session && session.user?.image) ?? "/images/default.jpeg"}
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">

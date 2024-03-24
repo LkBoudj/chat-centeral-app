@@ -115,7 +115,7 @@ model Message {
   id             Int             @id @default(autoincrement()) @db.UnsignedInt
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
-  conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade,onUpdate: Cascade)
   conversationId String
   fromMachin     Boolean?        @default(false)
   technology     Technology      @relation(fields: [technologyId], references: [id], onDelete: Cascade)
@@ -138,8 +138,8 @@ model Media {
 }
 
 model MessageMedias {
-  messages  Message @relation(fields: [messageId], references: [id])
-  medias    Media   @relation(fields: [mediaId], references: [id])
+  messages  Message @relation(fields: [messageId], references: [id],onDelete: Cascade,onUpdate: Cascade )
+  medias    Media   @relation(fields: [mediaId], references: [id],onDelete: Cascade,onUpdate: Cascade)
   messageId Int     @db.UnsignedInt
   mediaId   Int     @db.UnsignedInt
 
@@ -165,7 +165,9 @@ model Plan {
 model Prompt {
   id                Int                 @id @default(autoincrement()) @db.UnsignedInt
   title             String
+  image             String?
   excerpt           String              @db.VarChar(60)
+  slug              String              @unique
   technology        Technology?         @relation(fields: [technologyId], references: [id])
   user              User                @relation("creator", fields: [userId], references: [id], onDelete: Cascade)
   userId            String

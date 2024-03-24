@@ -20,16 +20,8 @@ const ActionPromptShow = ({
 }) => {
   return (
     <>
-      <Divider />
       <div className="flex items-center justify-between ">
-        <div className="space-x-5">
-          <IconButton content={liker.toString()} Icon={ThumbsUp} />
-          <IconButton
-            Icon={ThumbsUp}
-            content={comment.toString()}
-            // onClick={handelComment}
-          />
-        </div>
+        <div className="space-x-5"></div>
         <div>
           <IconButton Icon={ThumbsUp} />
           <IconButton isDisabled={true} Icon={ThumbsUp} />

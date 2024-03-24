@@ -25,8 +25,8 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { schemEditTechBack } from "@/lib/validation/technology_validation";
 import { date, z } from "zod";
 import { globalContext } from "@/components/context/GlobalContextProvider";
+import { useUpdateTech } from "@/lib/hocks/technology/useCreateUpdateTech";
 
-type Inputs = z.infer<typeof schemEditTechBack>;
 const UpdateTechnology = () => {
   const {
     onOpenChangeU,
@@ -35,42 +35,14 @@ const UpdateTechnology = () => {
     customErrors,
     updateItem,
     selectedItem,
-  } = useContext(techContext);
-
-  const {
+    files,
+    handleSubmitTech,
+    onOpenUploadFile,
     control,
-    handleSubmit,
-    register,
-    reset,
-    getValues,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schemEditTechBack),
-    defaultValues: {
-      id: selectedItem.id,
-      name: selectedItem.name,
-      refTech: selectedItem.refTech,
-      status: selectedItem.status,
-      models: selectedItem?.models?.split("#") ?? [],
-    },
-  });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control, // control props comes from useForm (optional: if you are using FormContext)
-      //@ts-ignore
-      name: "models", // unique name for your Field Array
-    }
-  );
-
-  const { onOpenUploadFile, file, setFile } = useContext(globalContext);
-  useEffect(() => {
-    if (Object.keys(errors).length) {
-      setCustomErros(errors);
-    }
-  }, [errors, setCustomErros]);
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await updateItem(JSON.stringify(data));
-  };
+    fields,
+    remove,
+    append,
+  } = useUpdateTech();
 
   return (
     <FormModel
@@ -79,10 +51,10 @@ const UpdateTechnology = () => {
       title={"Update Technology"}
       typeForm={"update"}
       edit={true}
-      handleSubmit={handleSubmit(onSubmit)}
+      handleSubmit={handleSubmitTech}
     >
       <div className="flex items-center justify-center mb-4">
-        <Avatar size="lg" src={file?.src} onClick={onOpenUploadFile} />
+        <Avatar size="lg" src={files[0]?.src} onClick={onOpenUploadFile} />
       </div>
 
       <FormInput.FromInputController

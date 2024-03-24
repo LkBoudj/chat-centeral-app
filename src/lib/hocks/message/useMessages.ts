@@ -149,7 +149,9 @@ export const useSubmitMessage = () => {
             scroll: true,
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
 
       setIsAiThink(false);
     },

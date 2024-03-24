@@ -10,6 +10,7 @@ const useInfiniteConversation = () => {
     isLoading: isLoadingC,
     isSuccess: isSuccessC,
     fetchNextPage,
+    hasNextPage,
   } = trpc.conversations.infiniteChats.useInfiniteQuery(
     {
       limit: 5,
@@ -24,28 +25,26 @@ const useInfiniteConversation = () => {
     setItems: setChats,
     page: pageC,
     setPage,
-    setIsHaveNext,
-    isHaveNext: isHaveNextC,
   } = usePaginationInfanteHock();
 
   const handelNextPageC = () => {
-    fetchNextPage && fetchNextPage();
-    setPage((page) => page + 1);
+    if (hasNextPage) {
+      fetchNextPage && fetchNextPage();
+      setPage((page) => page + 1);
+    }
   };
 
   const handlePreviousPageC = () => {
-    if (pageC - 1 > 0) {
-      let preP = pageC - 1;
-      setPage(preP);
-      setChats(data?.pages[preP - 1]?.items ?? []);
+    if (pageC > 0) {
+      setPage((page) => page - 1);
     }
   };
 
   useEffect(() => {
-    setChats(data?.pages[pageC - 1]?.items ?? []);
-
-    setIsHaveNext(data?.pages[pageC - 1]?.nextCursor ? true : false);
-  }, [data, pageC, setIsHaveNext, setChats]);
+    if (isSuccessC && data?.pages) {
+      setChats(data?.pages[pageC]?.items ?? []);
+    }
+  }, [data, pageC, setChats]);
 
   return {
     chats,
@@ -54,7 +53,7 @@ const useInfiniteConversation = () => {
     handlePreviousPageC,
     pageC,
     isSuccessC,
-    isHaveNextC,
+    hasNextPage,
     isLoadingC,
   };
 };

@@ -1,11 +1,18 @@
-import { Spinner } from "@nextui-org/react";
+import { cn, Spinner } from "@nextui-org/react";
 import React, { PropsWithChildren } from "react";
 
-type Props = {};
+interface Props extends React.ComponentPropsWithoutRef<"div"> {}
 
-const Loading = ({ children }: PropsWithChildren) => {
+const Loading = (props: Props) => {
+  const { children, className, ...resetProps } = props;
   return (
-    <div className="flex items-center justify-center w-full h-full fixed top-0 left-0 z-50">
+    <div
+      {...resetProps}
+      className={cn(
+        "flex items-center justify-center w-full h-full fixed top-0 left-0 z-50",
+        className
+      )}
+    >
       {children ?? <Spinner size="lg" />}
     </div>
   );

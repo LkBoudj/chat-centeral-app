@@ -34,11 +34,11 @@ export const useUpload = ({ accept }: UseUploadType) => {
 
         const { success, media, errors } = res.data;
 
-        if (success) {
-          toast.success("The uploaded successfully");
-        } else {
-          toast.error(errors);
-        }
+        // if (success) {
+        //   toast.success("The uploaded successfully");
+        // } else {
+        //   toast.error(errors);
+        // }
       } catch (error) {
         toast.error("Error uploading file:");
       }

@@ -27,12 +27,16 @@ export async function POST(req: Request) {
 
     if (id) {
       const data = await uploadMultiFileMedia(files, id);
+
       const medias = await mediaController.createMny(data);
+
       return handleResponse(true, medias, null);
     }
 
     return handleResponse(false, null, "Your are not login");
   } catch (e: any) {
+    console.log(e);
+
     if (e instanceof FileTypeNotAbodedError) {
       return handleResponse(false, null, e.message.toString());
     }

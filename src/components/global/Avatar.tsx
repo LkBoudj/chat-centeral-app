@@ -1,5 +1,5 @@
-import { Image } from "lucide-react";
-
+import { Image as ImageIcon } from "lucide-react";
+import { Image } from "@nextui-org/react";
 interface CustomButtonUploadFilesProps {
   fileSrc: string | undefined;
   onOpenUploadFile: () => void;
@@ -16,13 +16,13 @@ const CustomButtonUploadFiles: React.FC<CustomButtonUploadFilesProps> = ({
         onClick={onOpenUploadFile}
       >
         {fileSrc ? (
-          <img
+          <Image
             src={fileSrc}
             className="w-full h-full rounded-full object-cover"
             alt="Uploaded Avatar"
           />
         ) : (
-          <Image className="text-gray-500 text-3xl" />
+          <ImageIcon className="text-gray-500 text-3xl" />
         )}
       </div>
     </div>
