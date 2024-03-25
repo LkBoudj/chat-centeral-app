@@ -108,16 +108,31 @@ export const useSubmitMessage = () => {
   const handelFetchSendData = useCallback(
     async (data: any) => {
       setIsAiThink(true);
+
+      const { files, ...restData } = data;
+
+      const media = files.length
+        ? files.map((m: Media) => ({
+            medias: m,
+          }))
+        : [];
+
       const newDataWithUserMessage = [
         ...allMessages,
         {
-          ...data,
+          ...restData,
+          media,
           id: Date.now(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       ];
       setAllMessages(newDataWithUserMessage);
+
+      if (files.length) {
+        data.files = files.map((file: Media) => file.id);
+      }
+
       try {
         const res = await fetch(`/api/messages/${params.id ?? ""}`, {
           method: "POST",
@@ -125,6 +140,7 @@ export const useSubmitMessage = () => {
         });
 
         const contentType = res.headers.get("Content-Type");
+
         if (!res.ok) {
           toast.error("some errors");
         }
@@ -180,13 +196,14 @@ export const useSubmitMessage = () => {
   ) => {
     const data: any = message;
     if (files.length) {
-      data.message = files.map((file: Media) => file.id);
+      data.files = files;
     }
 
     data.technologyId = selectTechnology?.id;
     data.model = selectedModel ?? "";
 
     handelFetchSendData(data);
+    setFiles([]);
     reset();
   };
 

@@ -13,8 +13,9 @@ import prismaConfig from "@/lib/configs/prismaConfig";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId, model, media } =
+    const { content, technologyId, conversationId, model, files } =
       await req.json();
+
     const session = await getAuthSession();
     const userId = session?.user.id;
 
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       content,
       conversationId,
       technologyId,
-      fileId: media?.id,
+      fileId: files,
       model,
     });
 
@@ -72,14 +73,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
       userId,
     };
 
+    const newMessage = await MessageController.create(userMessage);
+
     const isFileExits: any = validation.data.fileId
       ? await mediaController.checkMediaExists({
           userId,
-          id: media?.id,
+          id: files[0],
         })
       : null;
-
-    const newMessage = await MessageController.create(userMessage);
 
     if (isFileExits) {
       await mediaController.linkToMessage({
@@ -87,7 +88,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         messageId: newMessage.id,
       });
     }
-
     const isTechExits = await technologyController.isExits({
       id: technologyId,
     });

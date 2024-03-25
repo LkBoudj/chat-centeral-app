@@ -9,6 +9,7 @@ import {
 } from "@/components";
 import { globalContext } from "@/components/context/GlobalContextProvider";
 import { userContext } from "@/components/context/UserContextProvider";
+import { FileManagerItems } from "@/components/global/explorer/FileManager";
 
 import { Tab } from "@nextui-org/react";
 
@@ -21,7 +22,7 @@ type Props = {
 
 const ProfilePage = () => {
   const { userData, isLoading, isError } = useContext(userContext);
-  const { onOpenUploadFile } = useContext(globalContext);
+  const { onOpenUploadFile, files } = useContext(globalContext);
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
   return (
@@ -31,21 +32,25 @@ const ProfilePage = () => {
         <CustomAvatarUser
           canEdit={true}
           onClick={onOpenUploadFile}
-          src={userData?.image ?? ""}
-          defualt="/images/default.jpeg"
+          src={files.length ? files[0].src : userData?.image ?? ""}
+          defaultSrc="/images/default.jpeg"
           name={userData?.name ?? ""}
           email={userData?.email ?? ""}
           description={userData?.description ?? ""}
         />
       </ContainerMaxWind>
-      <ContainerMaxWind className="px-5 items-center  flex flex-col  h-full max-h-96 min-h-96">
-        <Explorer
+      <ContainerMaxWind className="h-full   px-5 items-center   -translate-y-16">
+        <FileManagerItems
+          className="h-full max-h-[var(--mediaProfile)]"
           startComponent={
-            <Tab className="h-full w-full" key="informatin" title="Information">
+            <Tab
+              className="h-full w-full"
+              key="information"
+              title="Information"
+            >
               <UserInformation readonly={false} />
             </Tab>
           }
-          types={["image", "audio", "video", "pdf"]}
         />
       </ContainerMaxWind>
     </>

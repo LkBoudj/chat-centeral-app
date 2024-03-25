@@ -28,7 +28,7 @@ type Props = {
   title: string;
   excerpt: string;
   likedCount: number;
-  commnetCount: number;
+  commentCount: number;
   tags?: string;
   user?: any;
   createdAt?: Date;
@@ -59,7 +59,7 @@ const ItemPrompt: React.FC<Props> = ({
   image,
   tags,
   user,
-  commnetCount,
+  commentCount: commentCount,
   likedCount,
   createdAt,
   ref,
@@ -152,7 +152,7 @@ const ItemPrompt: React.FC<Props> = ({
                 <ThumbsUp size={13} />
               </span>
               <span className="px-0 flex items-center">
-                <span className="mr-1">{commnetCount}</span>{" "}
+                <span className="mr-1">{commentCount}</span>{" "}
                 <MessageCircleMore size={13} />
               </span>
             </div>

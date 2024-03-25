@@ -71,17 +71,7 @@ const ListOfChats = ({
   page,
 }: Props) => {
   const { id } = useParams();
-  const {
-    chats,
-    isHaveNextC,
-    pageC,
-    handlePreviousPageC,
-    handelNextPageC,
-    isOpenAside,
-
-    isSuccessC,
-    hasNextPage,
-  } = useContext(chatContext);
+  const { chats, isSuccessC, hasNextPage } = useContext(chatContext);
 
   return (
     <Card

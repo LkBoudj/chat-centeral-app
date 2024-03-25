@@ -17,32 +17,18 @@ export const userContext = createContext<any>(null);
 const UserContextProvider = ({ children, defaultVal }: Props) => {
   const { data: session } = useSession();
   const [customErrors, setCustomErros] = useState<any>();
-  const [userData, setUserData] = useState<User>();
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsErrors] = useState<boolean>(false);
   const user = session?.user;
 
-  const { isUploadFileOpen, onClose } = useContext(globalContext);
-
-  const handelSelectFile = async (e: Media) => {
-    const res = await fetch(`/api/users/${user.id}`, {
-      method: "PUT",
-      body: JSON.stringify({ image: e.src }),
-    });
-
-    const { data, success, error } = await res.json();
-    if (res.ok && success) {
-      console.log(data);
-
-      if (data && setUserData) setUserData(data);
-      toast.success("the profile updated successfuly");
-    } else {
-      toast.error("there is a problem");
-    }
-    onClose();
-  };
+  const { userData, setUserData, onClose, files } = useContext(globalContext);
 
   const handelUpdateUser = async (obj: any) => {
+    if (files.length) {
+      obj.image = files[0].src;
+    }
+
     const res = await fetch(`/api/users/${userData?.id}`, {
       method: "POST",
       body: JSON.stringify(obj),
@@ -94,14 +80,7 @@ const UserContextProvider = ({ children, defaultVal }: Props) => {
   }, [user?.id, setUserData]);
 
   useEffect(() => {}, [defaultVal]);
-  return (
-    <userContext.Provider value={values}>
-      {isUploadFileOpen && (
-        <UploadExplorer types={["image"]} handelSelectFile={handelSelectFile} />
-      )}
-      {children}
-    </userContext.Provider>
-  );
+  return <userContext.Provider value={values}>{children}</userContext.Provider>;
 };
 
 export default UserContextProvider;

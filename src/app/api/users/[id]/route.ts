@@ -37,6 +37,7 @@ export async function POST(req: NextRequest, { params: { id } }: any) {
       const json = await req.json();
       const schema: any = schemaUser.merge(
         z.object({
+          image: z.string().nullable().nullish(),
           email: z
             .string()
             .email()
@@ -90,6 +91,7 @@ export async function PUT(req: NextRequest, { params: { id } }: any) {
 
     if (user) {
       const json = await req.json();
+
       const schema: any = z.object({
         image: z.string(),
       });

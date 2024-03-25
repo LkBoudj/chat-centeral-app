@@ -42,47 +42,50 @@ const SendMessageForm: React.FC<any> = () => {
   return (
     <Form
       handleSubmit={customHandleSubmit}
-      className="bg-white rounded-xl ring-1 px-5 py-3 "
+      className="bg-white rounded-xl ring-1 p-5 "
     >
-      <div className="flex items-end">
-        <div className="mb-2">
-          <TechnologySelect maxCharacter={4} />
-        </div>
-        <Textarea
-          {...register("content")}
-          minRows={1}
-          placeholder={
-            [
-              "What's on your mind?",
-              "Got questions? Fire away!",
-              "Curious about something? Ask away!",
-              "How can I assist you today?",
-              "Let's dive into your queries!",
-              "Shoot your questions, I'm all ears!",
-              "Feeling inquisitive? I'm here to help!",
-              "Any burning questions today?",
-              "What intriguing question do you have today?",
-              "Ready to explore? Ask me something!",
-            ][Math.floor(Math.random() * 100)]
-          }
-          variant="bordered"
-          color="default"
-          // dir={textArabicDirection ? "rtl" : "ltr"}
-          onKeyDown={(e) => {
-            if (e.key == "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              customHandleSubmit();
+      <div className="flex items-start">
+        <div className="flex items-center w-full">
+          <TechnologySelect />
+          <Textarea
+            {...register("content")}
+            minRows={1}
+            placeholder={
+              [
+                "What's on your mind?",
+                "Got questions? Fire away!",
+                "Curious about something? Ask away!",
+                "How can I assist you today?",
+                "Let's dive into your queries!",
+                "Shoot your questions, I'm all ears!",
+                "Feeling inquisitive? I'm here to help!",
+                "Any burning questions today?",
+                "What intriguing question do you have today?",
+                "Ready to explore? Ask me something!",
+              ][Math.floor(Math.random() * 100)]
             }
-          }}
-          classNames={{
-            inputWrapper: "border-none shadow-none",
-            //input: textArabicDirection && `text-right`,
-          }}
-          className={cn(
-            `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full`
-          )}
-        />
+            variant="bordered"
+            color="default"
+            // dir={textArabicDirection ? "rtl" : "ltr"}
+            onKeyDown={(e) => {
+              if (e.key == "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                customHandleSubmit();
+              }
+            }}
+            classNames={{
+              inputWrapper: "border-none shadow-none",
+              //input: textArabicDirection && `text-right`,
+            }}
+            className={cn(
+              `placeholder:text-slate-800 placeholder:font-semibold bg-transparent w-full`
+            )}
+          />
+        </div>
 
+        {/* <IconButton size={22} Icon={Mic} /> */}
+      </div>
+      <div className="flex items-end justify-between">
         <IconButton onPress={onOpenUploadFile} size={22} Icon={Paperclip} />
         <IconButton
           isLoading={isAiThink}

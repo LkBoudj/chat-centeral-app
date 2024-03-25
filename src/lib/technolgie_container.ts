@@ -235,6 +235,7 @@ class TechnologiesContainer {
     oldMessages,
   }: VisionInput) {
     const base64_image = await convertImageToBaseFromUrl(path);
+    console.log(base64_image);
 
     const response = await this.openai.chat.completions.create({
       model: "gpt-4-vision-preview",
@@ -244,7 +245,7 @@ class TechnologiesContainer {
         {
           role: "system",
           content:
-            "You are a helpful chatbot answering any questions. Your name is chatcentral. You are to answer any question the user has and be friendly, conscie, helppful, and provide accurate info",
+            "You are a helpful chatbot answering any questions. Your name is Chatentral. You are to answer any question the user has and be friendly, conscie, helppful, and provide accurate info",
         },
 
         {
@@ -286,7 +287,7 @@ class TechnologiesContainer {
     });
   }
 
-  async genrateVioce({ model, userMessage, headers, userId }: voiceInput) {
+  async generateVoice({ model, userMessage, headers, userId }: voiceInput) {
     const mp3 = await this.openai.audio.speech.create({
       model: model ?? "tts-1",
       voice: "onyx",
@@ -391,6 +392,8 @@ class TechnologiesContainer {
       .join("\n");
 
     if (path) {
+      console.log(path);
+
       return this.generateTextCompletionVison({
         path,
         userMessage,
@@ -425,7 +428,7 @@ class TechnologiesContainer {
           userId,
         });
       case "tts":
-        return await this.genrateVioce({
+        return await this.generateVoice({
           model,
           userMessage,
           headers,

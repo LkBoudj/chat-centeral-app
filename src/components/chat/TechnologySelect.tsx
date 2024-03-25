@@ -1,5 +1,6 @@
 import {
   Avatar,
+  cn,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -10,13 +11,20 @@ import React, { useContext } from "react";
 import { chatContext } from "../context/ChatContextProvider";
 import { Technology } from "@prisma/client";
 
-type Props = {};
+type Props = {
+  className?: string;
+  maxCharacter?: number;
+};
 
 const TechnologySelect = (props: Props) => {
+  const { className, maxCharacter } = props;
   const { technologies, selectTechnology, handelSelectedTechnology } =
     useContext(chatContext);
+  const name = maxCharacter
+    ? selectTechnology?.name.substring(0, maxCharacter)
+    : selectTechnology?.name ?? "";
   return (
-    <Dropdown placement="bottom-start">
+    <Dropdown placement="bottom-start" className={cn(className)}>
       <DropdownTrigger>
         <div className="w-full max-w-[80px] flex items-center space-x-1 text-sm">
           <div>
@@ -29,9 +37,7 @@ const TechnologySelect = (props: Props) => {
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="truncate whitespace-normal">
-              {selectTechnology?.name ?? ""}
-            </p>
+            <p className="truncate whitespace-normal">{name}</p>
           </div>
         </div>
       </DropdownTrigger>

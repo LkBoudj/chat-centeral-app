@@ -44,7 +44,7 @@ const CustomInputTags = ({
   };
 
   const handelKeyDown = (e: any) => {
-    if ((e.keyCode == 13 || e.key == "Enter") && filterValue.trim() != "") {
+    if (e.keyCode == 32 && filterValue.trim() != "") {
       addTag(filterValue.trim());
     }
   };

@@ -12,7 +12,7 @@ import prismaConfig from "@/lib/configs/prismaConfig";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId, model, media } =
+    const { content, technologyId, conversationId, model, media, files } =
       await req.json();
 
     const session = await getAuthSession();
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const isFileExits: any = validation.data.fileId
       ? await mediaController.checkMediaExists({
           userId,
-          id: media?.id,
+          id: files[0],
         })
       : null;
 

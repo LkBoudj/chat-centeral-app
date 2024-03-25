@@ -22,7 +22,7 @@ type Props = {
 const ProfilePage = ({ params, searchParams }: Props) => {
   const { userData, isLoading, isError, user } = useContext(userContext);
   const { id } = params;
-  const { onOpenUploadFile } = useContext(globalContext);
+  const { onOpenUploadFile, files } = useContext(globalContext);
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
   return (
@@ -32,8 +32,8 @@ const ProfilePage = ({ params, searchParams }: Props) => {
         <CustomAvatarUser
           onClick={onOpenUploadFile}
           canEdit={user.id == id}
-          src={userData?.image ?? ""}
-          defualt="/images/default.jpeg"
+          src={files.length ? files[0].src : userData?.image ?? ""}
+          defaultSrc="/images/default.jpeg"
           name={userData?.name ?? ""}
           email={user.id == id && userData?.email ? userData?.email : ""}
           description={userData?.description ?? ""}

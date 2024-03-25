@@ -9,7 +9,6 @@ import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { forwardRef } from "react";
 import { MediaContainer } from "./CustmMediaMediaComponent";
 import CopyPaste from "./CopyPaste";
-import CodeCopyBtn from "./CopyPaste";
 
 const isRightToLift = (text: string) => {
   const regex = /[\u0600-\u06FF]/;
@@ -33,24 +32,15 @@ const BodyMessage = ({
   fromMachin?: boolean;
   content: string;
 }) => {
-  const Pre = ({ children }: any) => (
-    <pre className="blog-pre">
-      <CodeCopyBtn>{children}</CodeCopyBtn>
-      {children}
-    </pre>
-  );
   return (
     <ReactMarkdown
       components={{
-        pre: Pre,
+        pre: CopyPaste,
         code(props) {
           const { children, className, node, ...rest } = props;
-          const match = /language-(\w+)/.exec(className || "") ?? [
-            "language-jsx",
-            "js",
-          ];
+          const match = /language-(\w+)/.exec(className || "");
 
-          return (
+          return match ? (
             //@ts-ignore
             <Prism
               {...rest}
@@ -60,13 +50,11 @@ const BodyMessage = ({
             >
               {String(children).replace(/\n$/, "")}
             </Prism>
+          ) : (
+            <code {...rest} className={className}>
+              {children}
+            </code>
           );
-
-          // : (
-          //   <code {...rest} className={className}>
-          //     {children}
-          //   </code>
-          // );
         },
       }}
       className={cn(
@@ -82,9 +70,9 @@ const BodyMessage = ({
             place-self-start
             rounded-xl px-3 py-2  leading-[2.3]
             w-full
-            lg:max-w-full
+            max-w-full
             `,
-        true
+        fromMachin
           ? "bg-[#fcfcfc] text-slate-800 "
           : "bg-gradient-to-r from-indigo-500 to-blue-600 text-white "
       )}

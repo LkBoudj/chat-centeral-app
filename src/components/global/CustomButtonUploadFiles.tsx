@@ -4,16 +4,16 @@ import { Edit } from "lucide-react";
 
 const CustomAvatarUser = ({
   name,
-  defualt,
   description,
   src,
   email,
   showDetails = true,
   onClick,
   canEdit,
+  defaultSrc,
 }: {
   name: string;
-  defualt?: string;
+  defaultSrc?: string;
   description?: string;
   email?: string;
   src?: string;
@@ -27,7 +27,7 @@ const CustomAvatarUser = ({
         <Avatar
           className="  w-44 h-44"
           name={name}
-          src={src != "" ? src : defualt}
+          src={src != "" ? src : defaultSrc}
         />
         {canEdit && (
           <IconButton

@@ -1,27 +1,26 @@
 "use client";
-import { Snippet } from "@nextui-org/react";
-import { IconButton } from "..";
+import React from "react";
+import IconButton from "../global/IconButton";
 import { ClipboardCheck, Copy } from "lucide-react";
-import { useContext } from "react";
-import { chatContext } from "../context/ChatContextProvider";
-type Props = {};
+export default function CodeCopyBtn({ children }: any) {
+  const [copyOk, setCopyOk] = React.useState(false);
 
-const CopyPaste = ({ children }: any) => {
-  const { handelTextToCopy, copy } = useContext(chatContext);
+  const handleClick = (e: any) => {
+    navigator.clipboard.writeText(children.props.children[0]);
+
+    setCopyOk(true);
+    setTimeout(() => {
+      setCopyOk(false);
+    }, 500);
+  };
+
   return (
-    <pre className="blog-pre  ">
-      <div className="w-full flex justify-end">
-        <IconButton
-          onClick={() => {
-            navigator.clipboard.writeText(children[0].props.children[0]);
-          }}
-          className="text-white  "
-          Icon={!copy ? Copy : ClipboardCheck}
-        />
-      </div>
-      {children}
-    </pre>
+    <div className="code-copy-btn w-full flex justify-end">
+      <IconButton
+        onClick={handleClick}
+        className="text-white  "
+        Icon={!copyOk ? Copy : ClipboardCheck}
+      />
+    </div>
   );
-};
-
-export default CopyPaste;
+}
