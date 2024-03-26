@@ -5,7 +5,6 @@ import {
   Error,
   UserInformation,
   CustomAvatarUser,
-  Explorer,
 } from "@/components";
 import { globalContext } from "@/components/context/GlobalContextProvider";
 import { userContext } from "@/components/context/UserContextProvider";

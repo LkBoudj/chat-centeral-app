@@ -1,30 +1,67 @@
 "use client";
-import { cn } from "@nextui-org/react";
+import { cn, Image } from "@nextui-org/react";
 import IconButton from "../IconButton";
-import { Check, Trash } from "lucide-react";
-import { useRef } from "react";
-import Image from "next/image";
-interface VideoProps extends React.ComponentPropsWithRef<"video"> {}
+import { Check, Pause, Play, Trash } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+interface VideoProps extends React.ComponentPropsWithRef<"video"> {}
+interface AudioProps extends React.ComponentPropsWithRef<"audio"> {}
+import WaveSurfer from "wavesurfer.js";
+
+export const Audio = (props: AudioProps) => {
+  const { src } = props;
+  const waveformRef: any = useRef(null);
+  const myCurrentWaveSurferRef: any = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    // if (waveformRef.current) {
+
+    if (src) {
+      myCurrentWaveSurferRef.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "#9b95f3",
+        progressColor: "#6c83f5",
+        height: 30,
+      });
+      if (myCurrentWaveSurferRef.current) {
+        myCurrentWaveSurferRef.current.load(src as string);
+
+        myCurrentWaveSurferRef.current.on("finish", () => {
+          // Reset play state when the audio finishes playing
+          setIsPlaying(false);
+        });
+      }
+    }
+    // }
+
+    return () => {
+      myCurrentWaveSurferRef.current.destroy();
+    };
+  }, [src, waveformRef, myCurrentWaveSurferRef, setIsPlaying]);
+
+  const handelPlayPause = useCallback(() => {
+    if (myCurrentWaveSurferRef.current) {
+      myCurrentWaveSurferRef.current.playPause();
+      setIsPlaying(!isPlaying);
+    }
+  }, [isPlaying]);
+  return (
+    <div className="flex items-center gap-1 w-full min-w-64">
+      <IconButton
+        onClick={handelPlayPause}
+        size={18}
+        Icon={isPlaying ? Pause : Play}
+      />
+      <div id="waveform" className="w-full" ref={waveformRef}></div>
+    </div>
+  );
+};
 export const Video: React.FC<VideoProps> = (props) => {
   const { className, src, ...resetProps } = props;
   const playerRef: React.RefObject<HTMLVideoElement> =
     useRef<HTMLVideoElement>(null);
-  // useEffect(() => {
-  //   if (playerRef.current) {
-  //     player = videoJs(playerRef.current, {
-  //       controls: true,
-  //       autoplay: false, // Adjust as needed
-  //     });
-  //     player.src(src);
-  //   }
 
-  //   // return () => {
-  //   //   if (player) {
-  //   //     player.dispose();
-  //   //   }
-  //   // };
-  // }, [src, playerRef]);
   return (
     <>
       <video
@@ -71,27 +108,16 @@ const MediaItem: React.FC<any> = (props) => {
   const styleMedia = "w-full";
 
   if (type.startsWith("audio")) {
-    return (
-      <audio
-        className={cn(" rounded-md max-w-[240px]", styleMedia)}
-        controls
-        src={src}
-        autoPlay={false}
-      >
-        <source src={src} type="audio/mp3" />
-        Your browser does not support the audio element.
-      </audio>
-    );
+    return <Audio src={src} />;
   } else if (type.startsWith("video")) {
     return <Video className="w-full" src={src} autoPlay={false} />;
   } else if (type.startsWith("image")) {
     return (
       <Image
-        width={140}
-        height={140}
+        // width={140}
+        // height={140}
         src={src}
         alt="media"
-        objectFit="cover"
         className={cn("w-full h-full rounded-md ", styleMedia)}
       />
     );

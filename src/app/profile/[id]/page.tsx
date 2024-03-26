@@ -5,10 +5,10 @@ import {
   Error,
   UserInformation,
   CustomAvatarUser,
-  Explorer,
 } from "@/components";
 import { globalContext } from "@/components/context/GlobalContextProvider";
 import { userContext } from "@/components/context/UserContextProvider";
+import { FileManagerItems } from "@/components/global/explorer/FileManager";
 
 import { Tab } from "@nextui-org/react";
 
@@ -40,13 +40,17 @@ const ProfilePage = ({ params, searchParams }: Props) => {
         />
       </ContainerMaxWind>
       <ContainerMaxWind className="px-5 items-center  flex flex-col  h-full max-h-96 min-h-96">
-        <Explorer
+        <FileManagerItems
+          className="h-full max-h-[var(--mediaProfile)]"
           startComponent={
-            <Tab className="h-full w-full" key="informatin" title="Information">
-              <UserInformation readonly={user.id != id} />
+            <Tab
+              className="h-full w-full"
+              key="information"
+              title="Information"
+            >
+              <UserInformation readonly={false} />
             </Tab>
           }
-          types={["image", "audio", "video", "pdf"]}
         />
       </ContainerMaxWind>
     </>

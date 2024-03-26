@@ -29,6 +29,9 @@ interface CheckMediaParams extends MediaSearchParams {
 class MediaController {
   async findMany({ id, userId, type }: MediaSearchParams) {
     const medias = await prismaConfig.media.findMany({
+      orderBy: {
+        id: "desc",
+      },
       where: {
         id,
         userId,

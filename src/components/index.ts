@@ -6,7 +6,6 @@ import Details from "./auth/Details";
 import AuthForm from "./auth/AuthForm";
 //navbar
 import LkNavbar from "./navbar/LkNavbar";
-import AuthanticationButton from "./navbar/AuthanticationButton";
 //chat
 import ChatAside from "./chat/ChatAside";
 import ChatItemAction from "./chat/ChatItemAction ";
@@ -20,17 +19,17 @@ import TechnologySelect from "./chat/TechnologySelect";
 import DashboardAside from "./dashboard/DashboardAside";
 import CustomTooltip from "./global/CustomTooltip";
 import SelecteModel from "./chat/SelecteModel";
-import CustmMediaMediaComponent from "./chat/CustmMediaMediaComponent";
+
 import Section from "./Section";
 import LogoIcon from "./LogoIcon";
-import MediaFiles from "./global/explorer/MediaFiles";
+
 import Loading from "./global/Loading";
 import Error from "./global/Error";
 import UserInformation from "./user/UserInformation";
 import CustomAvatarUser from "./global/CustomButtonUploadFiles";
-import Explorer from "./global/explorer";
+
 import UploadMedia from "./global/explorer/UploadMedia";
-import UploadExplorer from "./global/explorer/UploadExplorer";
+
 //prompts
 import PromptHeader from "./prompts/PromptHeader";
 import CustomButtonUploadFiles from "./global/Avatar";
@@ -49,7 +48,6 @@ export {
   Message,
   CreateMessage,
   TechnologySelect as TechnologySelect,
-  CustmMediaMediaComponent,
   SelecteModel,
   // prompts
   PromptHeader,
@@ -57,14 +55,11 @@ export {
   UserInformation,
   //dashboard
   DashboardAside,
-  //GLOBA
+  //GLOBal
   CustomTooltip,
   Section,
   LogoIcon,
-  Explorer,
-  MediaFiles,
   UploadMedia,
-  UploadExplorer,
   Loading,
   Error,
   CustomAvatarUser,

@@ -50,7 +50,7 @@ export const useComment = ({ promptId }: CreateCommentProps) => {
         ...data,
       });
     },
-    [setPrompt, prompt]
+    [setPrompt, prompt, mutate]
   );
 
   const handleNextPage = async () => {
@@ -69,7 +69,7 @@ export const useComment = ({ promptId }: CreateCommentProps) => {
     if (isSuccess && data.pages && Array.isArray(data.pages)) {
       setComments([...comments, ...data.pages[page].items]);
     }
-  }, [isSuccess, setComments, data]);
+  }, [isSuccess, setComments, data, setComments, comments]);
 
   const {
     control,

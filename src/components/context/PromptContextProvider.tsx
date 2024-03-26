@@ -1,18 +1,10 @@
 "use client";
 
-import { limit_infinite_messagess } from "@/lib/configs/infinte_scrolle_config";
-import { useConversationHock } from "@/lib/hocks";
-import useMessageHoock from "@/lib/hocks/message/useMessageHoock";
-import useFrontTechnology from "@/lib/hocks/technology/useFrontTechnology";
 import { useDisclosure } from "@nextui-org/react";
-import { Comment, Media, Prompt } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { Prompt } from "@prisma/client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import UploadExplorer from "../global/explorer/UploadExplorer";
-import { globalContext } from "./GlobalContextProvider";
-import { trpc } from "@/trpc/client";
-import useInPromptsInfantry from "@/lib/hocks/prompts/useInPromptsInfintry";
+import React, { createContext } from "react";
+
 import CreatePrompts from "../prompts/CreatePrompts";
 import useTech from "@/lib/hocks/technology/useTech";
 import EditPrompts from "../prompts/EditPrompts";

@@ -43,7 +43,7 @@ export const useUpload = ({ accept }: UseUploadType) => {
         toast.error("Error uploading file:");
       }
     },
-    [progress, setProgress]
+    [setProgress]
   );
   const onDrop = useCallback(
     (acceptedFiles: any) => {
@@ -134,7 +134,7 @@ const useMedia = (props: Props) => {
       }
       setFiles(selectedMedias);
     },
-    [files, setFiles]
+    [files, setFiles, singleFile]
   );
 
   const isSaveDisable = () => !files.length;

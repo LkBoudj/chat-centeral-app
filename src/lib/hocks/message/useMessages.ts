@@ -32,7 +32,7 @@ const useMessages = () => {
     if (data) {
       setAllMessages(data);
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, setAllMessages]);
 
   useEffect(() => {}, [aiMessage]);
 
@@ -177,7 +177,12 @@ export const useSubmitMessage = () => {
 
       setIsAiThink(false);
     },
-    [setAllMessages, allMessages]
+    [
+      setAllMessages,
+      allMessages,
+      createMessageFromStream,
+      createMessageFromJson,
+    ]
   );
 
   const { setFiles, onOpenUploadFile, files, sessionUser } =

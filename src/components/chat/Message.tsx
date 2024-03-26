@@ -7,9 +7,9 @@ import ReactMarkdown from "react-markdown";
 import { Prism } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { forwardRef } from "react";
-import { MediaContainer } from "./CustmMediaMediaComponent";
-import CopyPaste from "./CopyPaste";
+
 import CodeCopyBtn from "./CopyPaste";
+import MediaItem from "../global/explorer/MediaItem";
 
 const isRightToLift = (text: string) => {
   const regex = /[\u0600-\u06FF]/;
@@ -94,6 +94,19 @@ const BodyMessage = ({
   );
 };
 
+type MessageMediasProps = {
+  fromMachine?: boolean;
+  medias: Media[];
+};
+const ListOfMessageMedias = (props: MessageMediasProps) => {
+  const { fromMachine, medias } = props;
+
+  const listOfMedia = medias.map((media) => {
+    return <MediaItem key={media.id} src={media.src} type={media.type} />;
+  });
+  //MediaItem
+  return <div>{listOfMedia}</div>;
+};
 type MessageType = {
   id?: any;
   fromMachin?: boolean;
@@ -104,6 +117,13 @@ type MessageType = {
 };
 const Message = forwardRef<HTMLDivElement, MessageType>(
   ({ id, content, fromMachin, technology, media }, ref) => {
+    const listOfMedias =
+      (Array.isArray(media) &&
+        media.map<Media>((m: any) => {
+          return m.medias;
+        })) ??
+      [];
+
     return (
       <div
         ref={ref}
@@ -113,19 +133,27 @@ const Message = forwardRef<HTMLDivElement, MessageType>(
         )}
       >
         <div className=" max-w-[1000px]  space-y-1">
-          {fromMachin && (
-            <span className="px-1 capitalize  font-semibold text-slate-800">
-              {technology?.name ?? siteConfig.name}
-            </span>
-          )}
+          <div className="flex justify-between">
+            {fromMachin && (
+              <span className="px-1 capitalize  font-semibold text-slate-800">
+                {technology?.name ?? siteConfig.name}
+              </span>
+            )}
+            {content && (
+              <CodeCopyBtn content={content} className="text-black" />
+            )}
+          </div>
           {content ? (
             <BodyMessage content={content} fromMachin={fromMachin} />
           ) : (
             ""
           )}
 
-          {media?.length ? (
-            <MediaContainer fromMachin={fromMachin} media={media ?? []} />
+          {Array.isArray(listOfMedias) && listOfMedias?.length ? (
+            <ListOfMessageMedias
+              fromMachine={fromMachin}
+              medias={listOfMedias}
+            />
           ) : (
             ""
           )}

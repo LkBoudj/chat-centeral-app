@@ -2,11 +2,21 @@
 import React from "react";
 import IconButton from "../global/IconButton";
 import { ClipboardCheck, Copy } from "lucide-react";
-export default function CodeCopyBtn({ children }: any) {
+import { cn } from "@nextui-org/react";
+
+export default function CodeCopyBtn({
+  children,
+  content,
+  className,
+}: {
+  className?: string;
+  children?: any;
+  content?: string;
+}) {
   const [copyOk, setCopyOk] = React.useState(false);
 
   const handleClick = (e: any) => {
-    navigator.clipboard.writeText(children.props.children[0]);
+    navigator.clipboard.writeText(content ? content : children.props.children);
 
     setCopyOk(true);
     setTimeout(() => {
@@ -18,7 +28,8 @@ export default function CodeCopyBtn({ children }: any) {
     <div className="code-copy-btn w-full flex justify-end">
       <IconButton
         onClick={handleClick}
-        className="text-white  "
+        className={cn("text-white  ", className)}
+        size={18}
         Icon={!copyOk ? Copy : ClipboardCheck}
       />
     </div>

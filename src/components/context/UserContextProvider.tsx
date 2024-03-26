@@ -1,9 +1,7 @@
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { globalContext } from "./GlobalContextProvider";
-import { Media } from "@prisma/client";
-import UploadExplorer from "../global/explorer/UploadExplorer";
+
 import toast from "react-hot-toast";
 import { hanldeCustomErrorsZod } from "@/lib/utlis";
 
@@ -79,7 +77,6 @@ const UserContextProvider = ({ children, defaultVal }: Props) => {
     if (user?.id) getUserData(user?.id);
   }, [user?.id, setUserData]);
 
-  useEffect(() => {}, [defaultVal]);
   return <userContext.Provider value={values}>{children}</userContext.Provider>;
 };
 

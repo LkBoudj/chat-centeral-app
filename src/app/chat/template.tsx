@@ -1,15 +1,12 @@
 "use client";
-import { ChatAside, IconButton, LkNavbar, UploadExplorer } from "@/components";
-import ChatContextProvider, {
-  chatContext,
-} from "@/components/context/ChatContextProvider";
-import FileManager from "@/components/global/explorer/FileManager";
+import { ChatAside, IconButton, LkNavbar } from "@/components";
+import ChatContextProvider from "@/components/context/ChatContextProvider";
 import { authNavigation } from "@/lib/data/authNavigation";
 import useAside from "@/lib/hocks/conversation/useAside";
 
 import { Settings } from "lucide-react";
 
-import { PropsWithChildren, useContext, useState } from "react";
+import { PropsWithChildren } from "react";
 
 const ChatTemplate = ({ children }: PropsWithChildren) => {
   const { toggleAside, isOpenAside, setIsOpenAside } = useAside();
