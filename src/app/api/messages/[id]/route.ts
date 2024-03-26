@@ -8,7 +8,7 @@ import { ConversationController, MessageController } from "@/lib/controller";
 import mediaController from "@/lib/controller/media_controller";
 import technologyController from "@/lib/controller/technology_controller";
 
-import technologiesContainer from "@/lib/technolgie_container";
+import technologiesContainer, { AiInput } from "@/lib/technolgie_container";
 import prismaConfig from "@/lib/configs/prismaConfig";
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -102,15 +102,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
           createdAt: "asc",
         },
       });
-
-      return technologiesContainer.handelAiTechNologies({
+      const dataMessage: AiInput = {
         userMessage,
         model,
-        path: isFileExits?.src,
+        path: isFileExits?.src ?? null,
+        mediaType: isFileExits?.type ?? null,
         oldMessagesData,
         refTech: isTechExits.refTech,
         userId,
-      });
+      };
+      return technologiesContainer.handelAiTechNologies(dataMessage);
     }
   } catch (e: any) {
     const errors =

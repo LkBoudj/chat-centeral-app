@@ -15,7 +15,7 @@ const useInPromptsInfantry = () => {
   const { data, refetch, isLoading, isSuccess, fetchNextPage, hasNextPage } =
     trpc.promptsAppRouter.showAll.useInfiniteQuery(
       {
-        limit: 4,
+        limit: 10,
         search,
         myPrompts,
         techId: selectedTech,
@@ -41,7 +41,12 @@ const useInPromptsInfantry = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && data.pages && Array.isArray(data.pages)) {
+    if (
+      isSuccess &&
+      data.pages &&
+      Array.isArray(data.pages) &&
+      data.pages[page]
+    ) {
       if (search != "" || valueTags.length > 0 || selectedTech != "0") {
         setItems([...data.pages[page].items]);
       } else {

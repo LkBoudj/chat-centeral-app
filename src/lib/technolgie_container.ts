@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
-
+import fs from "fs";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { MessageController } from "./controller";
@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 import {
   convertImageToBaseFromUrl,
   createAudioFile,
+  getPublicFilePath,
   saveImageFromURL,
 } from "./helper";
 import mediaController from "./controller/media_controller";
@@ -19,6 +20,7 @@ import { ChatOpenAI } from "@langchain/openai";
 
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { Technology } from "@prisma/client";
 
 interface BaseAiInput {
   userMessage: AppMessage;
@@ -28,19 +30,23 @@ interface BaseAiInput {
   oldMessages?: string;
 }
 
+interface BaseAiInputWithSrc extends BaseAiInput {
+  path: string;
+}
 interface DallInput extends BaseAiInput {}
 interface ClaudeInput extends BaseAiInput {}
 
 interface GPT4Input extends BaseAiInput {}
-interface VisionInput extends BaseAiInput {
-  path: string;
-}
-interface voiceInput extends BaseAiInput {}
 
-interface AiInput extends BaseAiInput {
+interface VisionInput extends BaseAiInputWithSrc {}
+interface voiceInput extends BaseAiInput {}
+interface TextVoiceInput extends BaseAiInputWithSrc {}
+
+export interface AiInput extends BaseAiInput {
   refTech?: string;
   oldMessagesData?: any[];
-  path?: string;
+  path?: string | null;
+  mediaType?: string | null;
 }
 class TechnologiesContainer {
   private openai: OpenAI;
@@ -334,6 +340,38 @@ class TechnologiesContainer {
     );
   }
 
+  async generateTextFromAudio({ path, headers, userMessage }: TextVoiceInput) {
+    const tech: Technology | null = await prismaConfig.technology.findUnique({
+      where: {
+        refTech: "stt",
+      },
+    });
+
+    const transcription = await this.openai.audio.transcriptions.create({
+      file: fs.createReadStream(getPublicFilePath(path)),
+      model: "whisper-1",
+    });
+
+    const newAiMessage: any = {
+      ...userMessage,
+      content: transcription.text,
+      fromMachin: true,
+    };
+    if (tech) {
+      newAiMessage.technologyId = tech.id;
+    }
+    new Promise(async () => {
+      await MessageController.create(newAiMessage);
+    });
+
+    if (tech) {
+      newAiMessage.technology = tech;
+    }
+    return NextResponse.json(
+      { success: true, data: newAiMessage, errors: "" },
+      { status: 200, headers }
+    );
+  }
   async handelLangChainOpenAi({
     oldMessages,
     model,
@@ -382,6 +420,7 @@ class TechnologiesContainer {
     userMessage,
     headers,
     path,
+    mediaType,
     userId,
   }: AiInput) {
     const oldMessages = oldMessagesData
@@ -392,58 +431,69 @@ class TechnologiesContainer {
       .join("\n");
 
     if (path) {
-      console.log(path);
-
-      return this.generateTextCompletionVison({
-        path,
-        userMessage,
-        oldMessages,
-        model,
-        userId,
-      });
-    }
-    console.log(refTech?.trim().toLowerCase());
-    switch (refTech?.trim().toLowerCase()) {
-      case "gpt4":
-        return await this.generateTextCompletion({
+      if (mediaType?.startsWith("audio")) {
+        return this.generateTextFromAudio({
+          headers,
+          path,
+          userMessage,
           oldMessages,
           model,
-          userMessage,
-          headers,
           userId,
         });
-      case "gpt3":
-        return this.generateTextCompletion({
+      } else if (mediaType?.startsWith("video")) {
+      } else if (mediaType?.startsWith("image")) {
+        return this.generateTextCompletionVison({
+          path,
+          userMessage,
           oldMessages,
           model,
-          userMessage,
-          headers,
           userId,
         });
-      case "dall-e":
-        return await this.generateImageDallE({
-          model,
-          userMessage,
-          headers,
-          userId,
-        });
-      case "tts":
-        return await this.generateVoice({
-          model,
-          userMessage,
-          headers,
-          userId,
-        });
-      case "claude":
-        return await this.generateTextCompletionClaude({
-          model,
-          userMessage,
-          headers,
-          userId,
-        });
+      }
+    } else {
+      switch (refTech?.trim().toLowerCase()) {
+        case "gpt4":
+          return await this.generateTextCompletion({
+            oldMessages,
+            model,
+            userMessage,
+            headers,
+            userId,
+          });
+        case "gpt3":
+          return this.generateTextCompletion({
+            oldMessages,
+            model,
+            userMessage,
+            headers,
+            userId,
+          });
+        case "dall-e":
+          return await this.generateImageDallE({
+            model,
+            userMessage,
+            headers,
+            userId,
+          });
+        case "tts":
+          return await this.generateVoice({
+            model,
+            userMessage,
+            headers,
+            userId,
+          });
 
-      default:
-        console.log("no tech selected");
+        case "claude":
+          return await this.generateTextCompletionClaude({
+            model,
+            userMessage,
+            headers,
+            userId,
+          });
+
+        default:
+          console.log("no tech selected");
+      }
     }
   }
 }

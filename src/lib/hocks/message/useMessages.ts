@@ -18,8 +18,7 @@ const useMessages = () => {
 
   const [aiMessage, setAiMessage] = useState("");
 
-  const { selectTechnology, sessionUser, allMessages, setAllMessages } =
-    useContext(chatContext);
+  const { allMessages, setAllMessages } = useContext(chatContext);
 
   if (id) {
   }
@@ -111,11 +110,12 @@ export const useSubmitMessage = () => {
 
       const { files, ...restData } = data;
 
-      const media = files.length
-        ? files.map((m: Media) => ({
-            medias: m,
-          }))
-        : [];
+      const media =
+        files && Array.isArray(files) && files.length
+          ? files.map((m: Media) => ({
+              medias: m,
+            }))
+          : [];
 
       const newDataWithUserMessage = [
         ...allMessages,
@@ -127,14 +127,16 @@ export const useSubmitMessage = () => {
           updatedAt: new Date(),
         },
       ];
+
       setAllMessages(newDataWithUserMessage);
 
-      if (files.length) {
+      if (files && Array.isArray(files) && files.length) {
         data.files = files.map((file: Media) => file.id);
       }
 
       try {
-        const res = await fetch(`/api/messages/${params.id ?? ""}`, {
+        const api = params.id ? `/api/messages/${params.id}` : `/api/messages`;
+        const res = await fetch(api, {
           method: "POST",
           body: JSON.stringify(data),
         });
@@ -143,7 +145,10 @@ export const useSubmitMessage = () => {
 
         if (!res.ok) {
           toast.error("some errors");
+          setIsAiThink(false);
+          return;
         }
+
         if (contentType == "application/json") {
           await createMessageFromJson(
             res,
@@ -165,8 +170,9 @@ export const useSubmitMessage = () => {
             scroll: true,
           });
         }
-      } catch (e) {
-        console.log(e);
+      } catch (e: any) {
+        toast.error(e.errors);
+        setIsAiThink(false);
       }
 
       setIsAiThink(false);

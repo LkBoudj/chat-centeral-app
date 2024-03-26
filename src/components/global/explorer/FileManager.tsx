@@ -66,10 +66,9 @@ const TabListOfMedias: React.FC<TabListOfMediasProps> = (props) => {
         >
           {medias.map((media: any, index: number) => {
             return (
-              <div>
+              <div key={index}>
                 {action ? (
                   <InnerDeleteMedia
-                    key={index}
                     onSelect={() => handelToggleSelectFiles(media)}
                     onDelete={() => handelDeleteMedia(media.id)}
                     className={`p-1 flex mx-auto md:mx-0  max-w-sm    border ${

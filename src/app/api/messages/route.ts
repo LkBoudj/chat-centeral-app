@@ -6,13 +6,14 @@ import { createNewMessageBackV } from "@/lib/validation";
 import { ConversationController, MessageController } from "@/lib/controller";
 
 import technologyController from "@/lib/controller/technology_controller";
-import technologiesContainer from "@/lib/technolgie_container";
+import technologiesContainer, { AiInput } from "@/lib/technolgie_container";
 import mediaController from "@/lib/controller/media_controller";
 import prismaConfig from "@/lib/configs/prismaConfig";
+import { Media } from "@prisma/client";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { content, technologyId, conversationId, model, media, files } =
+    const { content, technologyId, conversationId, model, files } =
       await req.json();
 
     const session = await getAuthSession();
@@ -44,6 +45,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       content,
       conversationId,
       technologyId,
+      fileId: files,
     });
 
     if (!validation.success) {
@@ -66,7 +68,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       userId,
     };
 
-    const isFileExits: any = validation.data.fileId
+    const isFileExits: Media | null = validation.data.fileId
       ? await mediaController.checkMediaExists({
           userId,
           id: files[0],
@@ -87,19 +89,31 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
 
     if (isTechExits) {
-      return technologiesContainer.handelAiTechNologies({
+      const messageData: AiInput = {
         userMessage,
         model,
         headers: {
           conversationId: newConversation.id,
         },
-        path: isFileExits?.src,
+        mediaType: isFileExits?.type ?? null,
+        path: isFileExits?.src ?? null,
         refTech: isTechExits.refTech,
-      });
+      };
+
+      return technologiesContainer.handelAiTechNologies(messageData);
     }
     // await TechnologiesContainer.generateTextCompletion({ userMessage });
     // return NextResponse.json({ conversationId: newConversation.id });
   } catch (e: any) {
-    return NextResponse.json(e, { status: 400 });
+    console.log(e);
+
+    return NextResponse.json(
+      {
+        data: [],
+        success: false,
+        errors: "tray agin",
+      },
+      { status: 400 }
+    );
   }
 }
