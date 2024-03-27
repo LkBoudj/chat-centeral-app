@@ -49,7 +49,7 @@ export default function Contact({ id }: { id?: LegacyRef<HTMLElement> }) {
       containerClass="pt-36 pb-16 grid gap-8 md:grid-cols-2 items-start w-full"
     >
       <div className="w-full space-y-10">
-        <h4 className="max-w-[548px] capitalize text-[43px] font-bold text-[#001131]">
+        <h4 className="max-w-[548px] capitalize text-[28px] md:text-[43px] font-bold text-[#001131]">
           Have a request? New Feature? Problem? Or anything at all, Reach out!
         </h4>
         <div className="space-y-4">
