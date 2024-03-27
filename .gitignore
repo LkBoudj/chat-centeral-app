@@ -2,7 +2,11 @@
 
 # dependencies
 /node_modules
-/publuc/media
+/public/media/videos/*
+/public/media/audio/*
+/public/media/images/*
+/public/media/documents/*
+
 /.pnp
 .pnp.js
 .yarn/install-state.gz
